@@ -1,0 +1,54 @@
+// colors
+// #0071bc
+// #205493
+// #112e51
+// #212121
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+
+#navbar {
+    background-color: #205493;
+    // height: 10vh;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+
+    #logo {
+        width: 8%;
+        height: 8%;
+        // margin: 2%;
+        margin-left: 2%;
+        align-self: center;
+        padding: 0.6%;
+        margin-top: 8px;
+        color: white;
+        font-family: Helvetica;
+        font-size: large;
+    }
+
+    #toggler{
+        margin-right: 15px;
+    }
+
+    #navbarSupportedContent{
+        margin-left: 20px;
+    }
+
+    #item{
+        color: white;
+
+    }
+    .logoItem{
+        height: 30px;
+        width: 30px;
+        padding: 5px;
+    }
+}
+
+
+

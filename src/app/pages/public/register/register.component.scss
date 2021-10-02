@@ -1,0 +1,120 @@
+
+$bodyFont: sfProTextRegular;
+$titleFont: sfProTextMedium;
+
+$azulOscuro: #112e51;
+$AzulMedio: #205493;
+$AzulClaro: #0071bc;
+$text: #212121;
+
+@font-face {
+    font-family: sfProTextRegular;
+    src: url(/assets/fonts/SFProTextRegular.ttf);
+}
+
+@font-face {
+    font-family: sfProTextMedium;
+    src: url(/assets/fonts/SFProTextMedium.ttf);
+}
+
+.material-icons {
+    display: inline-flex;
+    vertical-align: middle;
+ }
+
+ .toast-success {
+    background-color: #51A351 !important;
+  }
+
+ .is-invalid {
+    border-left: solid 6px red;
+  }
+
+  .success {
+    border-left: solid 6px green !important;
+  }
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.appContainer {
+    width: 100vw;
+    // height: 100vh;
+
+    // background-color: aqua;
+
+    
+    .text{
+        margin-top: 5px;
+        color: $AzulMedio;
+        font-size: large;
+        font-family: Helvetica;
+    }
+
+    .logo{
+        margin-top: 10px;
+        margin-bottom: 5px;
+        img{
+            height: 100px;
+        }
+    }
+
+    .logoContainer{
+        // background-color: blue;
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .imputContainer{
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .box {
+        margin-top: 15px;
+        width: 85%;
+        // height: auto;
+        // position: absolute;
+        padding: 15px;
+        
+        border-radius: 10px 10px 10px 10px;
+        border: 3px solid #205493;
+        
+
+        .media {
+            .media-content {
+                .content {
+                    .field {
+                        margin-bottom: 5px;
+                        .iti--allow-dropdown input{
+                            padding-right: 0px;
+                        }
+                        .buttons {
+                            display: flex;
+                            flex-flow: column wrap;
+                            align-items: center;
+                            justify-content: center;
+                            .is-info {
+                                width: 50%;
+                                margin-top: 10px;
+                                margin-bottom: 10px;
+                                background: $AzulClaro;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}

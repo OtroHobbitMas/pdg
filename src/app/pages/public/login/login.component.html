@@ -1,0 +1,59 @@
+<div class="page">
+  <div class="container">
+    <div class="text">
+      Login
+    </div>
+  
+    <div class="logo">
+      <img src="../../../../assets/img/Logo - Azul.svg" alt="">
+    </div>
+  
+    <div class="text">
+      LecturApp
+    </div>
+  
+    <div class="formBox">
+      <form [formGroup]="signupForm">
+        <div class="field">
+          <label style="color: #205493; font-size: medium;"for="">Email</label>
+          <p class="control has-icons-left has-icons-right">
+            <input class="input" formControlName="signupEmail" type="email" placeholder="Email" required>
+            
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+            <span class="icon is-small is-right">
+              <i class="fas fa-check"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <label style="color: #205493; font-size: medium;" for="">Password</label>
+          <p class="control has-icons-left">
+            <input class="input" formControlName="signupPassword"  type="password" placeholder="Password" required>
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <div class="buttons">                
+            <button type="submit" class="button is-info" style="width: 50%;" (click)="doLogin()">Login</button>
+
+          </div>
+        </div>
+      
+      </form>
+
+    <!-- <button class="Register">Register</button> -->
+    <a (click)="goToRegister()" class="RegisterBtn">Click here to register</a>
+
+    </div>
+  
+  </div>
+</div>
+
+
+
+
+

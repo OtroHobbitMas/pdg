@@ -1,0 +1,79 @@
+$bodyFont: sfProTextRegular;
+$titleFont: sfProTextMedium;
+
+$azulOscuro: #112e51;
+$AzulMedio: #205493;
+$AzulClaro: #0071bc;
+$text: #212121;
+
+@font-face {
+    font-family: sfProTextRegular;
+    src: url(/assets/fonts/SFProTextRegular.ttf);
+}
+
+@font-face {
+    font-family: sfProTextMedium;
+    src: url(/assets/fonts/SFProTextMedium.ttf);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.page{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+.container{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    // background-color: aqua;
+    flex-flow: column wrap;
+    width: 95%;
+
+    .text{
+        margin-top: 10px;
+        color: $AzulMedio;
+        font-size: large;
+        font-family: Helvetica;
+    }
+
+    .logo{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        img{
+            height: 100px;
+        }
+    }
+
+    .formBox{
+        margin-top: 15px;
+        margin-bottom: 50px;
+        // background-color: blue;
+        border-radius: 10px 10px 10px 10px;
+        border: 5px solid #205493;
+        width: 80%;
+        padding: 10px;
+
+    
+        .buttons{
+            // background-color: $AzulClaro;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            flex-flow: column wrap;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .RegisterBtn{
+            // background-color: aquamarine;
+            color: $AzulClaro;
+        }
+    }
+}
