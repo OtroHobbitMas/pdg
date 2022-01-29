@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-import { UserI } from '../interfaces/UserI';
+import { UserI } from '../shared/interfaces/UserI';
 // import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
@@ -13,7 +13,6 @@ export class AuthService {
   // user: UserI | undefined;
 
   constructor(private firebaseAuth: AngularFireAuth) { }
-
 
   async logout() {
     await firebase.auth().signOut();

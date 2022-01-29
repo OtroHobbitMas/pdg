@@ -1,13 +1,10 @@
-import { RegisterComponent } from './../register/register.component';
 import { Component, OnInit} from '@angular/core';
-import { RegisterService } from 'src/app/shared/services/register.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { UserI } from 'src/app/shared/interfaces/UserI';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as firebase from "firebase";
-import { element } from 'protractor';
+import { TagService } from 'src/app/services/tag.service';
 
 
 
@@ -31,12 +28,10 @@ export class TagsComponent implements OnInit {
   
 
   constructor(
-    private firebaseAuth: AngularFireAuth,
-    private registerService: RegisterService,
+    private tagService: TagService,
     private router: Router,
     private firebase: AngularFireDatabase,
-    private toastr: ToastrService,
-    private registerComponent: RegisterComponent) { }
+    private toastr: ToastrService) { }
 
     goToHome() {
       this.router.navigate(['/home']);
@@ -45,7 +40,7 @@ export class TagsComponent implements OnInit {
   ngOnInit(): void {
     let $this = this;
     this.UserAcount();
-    this.registerService.getTags()
+    this.tagService.getTags()
       .snapshotChanges().subscribe(item => {
         this.tagsList = [];
         item.forEach(element => {

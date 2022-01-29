@@ -1,18 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {  FormControl, FormGroup, NgForm, Validators, FormBuilder,} from "@angular/forms";
-//import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
-import { AngularFireDatabase, AngularFireList} from '@angular/fire/database';
+import {  FormControl, FormGroup} from "@angular/forms";
 import { Router } from '@angular/router';
 //import { AngularFireAuth } from 'angularfire2/auth';
  import { AngularFireAuth } from '@angular/fire/auth';
 import { UserI } from 'src/app/shared/interfaces/UserI';
-import { ToastrService } from 'ngx-toastr';
-import { CustomValidators } from 'src/app/custom-validators'; 
-import { RegisterService } from "src/app/shared/services/register.service";
+import { ToastrService } from 'ngx-toastr'; 
+import { UserService } from "src/app/services/user.service";
 import * as firebase from 'firebase';
-//import * as io from 'socket.io-client';
-
-
 
 @Component({
   selector: 'app-login',
@@ -26,10 +20,7 @@ export class LoginComponent implements OnInit {
     signupPassword: new FormControl(),
   });
 
-  //
-  
-  constructor(private router:Router, /*private firebase: AngularFireDatabase*/ 
-    private firebaseAuth: AngularFireAuth, private toastr: ToastrService, private registerService: RegisterService) { }
+  constructor(private router:Router, private toastr: ToastrService, private userService: UserService) { }
 
     registerList: UserI[];
     register= [];
@@ -37,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.registerService.getRegister()
+    this.userService.getRegister()
       .snapshotChanges().subscribe(item => {
         this.registerList = [];
         item.forEach(element => {
@@ -73,8 +64,6 @@ export class LoginComponent implements OnInit {
       userExist = this.registerList.find( user => user.telefono.e164Number == email && user);
       email = userExist && userExist.email || undefined;
       console.log(email);
-      //io.on('connection', (socket) => {
-      //console.log("Se conecto"+email+"con el ID"+socket.id);})
     }
 
     if(userExist){

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { ChatService } from 'src/app/shared/services/chat/chat.service';
-import { RegisterService } from "src/app/shared/services/register.service";
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AuthService } from 'src/app/services/auth.service';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { UserI } from 'src/app/shared/interfaces/UserI';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-external-profiles',
@@ -18,9 +17,8 @@ import * as firebase from 'firebase';
 export class ExternalProfilesComponent implements OnInit {
 
   constructor(public authService: AuthService,
-    public chatService: ChatService,
     private firebaseAuth:AngularFireAuth, 
-    private registerService: RegisterService,
+    private userService: UserService,
     private router: Router,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
@@ -45,7 +43,7 @@ export class ExternalProfilesComponent implements OnInit {
   ngOnInit(): void {
     let $this = this;
       this.UserAcount();
-      this.registerService.getRegister()
+      this.userService.getRegister()
       .snapshotChanges().subscribe(item => {
         this.registerList = [];
         item.forEach(element => {

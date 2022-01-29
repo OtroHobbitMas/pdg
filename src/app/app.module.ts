@@ -29,10 +29,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 //Servicios
-import { RegisterService} from '../app/shared/services/register.service';
-import { from } from 'rxjs';
 import { ToastrModule } from 'ngx-toastr';
-import { AuthService } from './shared/services/auth.service';
+import { AuthService } from './services/auth.service';
 import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { TagsComponent } from './pages/public/tags/tags.component';
 import { FilterTagsPipe } from './pipes/filter-tags.pipe';
@@ -45,9 +43,6 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { ExternalProfilesComponent } from './pages/private/external-profiles/external-profiles.component';
 import { GroupComponent } from './pages/private/group/group.component';
 import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pipe';
-
-
-
 
 
 @NgModule({
@@ -88,7 +83,6 @@ import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pip
     })
   ],
   providers: [
-    RegisterService,
     RegisterComponent,
     AuthService,
     AngularFirestore,

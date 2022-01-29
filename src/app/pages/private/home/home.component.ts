@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { ChatService } from 'src/app/shared/services/chat/chat.service';
-import { RegisterService } from "src/app/shared/services/register.service";
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from "src/app/services/user.service";
 import { UserI } from 'src/app/shared/interfaces/UserI';
 // import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -13,8 +12,9 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { BookService } from 'src/app/services/book.service';
 
-@Component({
+@Component({ 
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -46,9 +46,9 @@ export class HomeComponent implements OnInit {
 
 
   constructor(public authService: AuthService,
-    public chatService: ChatService,
     private firebaseAuth:AngularFireAuth, 
-    private registerService: RegisterService,
+    private userService: UserService,
+    private bookService: BookService,
     private router: Router,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
       // this.initChat();
       let $this = this;
       this.UserAcount();
-      this.registerService.getRegister()
+      this.userService.getRegister()
       .snapshotChanges().subscribe(item => {
         this.registerList = [];
         item.forEach(element => {
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
         });
       });
       
-      this.registerService.getBooks()
+      this.bookService.getBooks()
       .snapshotChanges().subscribe(item => {
         this.bookList = [];
         item.forEach((element) => {

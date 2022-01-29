@@ -1,20 +1,13 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import {  FormControl, FormGroup, NgForm, Validators, FormBuilder,} from "@angular/forms";
+import { Component, OnInit} from "@angular/core";
+import {  FormControl, FormGroup, Validators, FormBuilder,} from "@angular/forms";
 import { Router } from "@angular/router";
-import { AuthService } from "src/app/shared/services/auth.service";
-import { RegisterService } from "src/app/shared/services/register.service";
-//import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { AngularFireDatabase,AngularFireList}from '@angular/fire/database';
-// import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthService } from "src/app/services/auth.service";
 import { CustomValidators } from 'src/app/custom-validators';
 import { SearchCountryField, TooltipLabel, CountryISO } from 'ngx-intl-tel-input';
 import { ToastrService } from 'ngx-toastr';
 import { UserI } from 'src/app/shared/interfaces/UserI';
-// import * as io from 'socket.io-client';
 import * as firebase from 'firebase';
-
-
+import { UserService } from "src/app/services/user.service";
 
 @Component({
   selector: "app-register",
@@ -27,16 +20,12 @@ export class RegisterComponent implements OnInit {
 	SearchCountryField = SearchCountryField;
 	TooltipLabel = TooltipLabel;
 	CountryISO = CountryISO;
-	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
-	phoneForm = new FormGroup({
-		phone: new FormControl(undefined, [Validators.required])
-	});
 
-	changePreferredCountries() {
-		this.preferredCountries = [CountryISO.India, CountryISO.Canada];
-  }
+  registerList: UserI[];
+  register= [];
+  itemRef: any;
+  email: any = "ejemplo";
 
-  
   ngForm = new FormGroup({
     name: new FormControl(),
     lname: new FormControl(),
@@ -46,13 +35,20 @@ export class RegisterComponent implements OnInit {
     confirmPassword: new FormControl(),      
   });
 
+	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+	phoneForm = new FormGroup({
+		phone: new FormControl(undefined, [Validators.required])
+	});
+
+	changePreferredCountries() {
+		this.preferredCountries = [CountryISO.India, CountryISO.Canada];
+  }
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private registerService: RegisterService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
-    private firebaseDB: AngularFireDatabase,
-    private firebaseAuth: AngularFireAuth,
     private toastr: ToastrService
   ) {
 
@@ -80,7 +76,7 @@ export class RegisterComponent implements OnInit {
             // // check whether the entered password has upper case letter
             // CustomValidators.patternValidator(/[A-Z]/, {
             //   hasCapitalCase: true
-            // }),
+            // }),  
             // // check whether the entered password has a lower case letter
             // CustomValidators.patternValidator(/[a-z]/, {
             //   hasSmallCase: true
@@ -104,13 +100,8 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-    registerList: UserI[];
-    register= [];
-    itemRef: any;
-    email: any = "ejemplo";
-
   ngOnInit(): void {
-    this.registerService.getRegister()
+    this.userService.getRegister()
     .snapshotChanges().subscribe(item => {
       this.registerList = [];
       item.forEach(element => {
@@ -135,23 +126,13 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     
-    const Email = this.ngForm.controls.email.value;
+    const email = this.ngForm.controls.email.value;
     const telefono = this.ngForm.controls.telefono.value;
-    const Password = this.ngForm.controls.password.value;
-    const ConfirmPassword = this.ngForm.controls.confirmPassword.value;
-    let EmailExist = this.registerList.find(user => user.email == Email);
+    const password = this.ngForm.controls.password.value;
+    const confirmPassword = this.ngForm.controls.confirmPassword.value;
+    let EmailExist = this.registerList.find(user => user.email == email);
     let PhoneExist = this.registerList.find(user => user.telefono.e164Number == telefono.e164Number);
     
-    // let socket = io();
-    //   let id : any; 
-    //   //on connect Event 
-    //   socket.on('connect', () => {
-    //       //get the id from socket
-    //       let id = socket.id;
-    //       console.log(id);
-    //      return id;
-    //   });
-  
     if (EmailExist) {
       console.log("Ya existe este email");
       this.toastr.error('Ese correo ya esta registrado', 'Intenta otro correo', {
@@ -164,32 +145,20 @@ export class RegisterComponent implements OnInit {
       console.log("Ya existe este número");
     } else {
       
-      firebase.auth().createUserWithEmailAndPassword(Email, Password).catch(function(error) {
-        // Handle Errors here.
+      firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-        // ...
       });
-      this.registerService.insertRegister(this.ngForm.value);
-      if (ConfirmPassword == Password) {
-        firebase.auth().createUserWithEmailAndPassword(Email, Password).catch(function (error) {
+      this.userService.insertRegister(this.ngForm.value);
+      if (confirmPassword == password) {
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
         });
 
-    
-      // this.resetForm();
-      // this.ngForm.reset({
-      //   email : '',
-      //   telefono: '',
-      //   name: '',
-      //   lname: '',
-      //   password: '',
-      //   confirmPassword: '',
-      // });
-      this.email = Email;
-      firebase.auth().signInWithEmailAndPassword(Email, Password).then(() => {
+      this.email = email;
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
         this.router.navigate(['/tags']);
         this.toastr.success('Cuenta creada', 'Exitosamente', {
           positionClass: 'toast-top-center'

@@ -1,24 +1,17 @@
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
-import { Component, EventEmitter, OnDestroy, OnInit, Output, Directive,HostListener} from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthService } from "src/app/shared/services/auth.service";
-import { ChatService } from "src/app/shared/services/chat/chat.service";
-// import { ChatI } from "./interfaces/ChatI";
-// import { Group } from "./interfaces/Group";
-// import { MessageI } from "./interfaces/MessageI";
-import { RegisterService } from "src/app/shared/services/register.service";
+import { Component, OnInit} from "@angular/core";
+import { AuthService } from "src/app/services/auth.service";
+import { UserService } from "src/app/services/user.service";
 import { UserI } from "src/app/shared/interfaces/UserI";
 import { AngularFireAuth } from "@angular/fire/auth";
-import {  FormControl,FormGroup,NgForm,Validators,FormBuilder, NgModelGroup,} from "@angular/forms";
+import {  FormControl,FormGroup} from "@angular/forms";
 import * as firebase from "firebase";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { Observable } from 'rxjs';
-import { finalize, mergeScan } from 'rxjs/operators';
-import { Key } from 'protractor';
-import { Console, error, info } from 'console';
 import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { TagService } from 'src/app/services/tag.service';
+import { BookService } from 'src/app/services/book.service';
 
 
 
@@ -53,19 +46,20 @@ export class ProfileComponent implements OnInit {
   constructor( 
     private _config:NgbCarouselConfig,
     public authService: AuthService,
-    public chatService: ChatService,
     private firebaseAuth: AngularFireAuth,
-    private registerService: RegisterService,
+    private userService: UserService,
+    private bookService: BookService,
     private router: Router,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
-    private filterpipe:FilterPipe) 
+    private filterpipe:FilterPipe,
+    private tagService: TagService) 
     { }
 
     async ngOnInit(){
       this.UserAcount();      
   
-      this.registerService
+      this.userService
         .getRegister()
         .snapshotChanges()
         .subscribe((item) => {
@@ -526,7 +520,7 @@ export class ProfileComponent implements OnInit {
     let query2: string = "#contTag"+index[1];
     let cont: any = document.querySelector(query2);
     cont.style.display = 'none';
-    this.registerService.deleteTag(this.keyOrdenList[index[1]],this.KeyUSER);
+    this.tagService.deleteTag(this.keyOrdenList[index[1]],this.KeyUSER);
     this.toastr.warning('Tag eliminado', 'Exitosamente');    
   }
 
@@ -538,7 +532,7 @@ export class ProfileComponent implements OnInit {
     console.log(cont);
     cont.style.display = 'none';
     
-    this.registerService.deleteLibros(this.keyOrdenBooksList[index[1]],this.KeyUSER);
+    this.bookService.deleteBooks(this.keyOrdenBooksList[index[1]],this.KeyUSER);
     this.toastr.warning('Libro eliminado', 'Exitosamente');    
   }
 
@@ -547,12 +541,12 @@ export class ProfileComponent implements OnInit {
     let query2: string = ".containerAmigos"+index[1];
     let cont: any = document.querySelector(query2);
     cont.style.display = 'none';
-    this.registerService.deleteAmigos(this.keyOrdenAmigosList[index[1]],this.KeyUSER);
+    this.userService.deleteFriends(this.keyOrdenAmigosList[index[1]],this.KeyUSER);
     this.toastr.warning('Amigo eliminado', 'Exitosamente');    
   }
 
   async editUserName(register: UserI){
     let variable;
-    this.registerService.updateUsername(variable);
+    this.userService.updateUsername(variable);
   }
 }
