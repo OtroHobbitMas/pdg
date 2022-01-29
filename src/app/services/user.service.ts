@@ -25,7 +25,7 @@ export class UserService {
   }
 
   public findById(email: string) {
-    const ref = this.firebase.database.ref('registers');
+    const ref = this.firebase.database.ref(this.collection);
     
     return ref.orderByChild('email').equalTo(email).limitToLast(1);
   }

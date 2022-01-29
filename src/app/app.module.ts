@@ -1,4 +1,4 @@
-import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FileUploadComponent } from './pages/private/file-upload/file-upload.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
@@ -13,16 +13,12 @@ import { LoginComponent } from './pages/public/login/login.component';
 import { RegisterComponent } from './pages/public/register/register.component';
 
 //firebase
-//import { AngularFireModule} from 'angularfire2';
+
 import { AngularFireModule} from '@angular/fire';
-//import { AngularFireDatabaseModule} from 'angularfire2/database';
 import { AngularFireDatabaseModule} from '@angular/fire/database';
 import { environment } from '../environments/environment';
-//import { AngularFirestoreModule, AngularFirestore }    from 'angularfire2/firestore';
 import { AngularFirestoreModule, AngularFirestore }    from '@angular/fire/firestore';
-//import { AngularFireStorageModule, AngularFireStorage }    from 'angularfire2/storage';
 import { AngularFireStorageModule, AngularFireStorage }    from '@angular/fire/storage';
-// import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 //bootstrap
