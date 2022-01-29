@@ -2,7 +2,6 @@ import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { Component, OnInit} from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
 import { UserService } from "src/app/services/user.service";
-import { UserI } from "src/app/shared/interfaces/UserI";
 import { AngularFireAuth } from "@angular/fire/auth";
 import {  FormControl,FormGroup} from "@angular/forms";
 import * as firebase from "firebase";
@@ -12,6 +11,7 @@ import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TagService } from 'src/app/services/tag.service';
 import { BookService } from 'src/app/services/book.service';
+import { User } from 'src/app/models/user';
 
 
 
@@ -22,11 +22,11 @@ import { BookService } from 'src/app/services/book.service';
 })
 export class ProfileComponent implements OnInit {
   
-  userInfoList: UserI[];
+  userInfoList: User[];
   misTagsList: any[] = [];
   misLibrosList: any[] = [];
   ImageSelected: string;
-  registerList: UserI[];
+  registerList: User[];
   Currentimg: string;
   CurrentDescription: string;
   UserName: string;
@@ -67,7 +67,7 @@ export class ProfileComponent implements OnInit {
           item.forEach((element) => {
             let x = element.payload.toJSON();
             x["$key"] = element.key;
-            this.registerList.push(x as UserI);
+            this.registerList.push(x as User);
 
           });        
         });
@@ -545,7 +545,7 @@ export class ProfileComponent implements OnInit {
     this.toastr.warning('Amigo eliminado', 'Exitosamente');    
   }
 
-  async editUserName(register: UserI){
+  async editUserName(register: User){
     let variable;
     this.userService.updateUsername(variable);
   }

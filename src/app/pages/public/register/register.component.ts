@@ -1,13 +1,14 @@
-import { Component, OnInit} from "@angular/core";
-import {  FormControl, FormGroup, Validators, FormBuilder,} from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators, FormBuilder, } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
-import { CustomValidators } from 'src/app/custom-validators';
+
 import { SearchCountryField, TooltipLabel, CountryISO } from 'ngx-intl-tel-input';
 import { ToastrService } from 'ngx-toastr';
-import { UserI } from 'src/app/shared/interfaces/UserI';
 import * as firebase from 'firebase';
 import { UserService } from "src/app/services/user.service";
+import { User } from "src/app/models/user";
+import { CustomValidators } from "src/app/shared/guards/custom-validators";
 
 @Component({
   selector: "app-register",
@@ -17,12 +18,12 @@ import { UserService } from "src/app/services/user.service";
 export class RegisterComponent implements OnInit {
 
   separateDialCode = false;
-	SearchCountryField = SearchCountryField;
-	TooltipLabel = TooltipLabel;
-	CountryISO = CountryISO;
+  SearchCountryField = SearchCountryField;
+  TooltipLabel = TooltipLabel;
+  CountryISO = CountryISO;
 
-  registerList: UserI[];
-  register= [];
+  registerList: User[];
+  register = [];
   itemRef: any;
   email: any = "ejemplo";
 
@@ -30,18 +31,18 @@ export class RegisterComponent implements OnInit {
     name: new FormControl(),
     lname: new FormControl(),
     telefono: new FormControl(),
-    email: new FormControl(),    
+    email: new FormControl(),
     password: new FormControl(),
-    confirmPassword: new FormControl(),      
+    confirmPassword: new FormControl(),
   });
 
-	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
-	phoneForm = new FormGroup({
-		phone: new FormControl(undefined, [Validators.required])
-	});
+  preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+  phoneForm = new FormGroup({
+    phone: new FormControl(undefined, [Validators.required])
+  });
 
-	changePreferredCountries() {
-		this.preferredCountries = [CountryISO.India, CountryISO.Canada];
+  changePreferredCountries() {
+    this.preferredCountries = [CountryISO.India, CountryISO.Canada];
   }
 
   constructor(
@@ -57,7 +58,7 @@ export class RegisterComponent implements OnInit {
 
   createSignupForm(): FormGroup {
     return this.formBuilder.group(
-      { 
+      {
         telefono: "",
         name: "",
         lname: "",
@@ -102,16 +103,16 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getRegister()
-    .snapshotChanges().subscribe(item => {
-      this.registerList = [];
-      item.forEach(element => {
-        let x = element.payload.toJSON();
-        x["$key"] = element.key;
-        this.registerList.push(x as UserI);
+      .snapshotChanges().subscribe(item => {
+        this.registerList = [];
+        item.forEach(element => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.registerList.push(x as User);
+        });
       });
-    });    
   }
-  
+
   createForm() {
     this.ngForm = this.formBuilder.group({
       email: "",
@@ -125,55 +126,58 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    
+
     const email = this.ngForm.controls.email.value;
     const telefono = this.ngForm.controls.telefono.value;
     const password = this.ngForm.controls.password.value;
     const confirmPassword = this.ngForm.controls.confirmPassword.value;
-    let EmailExist = this.registerList.find(user => user.email == email);
-    let PhoneExist = this.registerList.find(user => user.telefono.e164Number == telefono.e164Number);
-    
-    if (EmailExist) {
+    let emailExist = this.registerList.find(user => user.email == email);
+    let phoneExist = this.registerList.find(user => user.phone.e164Number == telefono.e164Number);
+
+    if (emailExist) {
       console.log("Ya existe este email");
       this.toastr.error('Ese correo ya esta registrado', 'Intenta otro correo', {
         positionClass: 'toast-top-center'
       });
-    } else if (PhoneExist) {
+    } else if (phoneExist) {
       this.toastr.error('El número ya esta registrado', 'Intenta otro número', {
         positionClass: 'toast-top-center'
       });
       console.log("Ya existe este número");
     } else {
-      
-      firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
-      this.userService.insertRegister(this.ngForm.value);
+
       if (confirmPassword == password) {
-        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then( () => {
+
+          this.userService.insertRegister(this.ngForm.value);
+
+        }).catch(function (error) {
+          
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
+          
+          console.log(errorCode);
+          console.log(errorMessage);
         });
 
-      this.email = email;
-      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-        this.router.navigate(['/tags']);
-        this.toastr.success('Cuenta creada', 'Exitosamente', {
-          positionClass: 'toast-top-center'
-        });
-      }) 
-      console.log("this.email");  
-      console.log(this.email);
-        
-      this.router.navigate(["/tags"]); 
-        }  
-    
+        this.email = email;
+        firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+          this.router.navigate(['/tags']);
+          this.toastr.success('Cuenta creada', 'Exitosamente', {
+            positionClass: 'toast-top-center'
+          });
+        })
+        console.log("this.email");
+        console.log(this.email);
+
+        this.router.navigate(["/tags"]);
       }
-    }
 
-  
+    }
+  }
+
+
   async doLogout() {
     await this.authService.logout();
     this.router.navigate(["/"]);
@@ -215,11 +219,11 @@ export class RegisterComponent implements OnInit {
 
   countEstad: number = 0;
 
-  openaddContact(){
-    if (this.count == 0){
+  openaddContact() {
+    if (this.count == 0) {
       this.count = 1;
       this.addcontact(this.count);
-    } else {      
+    } else {
       this.count = 0;
       this.addcontact(this.count);
     }

@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from "src/app/services/user.service";
-import { UserI } from 'src/app/shared/interfaces/UserI';
-// import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {  FormControl, FormGroup, NgForm, Validators, FormBuilder,} from "@angular/forms";
 import * as firebase from 'firebase';
@@ -13,6 +11,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { BookService } from 'src/app/services/book.service';
+import { User } from 'src/app/models/user';
 
 @Component({ 
   selector: 'app-home',
@@ -54,8 +53,8 @@ export class HomeComponent implements OnInit {
     private toastr: ToastrService,
     private filter: FilterPipe) {}
 
-    registerList: UserI[];
-    bookList: UserI[];
+    registerList: User[];
+    bookList: User[];
     bookComents: any[] = [];
     register= [];
     itemRef: any;
@@ -71,7 +70,7 @@ export class HomeComponent implements OnInit {
         item.forEach(element => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.registerList.push(x as UserI);
+          this.registerList.push(x as User);
         });
       });
       
@@ -81,7 +80,7 @@ export class HomeComponent implements OnInit {
         item.forEach((element) => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.bookList.push(x as UserI);
+          this.bookList.push(x as User);
         });
         $this.coments(this.bookList);
       });
@@ -282,7 +281,7 @@ export class HomeComponent implements OnInit {
     } else {
       // console.log("Es teléfono");
       // Es teléfono
-      userExist = this.registerList.find(user => user.telefono.e164Number == ContactNumber && user);
+      userExist = this.registerList.find(user => user.phone.e164Number == ContactNumber && user);
       if (!userExist) {
         console.log("Este usuario no existe")
       } else {

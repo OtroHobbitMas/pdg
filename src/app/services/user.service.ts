@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
-import { UserI } from '../shared/interfaces/UserI';
+import { AngularFirestoreCollection } from '@angular/fire/firestore';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -8,39 +9,62 @@ import { UserI } from '../shared/interfaces/UserI';
 export class UserService {
 
   registerList: AngularFireList<any>;
+  userCollection: AngularFirestoreCollection<User>;
+  private collection: string;
+  private subCollectionPhone: string;
 
-  constructor(private firebase: AngularFireDatabase) { }
+  constructor(private firebase: AngularFireDatabase) { 
+    this.collection= "registers";
+    this.subCollectionPhone= "telefono";
+  }
 
   getRegister(){
-     this.registerList = this.firebase.list('registers');
+     this.registerList = this.firebase.list(this.collection);
+     
     return this.registerList;
   }
+
+  public findById(email: string) {
+    const ref = this.firebase.database.ref('registers');
+    
+    return ref.orderByChild('email').equalTo(email).limitToLast(1);
+  }
+
+  public findByPhone(numero: string) {
+    const ref = this.firebase.database.ref(this.collection);
+    
+    return ref.orderByChild(this.subCollectionPhone+'/e164Number').equalTo('+57'+numero).limitToLast(1);
+  }
+
 
   deleteFriends(tagkey: string,$key: string)
   {
     console.log("delete $key");
     console.log(tagkey);
-    this.firebase.database.ref("registers").child($key).child("Amigos").child(tagkey).remove();
+    this.firebase.database.ref(this.collection).child($key).child("friends").child(tagkey).remove();
   }
 
-  updateUsername(register: UserI)
+  updateUsername(user: User)
   {
-    console.log("register.$key");
-    console.log(register.$key);
+    console.log("user.$key");
+    console.log(user.$key);
     // this.registerList.update(register.$key, {
     //   name: register.name,
     // });
   }
 
-  insertRegister(register: UserI){
+  insertRegister(user: User){
 
-    this.registerList.push({
-      email: register.email,
-      telefono: register.telefono,
-      password: register.password,
-      name: register.name,
-      lname: register.lname,
-      // socketID: register.socketID,      
-    });
+    this.firebase.object(this.collection).set({...user});
+
+    // this.firebase.list('register').push({
+    //   email: register.email,
+    //   telefono: register.telefono,
+    //   password: register.password,
+    //   name: register.name,
+    //   lname: register.lname
+    // });
+
   }
+
 }

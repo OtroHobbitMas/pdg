@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { UserI } from 'src/app/shared/interfaces/UserI';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-external-profiles',
@@ -24,7 +24,7 @@ export class ExternalProfilesComponent implements OnInit {
     private toastr: ToastrService,
     private filter: FilterPipe) { }
 
-    registerList: UserI[];
+    registerList: User[];
     imgUser: any[] = [];
     registerListNew: any[] = [];
     arr: any[] = [];
@@ -49,7 +49,7 @@ export class ExternalProfilesComponent implements OnInit {
         item.forEach(element => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.registerList.push(x as UserI);
+          this.registerList.push(x as User);
         });
         console.warn("this.registerList");
         console.log(this.registerList);

@@ -1,10 +1,10 @@
 import { Component, OnInit} from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { UserI } from 'src/app/shared/interfaces/UserI';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as firebase from "firebase";
 import { TagService } from 'src/app/services/tag.service';
+import { User } from 'src/app/models/user';
 
 
 
@@ -46,7 +46,7 @@ export class TagsComponent implements OnInit {
         item.forEach(element => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.tagsList.push(x as UserI);
+          this.tagsList.push(x as User);
         });
         this.tagsList = Object.keys(this.tagsList[0]).map((key) => [this.tagsList[0][key]]);
         for (let i = 0; i < this.tagsList.length; i++) {

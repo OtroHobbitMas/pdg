@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { from } from 'rxjs';
-import { UserI } from '../shared/interfaces/UserI';
-// import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 
@@ -9,8 +6,6 @@ import * as firebase from 'firebase';
   providedIn: 'root'
 })
 export class AuthService {
-
-  // user: UserI | undefined;
 
   constructor(private firebaseAuth: AngularFireAuth) { }
 
