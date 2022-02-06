@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
-import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { User } from '../models/user';
 
 @Injectable({
@@ -9,12 +8,11 @@ import { User } from '../models/user';
 export class UserService {
 
   registerList: AngularFireList<any>;
-  userCollection: AngularFirestoreCollection<User>;
   private collection: string;
   private subCollectionPhone: string;
 
   constructor(private firebase: AngularFireDatabase) { 
-    this.collection= "registers";
+    this.collection= 'register';
     this.subCollectionPhone= "telefono";
   }
 
@@ -25,8 +23,9 @@ export class UserService {
   }
 
   public findById(email: string) {
-    const ref = this.firebase.database.ref(this.collection);
     
+    const ref = this.firebase.database.ref(this.collection);
+  
     return ref.orderByChild('email').equalTo(email).limitToLast(1);
   }
 
@@ -55,15 +54,15 @@ export class UserService {
 
   insertRegister(user: User){
 
-    this.firebase.object(this.collection).set({...user});
+    // this.firebase.object(this.collection).set({...user});
 
-    // this.firebase.list('register').push({
-    //   email: register.email,
-    //   telefono: register.telefono,
-    //   password: register.password,
-    //   name: register.name,
-    //   lname: register.lname
-    // });
+    this.firebase.list('register').push({
+      email: user.email,
+      telefono: user.telefono,
+      password: user.password,
+      name: user.name,
+      lname: user.lname
+    });
 
   }
 

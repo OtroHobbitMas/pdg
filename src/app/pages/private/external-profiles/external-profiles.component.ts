@@ -118,7 +118,7 @@ export class ExternalProfilesComponent implements OnInit {
             if (entries[j].match(filter)) {
             
               email = entries[j];
-               $this.firebase.database.ref("registers").once("value", (users) => {
+               $this.firebase.database.ref("register").once("value", (users) => {
                 users.forEach((user) => {
                   const childKey = user.key;
                   const childData = user.val();     
@@ -191,7 +191,7 @@ export class ExternalProfilesComponent implements OnInit {
     }
 
       // console.log(this.autor);
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;
@@ -215,7 +215,7 @@ export class ExternalProfilesComponent implements OnInit {
       });
       console.log(this.arr);
       if (this.arr==undefined){
-        this.firebase.database.ref("registers").child(Key).child("Amigos").push({
+        this.firebase.database.ref("register").child(Key).child("Amigos").push({
           Contacto: correoAmigoText,
           NombreAmigo: nombreAmigoText,
           ImagenAmigo: imagenAmigoSrc
@@ -233,7 +233,7 @@ export class ExternalProfilesComponent implements OnInit {
           this.toastr.error('Esta persona ya se encuentra en tu lista', 'Fallido');
         }
         if (confirm == true){
-          this.firebase.database.ref("registers").child(Key).child("Amigos").push({
+          this.firebase.database.ref("register").child(Key).child("Amigos").push({
             Contacto: correoAmigoText,
             NombreAmigo: nombreAmigoText,
             ImagenAmigo: imagenAmigoSrc
@@ -251,7 +251,7 @@ export class ExternalProfilesComponent implements OnInit {
     const Email = firebase.auth().currentUser.email;
 
       // Verificar si ya esta agregado
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;
@@ -275,7 +275,7 @@ export class ExternalProfilesComponent implements OnInit {
       });
       
       if (this.arr==undefined){
-        this.firebase.database.ref("registers").child(Key).child("Amigos").push({
+        this.firebase.database.ref("register").child(Key).child("Amigos").push({
           Contacto: this.correoExt,
           NombreAmigo: this.FulName,
           ImagenAmigo: this.Currentimg
@@ -293,7 +293,7 @@ export class ExternalProfilesComponent implements OnInit {
           this.toastr.error('Esta persona ya se encuentra en tu lista', 'Fallido');
         }
         if (confirm == true){
-          this.firebase.database.ref("registers").child(Key).child("Amigos").push({
+          this.firebase.database.ref("register").child(Key).child("Amigos").push({
             Contacto: this.correoExt,
             NombreAmigo: this.FulName,
             ImagenAmigo: this.Currentimg
@@ -322,7 +322,7 @@ export class ExternalProfilesComponent implements OnInit {
     let Tags = {};
 
     let Key;
-    await this.firebase.database.ref("registers").once("value", (users) => {
+    await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     

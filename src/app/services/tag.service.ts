@@ -20,7 +20,7 @@ export class TagService {
   {
     console.log("delete $key");
     console.log(tagkey);
-    this.firebase.database.ref("registers").child($key).child("Tags").child(tagkey).remove();
+    this.firebase.database.ref("register").child($key).child("Tags").child(tagkey).remove();
   }
 
 }

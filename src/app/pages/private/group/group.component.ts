@@ -63,7 +63,7 @@ export class GroupComponent implements OnInit {
       let Key;      
       const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           const childKey = user.key;
           const childData = user.val();
@@ -74,7 +74,7 @@ export class GroupComponent implements OnInit {
         });
       });
 
-      this.firebase.database.ref("registers").child(Key).child("Images").push({
+      this.firebase.database.ref("register").child(Key).child("Images").push({
         ImgUrl: this.ImgUrl
       });
       
@@ -88,7 +88,7 @@ export class GroupComponent implements OnInit {
 
     const Email = Mail;
 
-    await this.firebase.database.ref("registers").once("value", (users) => {
+    await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     

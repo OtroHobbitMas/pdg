@@ -160,7 +160,7 @@ export class ProfileComponent implements OnInit {
       let Key;      
       const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           const childKey = user.key;
           const childData = user.val();
@@ -171,7 +171,7 @@ export class ProfileComponent implements OnInit {
         });
       });
 
-      this.firebase.database.ref("registers").child(Key).child("Images").push({
+      this.firebase.database.ref("register").child(Key).child("Images").push({
         ImgUrl: this.ImgUrl
       });
       
@@ -187,7 +187,7 @@ export class ProfileComponent implements OnInit {
 
     const Email = Mail;
 
-    await this.firebase.database.ref("registers").once("value", (users) => {
+    await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     
@@ -237,7 +237,7 @@ export class ProfileComponent implements OnInit {
 //     let ContactNumber = this.FormAdd.controls.Numbercontact.value;
 
 
-//     await this.firebase.database.ref("registers").once("value", (users) => {
+//     await this.firebase.database.ref("register").once("value", (users) => {
 //       users.forEach((user) => {
 //         const childKey = user.key;
 //         const childData = user.val();
@@ -277,7 +277,7 @@ export class ProfileComponent implements OnInit {
 
     let Key;
     const Email = Mail;
-    await this.firebase.database.ref("registers").once("value", (users) => {
+    await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     
@@ -314,7 +314,7 @@ export class ProfileComponent implements OnInit {
     if(Description != ''){
       let Key;      
       const Email = firebase.auth().currentUser.email;
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           const childKey = user.key;
           const childData = user.val();
@@ -325,7 +325,7 @@ export class ProfileComponent implements OnInit {
         });
       });
   
-      this.firebase.database.ref("registers").child(Key).child("Descripcion").push({
+      this.firebase.database.ref("register").child(Key).child("Descripcion").push({
         Descripcion: Description
       });
       
@@ -339,7 +339,7 @@ export class ProfileComponent implements OnInit {
     let Key;
     // firebase.auth().currentUser.email
     const Email = Mail;
-    await this.firebase.database.ref("registers").once("value", (users) => {
+    await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     
@@ -387,7 +387,7 @@ export class ProfileComponent implements OnInit {
     let keyLibros;
     const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
 
           const childKey = user.key;
@@ -433,7 +433,7 @@ export class ProfileComponent implements OnInit {
     let keyAmigos;
     const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
 
           const childKey = user.key;
@@ -479,7 +479,7 @@ export class ProfileComponent implements OnInit {
 
     const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;

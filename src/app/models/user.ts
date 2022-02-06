@@ -10,8 +10,8 @@ export class User {
     name: string;
     description: string;
     urlImage: string;
-    
-    phone: Phone;
+    password: string;
+    telefono: Phone;
     friends: Array<User>;
     books: Array<Book>;
     tags: Array<Tag>;

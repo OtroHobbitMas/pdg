@@ -179,7 +179,7 @@ export class HomeComponent implements OnInit {
       this.autor = document.querySelector('#'+autorText+index[1]);      
       this.autor = this.autor.textContent;
 
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;
@@ -214,7 +214,7 @@ export class HomeComponent implements OnInit {
         this.toastr.error('El libro ya se encuentra en tu lista', 'Fallido');
       }
       if (this.confirm == true){
-        this.firebase.database.ref("registers").child(Key).child("MisLibros").push({
+        this.firebase.database.ref("register").child(Key).child("MisLibros").push({
           Imagen: this.imagen,
           Titulo: this.titulo,
           Autor: this.autor,
@@ -281,7 +281,7 @@ export class HomeComponent implements OnInit {
     } else {
       // console.log("Es teléfono");
       // Es teléfono
-      userExist = this.registerList.find(user => user.phone.e164Number == ContactNumber && user);
+      userExist = this.registerList.find(user => user.telefono.e164Number == ContactNumber && user);
       if (!userExist) {
         console.log("Este usuario no existe")
       } else {

@@ -132,7 +132,7 @@ export class RegisterComponent implements OnInit {
     const password = this.ngForm.controls.password.value;
     const confirmPassword = this.ngForm.controls.confirmPassword.value;
     let emailExist = this.registerList.find(user => user.email == email);
-    let phoneExist = this.registerList.find(user => user.phone.e164Number == telefono.e164Number);
+    let phoneExist = this.registerList.find(user => user.telefono.e164Number == telefono.e164Number);
 
     if (emailExist) {
       console.log("Ya existe este email");

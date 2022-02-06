@@ -40,7 +40,8 @@ export class TagsComponent implements OnInit {
   ngOnInit(): void {
     let $this = this;
     this.UserAcount();
-    this.tagService.getTags()
+    console.log(this.tagService.getTags());
+    this.tagService.getTags()    
       .snapshotChanges().subscribe(item => {
         this.tagsList = [];
         item.forEach(element => {
@@ -55,7 +56,7 @@ export class TagsComponent implements OnInit {
         for (let i = 0; i < this.tagsList.length; i++) {
           this.validate.push(this.tagsList[i][0]);     
         }        
-        
+        console.log(this.tagsList);
         setTimeout(function(){ $this.validateTags(); }, 500);
       });
       
@@ -100,7 +101,7 @@ export class TagsComponent implements OnInit {
     if(Tags != ''){
             
       const Email = firebase.auth().currentUser.email;
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;
@@ -139,7 +140,7 @@ export class TagsComponent implements OnInit {
 
         if(keytag.value == null || keytag.value == ""){
           
-          this.firebase.database.ref("registers").child(this.Key).child("Tags").push({
+          this.firebase.database.ref("register").child(this.Key).child("Tags").push({
             Tag: Tags
           });
           this.toastr.success('Tag '+Tags+' agregado', 'Exitosamente');
@@ -162,7 +163,7 @@ export class TagsComponent implements OnInit {
 
   async validateTags (){   
       const Email = firebase.auth().currentUser.email;
-      await this.firebase.database.ref("registers").once("value", (users) => {
+      await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
           // console.log("entre nivel1");
           const childKey = user.key;
