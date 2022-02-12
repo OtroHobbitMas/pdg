@@ -11,6 +11,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { BookService } from 'src/app/services/book.service';
+// import { User } from 'src/app/models/user';
 import { User } from 'src/app/models/user';
 
 @Component({ 
@@ -291,8 +292,7 @@ export class HomeComponent implements OnInit {
           Numbercontact: ContactNumber,
         });
       }
-    }
-    console.log("hola, esto es para el commit");   
+    } 
 
     this.FormAdd.reset({
       Namecontact: "",

@@ -9,7 +9,7 @@ export class User {
     lname: string;
     name: string;
     description: string;
-    urlImage: string;
+    urlImage: string; 
     password: string;
     telefono: Phone;
     friends: Array<User>;
