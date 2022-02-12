@@ -252,7 +252,7 @@ export class HomeComponent implements OnInit {
     let emailRegexp = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
     let userExist;
 
-    await this.firebase.database.ref('registers').once('value', users => {
+    await this.firebase.database.ref('register').once('value', users => {
       users.forEach(user => {
         const childKey = user.key;
         const childData = user.val();
@@ -273,7 +273,7 @@ export class HomeComponent implements OnInit {
         console.log("Este usuario no existe")
       } else {
         console.log(ContactName, ContactNumber);
-        this.firebase.database.ref('registers').child(Key).child('contacts').push({
+        this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,
         });
@@ -286,12 +286,13 @@ export class HomeComponent implements OnInit {
         console.log("Este usuario no existe")
       } else {
         console.log(ContactName, ContactNumber);
-        this.firebase.database.ref('registers').child(Key).child('contacts').push({
+        this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,
         });
       }
     }
+    console.log("hola, esto es para el commit");   
 
     this.FormAdd.reset({
       Namecontact: "",
