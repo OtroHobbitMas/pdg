@@ -17,7 +17,7 @@ $text: #212121;
     bottom: 0px;
     background-color: $AzulMedio;
     position: fixed;
-
+ 
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
@@ -27,7 +27,7 @@ $text: #212121;
     // // flex-flow: row nowrap;
     // // flex-wrap: nowrap;
     // flex-flow: row wrap;
-    // justify-content: space-around;
+    justify-content: space-around;
     // align-items: center;
 
 
@@ -38,12 +38,18 @@ $text: #212121;
         height:10%;
         // background-color: green;
         // flex-flow: row wrap;
-        margin: 2%;
+        margin: 4%;
+        margin-top:2%;
+        margin-bottom: 2% ;
+        // margin-left: 15px;
     }
 
     .footer-item{
         // background-color: honeydew;
-        justify-self: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
         
     }
 
