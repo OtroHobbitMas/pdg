@@ -25,7 +25,7 @@
                 <button class="button is-info"  id="{{'button-'+i}}" (click)="addFriend(i)">Agregar amigo</button>
             </div>
 
-   
+    
             
         </div> 
     </div>
@@ -33,45 +33,78 @@
 
 
     <!-- ---------------------------------------------------VIEW PROFILE----------------------------------------------- -->
-<div *ngIf="viewProfile == true" class="containerView" >
-    <button (click)="gotoExternalProfile()">Volver</button>
-    <div class="PerfilPhoto" >
-        <img  class="Photoimg" src="../../../../../../assets/img/NoImage.png" srcset="" alt="" id="img">
-        <button id="boton" (click)="addFriendInsidePerfil()">Agregar amigo</button><br>
-        <div class="ContainerDescription">
-            <div class="textN">Nombre:</div>
-            <h1  class="name"></h1>
-            <label for="descripcion">Descripción
-                <input id="descripcionID" type="text" class="inputDescripcion" >
-            </label> 
-        </div>
-        
-      <div class="ContainerTags" >
-        <h1>Sus tags:</h1>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Tag</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let susTags of susTagsList; let i = index" id="{{'contTag'+i}}">
-                    <th><label id="{{'mitag'+i}}">{{susTags.Tags}}</label></th>            
-                </tr>
-                </tbody>
-            </table>   
-        </div>
-        <label for="">Sus Libros</label>
-        <div class="susLibros" *ngFor="let susLibros of susLibrosList; let i = index" >          
-          <img id="{{'imagen'+i}}"  [src]="susLibros.Imagen" alt="imagenes" class="bookImg">
-          <h1 id="{{'titulo'+i}}"  align="center" >{{susLibros.Titulo}}</h1>
-          <h2 id="{{'autor'+i}}"  align="center" >{{susLibros.Autor}}</h2>
-        </div>  
-        
-    </div>
-</div>
-</div>
+<div class="container">
+    <div *ngIf="viewProfile == true" class="containerView" >
 
+        <button (click)="gotoExternalProfile()" type="submit" class="button is-info"
+        style="padding: 5px;">Volver</button>
+
+
+        <div class="perfilContainer" >
+
+            <div class="photoContainer">                
+                <img  class="Photoimg" src="../../../../../../assets/img/NoImage.png" srcset="" alt="" id="img">
+            </div>
+
+                           
+            <div class="ContainerDescription">
+                <h1  class="name"></h1>
+                <input disabled id="descripcionID" type="text" class="inputDescripcion" >
+            </div>
+
+            <br><button id="boton" (click)="addFriendInsidePerfil()" type="submit" class="button is-info"
+            style="padding: 5px;">Seguir</button><br>
+
+
+          <div class="ContainerTags" >
+
+            <h1 class="name">Sus tags:</h1>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Tag</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let susTags of susTagsList; let i = index" id="{{'contTag'+i}}">
+                        <th><label id="{{'mitag'+i}}">{{susTags.Tags}}</label></th>            
+                    </tr>
+                    </tbody>
+                </table>   
+            </div>
+
+
+            <div class="librosContainer">
+                <h1 class="name" style="margin-top: 40px;">Sus Libros</h1>
+
+
+                <ngb-carousel>
+                    <ng-template *ngFor="let susLibros of susLibrosList; let i = index" id="{{'susLibros'+i}}" ngbSlide>
+                        <div>
+                            <div class="picsum-img-wrapper">
+                                <img class="portadaImg" id="{{'imagen'+i}}" [src]="susLibros.Imagen"
+                                    alt="Random first slide">
+    
+                            </div>
+                            <div class="carousel-caption" style="z-index: 0;">
+                                <h3 id="{{'titulo'+i}}" align="center">{{susLibros.Titulo}}</h3>
+                                <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{susLibros.Autor}}</p>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+
+                
+            </div>
+
+        </div>
+    </div>
+    </div>
+    
+    
+    
+</div>
 
 
 
