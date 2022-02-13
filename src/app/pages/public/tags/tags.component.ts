@@ -6,7 +6,7 @@ import * as firebase from "firebase";
 import { TagService } from 'src/app/services/tag.service';
 import { User } from 'src/app/models/user';
 
-
+ 
 
 @Component({
   selector: 'app-tags',
@@ -20,7 +20,7 @@ export class TagsComponent implements OnInit {
   tagsValidate: any[] = [];
   validate: any[] = [];
   tags: any[] = [];
-  searchBoxTag= '';
+  searchBoxTag= ''; 
   Key = '';
   confirm: any = false;
   contador: number= 0;
@@ -36,6 +36,11 @@ export class TagsComponent implements OnInit {
     goToHome() {
       this.router.navigate(['/home']);
     }
+
+    goToProfile() {
+      this.router.navigate(['/profile']);
+    }
+  
 
   ngOnInit(): void {
     let $this = this;
