@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MessageI } from 'src/app/models/MessageI';
 
 @Component({
   selector: 'app-book-chat',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./book-chat.component.scss']
 })
 export class BookChatComponent implements OnInit {
-
+  @Input() msg: MessageI
   constructor() { }
 
   ngOnInit(): void {
