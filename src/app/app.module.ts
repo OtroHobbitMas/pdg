@@ -39,6 +39,12 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { ExternalProfilesComponent } from './pages/private/external-profiles/external-profiles.component';
 import { GroupComponent } from './pages/private/group/group.component';
 import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pipe';
+import { BookPDFComponent } from './pages/private/book-pdf/book-pdf.component';
+
+
+
+//PDF Viewer
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 @NgModule({
@@ -57,8 +63,10 @@ import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pip
     ExternalProfilesComponent,
     GroupComponent,
     FilterExternalProfilesPipe,
+    BookPDFComponent,
   ],
   imports: [
+    PdfViewerModule,
     BrowserModule,
     CommonModule,
     AppRoutingModule,
