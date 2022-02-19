@@ -1,9 +1,24 @@
-<p>book-pdf works!</p>
+<app-navigation-bar></app-navigation-bar>
 
+<div class="name">{{name}}</div>
 
-<pdf-viewer [src]="pdfSrc"
-[render-text]="true"
-[original-size]="false"
-style="height: 90%"
-[zoom-scale]="'page-width'"
-></pdf-viewer>
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer position="end" #drawer class="chat" mode="side">
+        <button type="button" mat-button (click)="drawer.close()">CLICK</button>
+        <app-book-chat></app-book-chat>
+        <app-book-chat></app-book-chat>
+        <app-book-chat></app-book-chat>
+    </mat-drawer>
+
+    <div class="example-sidenav-content">
+        <button type="button" mat-button (click)="drawer.toggle()">CLICK</button>
+        <div class="page">
+            <pdf-viewer [src]="pdfSrc" [render-text]="true" [original-size]="false" style="height: 90vh; width: 95vw;"
+                (pages-initialized)="pageInitialized($event)" [zoom-scale]="'page-width'" [page]="50"></pdf-viewer>
+        </div>
+
+    </div>
+
+</mat-drawer-container>
+
+<app-footer></app-footer>

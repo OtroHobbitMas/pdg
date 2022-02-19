@@ -1,0 +1,32 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    overflow-y: hidden;
+}
+$azulOscuro: #112e51;
+$AzulMedio: #205493;
+$AzulClaro: #0071bc;
+$text: #212121;
+
+
+
+.name{
+    font-size: larger;
+    text-align: center;
+    color: $AzulMedio;
+    align-self: center;
+    margin-top: 80px;
+    margin-bottom: 10px;
+}
+
+.page{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat{
+    width: 100%;
+}

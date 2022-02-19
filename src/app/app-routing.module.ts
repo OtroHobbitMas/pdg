@@ -25,7 +25,7 @@ const routes: Routes = [
   { path: 'tags', component: TagsComponent },
   { path: 'externalProfiles', component: ExternalProfilesComponent },
   { path: 'groups', component: GroupComponent},
-  { path: 'libro', component: BookPDFComponent},
+  { path: 'book', component: BookPDFComponent},
   { path: '**', redirectTo: '/login' },
 
 ];

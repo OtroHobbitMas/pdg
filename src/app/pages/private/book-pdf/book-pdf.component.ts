@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-
+import { MatSliderModule } from '@angular/material/slider';
 @Component({
   selector: 'app-book-pdf',
   templateUrl: './book-pdf.component.html',
@@ -15,6 +14,23 @@ export class BookPDFComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  pdfSrc = "https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FHarryPotter-PiedraFilosofal.pdf?alt=media&token=fd8c3d54-b931-4bb9-a158-1b6d3496e2d8";
+  showFiller = false;
+  
+  public name: string = "Harry Potter y la Piedra Filosofal"; 
 
+  // pdfSrc = "https://drive.google.com/file/d/1jq3wKpEloUZlT3PjqSn0GGhfuytXJbhD/view?usp=sharing";
+  pdfSrc="../../../../assets/HarryPotter-PiedraFilosofal.pdf";
+
+  pageRendered(e: CustomEvent) {
+    console.log('(page-rendered)', e);
+  }
+
+  pageInitialized(e: CustomEvent) {
+    console.log('(pages-initialized:)', e);
+  }
+
+  onProgress(progressData) {
+    console.log('(progress)', progressData); // do anything with progress data. For example progress indicator
+  }
 }
+
