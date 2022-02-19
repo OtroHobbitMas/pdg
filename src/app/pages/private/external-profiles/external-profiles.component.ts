@@ -38,6 +38,7 @@ export class ExternalProfilesComponent implements OnInit {
     correoExt = '';
     Currentimg = '';
     searchBoxExternal= '';
+    mensajeButton = 'Seguir';
 
 
   ngOnInit(): void {
@@ -69,8 +70,9 @@ export class ExternalProfilesComponent implements OnInit {
         }
         
         $this.getImgUsers(this.registerList);
-        
+        $this.searchFriends(this.registerList);
       });
+      
   }
 
   UserAcount (){    
@@ -92,6 +94,7 @@ export class ExternalProfilesComponent implements OnInit {
       }
     });
   }
+
 
   async  doLogout() {
     await this.authService.logout();
@@ -169,6 +172,52 @@ export class ExternalProfilesComponent implements OnInit {
      }, 500);
     
     this.imgUser = [];
+  }
+
+  async searchFriends(array){
+    let Key;
+    const Email = firebase.auth().currentUser.email;
+    console.warn("array");
+    console.log(array);
+    console.log("LEGNTH = "+array.length);
+    // console.warn("array EMAIL");
+    // console.log(array[0].email);
+        
+
+      // console.log(this.autor);
+      await this.firebase.database.ref("register").once("value", (users) => {
+        users.forEach((user) => {
+          // console.log("entre nivel1");
+          const childKey = user.key;
+          const childData = user.val();
+          if (childData.email == Email) {
+            Key = childKey;
+            user.forEach((info) => {
+              info.forEach((Amigos) => {
+                Amigos.forEach((misAmigos) => {
+                  const misAmigosChildKey = misAmigos.key;
+                  const misAmigosChildData = misAmigos.val();
+                if (misAmigosChildKey == "Contacto"){
+                    this.arr.push(misAmigosChildData);                  
+                }
+                });
+                
+              });
+            });
+          }        
+        });
+      });
+      console.warn("this.arr");
+      console.log(this.arr);
+      for (let i = 0; i < array.length; i++){
+        for (let j = 0; j < this.arr.length; j++){
+          console.log("array.email "+array[i]);
+          console.log("this.array "+this.arr[i]);
+          if (array[i].email==this.arr[j]){
+            this.mensajeButton = "Amigo";
+          }
+        } 
+     }           
   }
 
   async addFriend(index){
