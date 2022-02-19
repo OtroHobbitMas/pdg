@@ -26,13 +26,6 @@ export class HomeComponent implements OnInit {
     Namecontact: new FormControl()
   });
 
-  subscriptionList: {
-    connection: Subscription,
-    msgs: Subscription
-  } = {
-      connection: undefined,
-      msgs: undefined
-  };
   
   searchBoxHome= '';
 
@@ -87,7 +80,6 @@ export class HomeComponent implements OnInit {
       });
       
     }
-
 
    async coments(books){
 
