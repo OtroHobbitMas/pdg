@@ -4,7 +4,7 @@
   [(ngModel)]="searchBoxHome" />
 
 <div class="container">
-  <div *ngFor="let book of bookList | filter: searchBoxHome; let i = index">
+  <div *ngFor="let book of macthRecomended | filter: searchBoxHome; let i = index">
     <img id="{{ 'imagen' + i }}" [src]="book.Portada" alt="imagenes" class="bookImg" />
     
     <div class="cuerpoText">
@@ -14,6 +14,7 @@
       <div class="contenedorStars">
         <img class="stars" style="width: 50%" src="../../../../assets/img/stars.png" alt="" />
       </div>
+      
 
       <div class="descripcion">
         <a href="">{{ book.Descripcion }}</a>

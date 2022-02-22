@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class BookService {
     this.bookList = this.firebase.list('books');
     return this.bookList;
   }
+
+  
 
   deleteBooks(tagkey: string,$key: string)
   {

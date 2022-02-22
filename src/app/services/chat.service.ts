@@ -16,7 +16,7 @@ export class ChatService {
   connect() {
     return new Observable(observer => {
       // this.socket = io('http://192.168.0.23:3000');
-      this.socket = io('http://localhost:3000',{ transports: ['websocket'] });
+      this.socket = io('http://192.168.1.56:3000',{ transports: ['websocket'] });
       this.socket.on('connect', () => {
         this.socket.emit("connected");
         observer.next();
