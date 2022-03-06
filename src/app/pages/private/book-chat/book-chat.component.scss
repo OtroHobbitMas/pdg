@@ -1,0 +1,21 @@
+$azulOscuro: #112e51;
+$AzulMedio: #205493;
+$AzulClaro: #0071bc;
+$text: #212121;
+
+
+
+.img{
+    height: 10%;
+    width: 10%;
+    border-radius: 75px;
+    object-fit: cover;
+    border: 1px solid $azulOscuro;
+    margin: 2%;
+    
+}
+
+.mensaje{
+    display: flex;
+    align-items: center;
+}

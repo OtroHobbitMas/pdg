@@ -39,6 +39,14 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { ExternalProfilesComponent } from './pages/private/external-profiles/external-profiles.component';
 import { GroupComponent } from './pages/private/group/group.component';
 import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pipe';
+import { BookPDFComponent } from './pages/private/book-pdf/book-pdf.component';
+// import { matDrawerAnimations, MatDrawerContainer } from '@angular/material/sidenav';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
+//PDF Viewer
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { BookChatComponent } from './pages/private/book-chat/book-chat.component';
+
 
 
 @NgModule({
@@ -57,8 +65,12 @@ import { FilterExternalProfilesPipe } from './pipes/filter-external-profiles.pip
     ExternalProfilesComponent,
     GroupComponent,
     FilterExternalProfilesPipe,
+    BookPDFComponent,
+    BookChatComponent,
   ],
   imports: [
+    MatSidenavModule,
+    PdfViewerModule,
     BrowserModule,
     CommonModule,
     AppRoutingModule,

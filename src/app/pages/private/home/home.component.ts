@@ -56,9 +56,13 @@ export class HomeComponent implements OnInit {
 
     registerList: User[];
     bookList: User[];
+    // bookList: any[] = [];
     bookComents: any[] = [];
+    bookListRecomended;
+    bookTags: any[] = [];
     register= [];
     itemRef: any;
+    macthRecomended: any[] = [];;
     
 
     ngOnInit(): void {
@@ -83,11 +87,76 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.bookList.push(x as User);
         });
+        $this.getBooksByTag(this.bookList);
         $this.coments(this.bookList);
       });
       
     }
 
+    async getBooksByTag(lista)
+  {
+    let Key;
+    let arr = [];
+    let tagsLibros;
+    console.log("lista");
+    console.log(lista);
+
+    const Email = firebase.auth().currentUser.email;
+
+    await this.firebase.database.ref("register").once("value", (users) => {
+      users.forEach((user) => {
+        // console.log("entre nivel1");
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.email == Email) {
+          Key = childKey;
+          user.forEach((info) => {
+            info.forEach((MisTags) => {
+              MisTags.forEach((Tags) => {
+                const TagsChildKey = Tags.key;
+                const TagsChildData = Tags.val();
+                // console.log("TagsChildKey:" + TagsChildKey);
+                // console.log("TagsChildData:" + TagsChildData);
+              if (TagsChildKey == "Tag"){
+                
+                arr.push(TagsChildData);
+                
+              }
+              });
+              
+            });
+          });
+        }        
+      });
+    });
+    console.log(arr);
+    
+    for (let i = 0; i < lista.length; i++) {
+      tagsLibros = Object.values(lista[i].Tags);
+      // console.log(tagsLibros);
+      for (let j = 0; j < arr.length; j++) {
+        
+        for (let k = 0; k < tagsLibros.length; k++) {
+          // console.log(tagsLibros[k]+ " vs "+arr[j]);
+          if (tagsLibros[k] == arr[j]){
+            this.macthRecomended.push(lista[i]);            
+          }          
+        }
+        
+        
+      }
+      
+    }
+    // for (let i = 0; i < lista.length; i++) {
+    //     tagsLibros = Object.values(lista[i].Tags);
+        
+    //     this.bookTags.push({tag: tagsLibros, code: i});              
+    // }
+    // console.log("this.bookTags");
+    // console.log(this.bookTags);  
+
+
+  }
 
    async coments(books){
 
@@ -117,6 +186,8 @@ export class HomeComponent implements OnInit {
           flag ++;         
         }  
       }
+      console.log("this.bookComents");
+      console.log(this.bookComents);
     }
 
       UserAcount (){

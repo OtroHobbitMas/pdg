@@ -25,6 +25,10 @@ export class FooterComponent implements OnInit {
     this.router.navigate(['/groups']);
   }
 
+  goToBook() {
+    this.router.navigate(['/book']);
+  }
+
   goToExternalProfiles() {
     this.router.navigate(['/externalProfiles']);
   }

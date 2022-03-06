@@ -1,15 +1,21 @@
+<app-navigation-bar></app-navigation-bar>
+
 <input type="text" name="searchBoxTag" placeholder="Buscar ..." [(ngModel)]="searchBoxTag">
 <div class="container" >
-
+    <label style="color: #205493; font-weight: bold; font-size: large; font-family: Helvetica; margin-bottom: 10px;">Agrega Tags de tus Intereses</label>
         <div *ngFor="let tags of tagsListNew | filterTags:searchBoxTag ; let i = index">
 
             <input type="hidden" id="{{'key'+i}}">    
-
+ 
             <div class="tagscont form-row">
                 <img (click)="sendTags('categoria-'+i)" id="{{'tags'+i}}"  src="../../../../assets/img/addImg.svg" alt="tag" class="tagImg">
-                <h1 (click)="sendTags('categoria-'+i)" id="{{'categoria'+i}}" align="center" >{{tags.Categoria}}</h1>
+                <h1 style="font-size: medium; line-height: 42px; margin-left: 10px;" (click)="sendTags('categoria-'+i)" id="{{'categoria'+i}}" align="center" >{{tags.Categoria}}</h1>
             </div>
         </div>
+        <button (click)="goToProfile()" class="button is-info" style="width: 50%;">
+            Continuar
+        </button>
 
-    <button (click)="goToHome()">Continuar</button>
-</div>
+</div> 
+
+<app-footer></app-footer>

@@ -1,5 +1,5 @@
 import { ProfileComponent } from './pages/private/profile/profile.component';
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './pages/private/home/home.component';
@@ -11,6 +11,7 @@ import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from
 import { TagsComponent } from './pages/public/tags/tags.component';
 import { ExternalProfilesComponent } from './pages/private/external-profiles/external-profiles.component';
 import { GroupComponent } from './pages/private/group/group.component';
+import { BookPDFComponent } from './pages/private/book-pdf/book-pdf.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectAuthorizedToHome = () => redirectLoggedInTo(['home']);
@@ -24,7 +25,9 @@ const routes: Routes = [
   { path: 'tags', component: TagsComponent },
   { path: 'externalProfiles', component: ExternalProfilesComponent },
   { path: 'groups', component: GroupComponent},
+  { path: 'book', component: BookPDFComponent},
   { path: '**', redirectTo: '/login' },
+
 ];
 
 @NgModule({
