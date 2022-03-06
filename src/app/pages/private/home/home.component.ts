@@ -14,7 +14,7 @@ import { BookService } from 'src/app/services/book.service';
 // import { User } from 'src/app/models/user';
 import { User } from 'src/app/models/user';
 
-@Component({ 
+@Component({   
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   subscriptionList: {
     connection: Subscription,
-    msgs: Subscription
+    msgs: Subscription   
   } = {
       connection: undefined,
       msgs: undefined
