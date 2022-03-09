@@ -55,7 +55,10 @@ export class HomeComponent implements OnInit {
     bookTags: any[] = [];
     register= [];
     itemRef: any;
-    macthRecomended: any[] = [];;
+    macthRecomended: any[] = [];
+    nameGroup: string;
+    groupList: any[] = [];
+    activate = false;
     
 
     ngOnInit(): void {
@@ -70,6 +73,7 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
+        this.getMyGroups(this.registerList);
       });
       
       this.bookService.getBooks()
@@ -126,11 +130,9 @@ export class HomeComponent implements OnInit {
     
     for (let i = 0; i < lista.length; i++) {
       tagsLibros = Object.values(lista[i].Tags);
-      // console.log(tagsLibros);
       for (let j = 0; j < arr.length; j++) {
         
         for (let k = 0; k < tagsLibros.length; k++) {
-          // console.log(tagsLibros[k]+ " vs "+arr[j]);
           if (tagsLibros[k] == arr[j]){
             this.macthRecomended.push(lista[i]);            
           }          
@@ -140,15 +142,34 @@ export class HomeComponent implements OnInit {
       }
       
     }
-    // for (let i = 0; i < lista.length; i++) {
-    //     tagsLibros = Object.values(lista[i].Tags);
-        
-    //     this.bookTags.push({tag: tagsLibros, code: i});              
-    // }
-    // console.log("this.bookTags");
-    // console.log(this.bookTags);  
+
+    if (this.macthRecomended.length == 0){
+      this.macthRecomended = lista;
+    }
 
 
+  }
+
+  activateSelect(){
+    this.activate = true;
+  }
+
+
+  getMyGroups(list){
+    let entries;
+
+    list.forEach((element,index) => {
+      if ("Groups" in element){
+        entries = Object.keys(element.Groups);
+        for (let i = 0; i < entries.length; i++) {
+          if (element.Groups[entries[i]].category == "owner") {
+            this.groupList.push(element.Groups[entries[i]].groupName);
+          }
+        }        
+      }
+    });
+    console.log("this.groupList");
+    console.log(this.groupList);
   }
 
    async coments(books){
@@ -233,7 +254,7 @@ export class HomeComponent implements OnInit {
 
     const Email = firebase.auth().currentUser.email;
       let imgText = "imagen";
-    this.imagen = document.querySelector('#'+imgText+index[1]);         
+      this.imagen = document.querySelector('#'+imgText+index[1]);         
       this.imagen = this.imagen.src;  
 
       let titText = "titulo";
@@ -292,21 +313,40 @@ export class HomeComponent implements OnInit {
     this.arr = [];  
   }
   
+  async addBookToGroup(i){
+    let keygroup;
+    let index = i.split("-");
+    let imgText = "imagen";
+    this.imagen = document.querySelector('#'+imgText+index[1]);         
+    this.imagen = this.imagen.src;  
 
-  // PerfilPhoto(){
-  //   const query: string = '#app .PerfilPhoto';
-  //   const PerfilPhoto: any = document.querySelector(query);
-    
-  //   if (this.countPhoto == 0) {
-  //     this.countPhoto = 1;
-  //     PerfilPhoto.style.left = 0;
-  //   } else {
-  //     this.countPhoto = 0;
-  //     PerfilPhoto.style.left = "-100vh";
-  //   }
-  // }
+    let titText = "titulo";
+    this.titulo = document.querySelector('#'+titText+index[1]);      
+    this.titulo = this.titulo.textContent;
 
-  // countPhoto : number = 0;
+    let autorText = "autor";
+    this.autor = document.querySelector('#'+autorText+index[1]);      
+    this.autor = this.autor.textContent;
+
+    await this.firebase.database.ref("groups").once("value", (users) => {
+      users.forEach((user) => {
+        // console.log("entre nivel1");
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.name == this.groupList[index[1]]) {
+          keygroup = childKey;
+        }        
+      });
+    });
+    if (keygroup) {
+      this.firebase.database.ref("groups").child(keygroup).child("books").push({
+        Autor: this.autor,
+        Imagen: this.imagen,
+        Titulo: this.titulo
+      });
+      this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
+    }   
+  }
   
   async SendContact() {
     

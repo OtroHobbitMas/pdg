@@ -28,6 +28,15 @@
           style="width: 50%">
           Agregar a mi lista
         </button>
+        <button *ngIf="groupList.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%">
+          Agregar a mi grupo
+        </button>
+        <div *ngIf="activate == true">
+          <select (change)="addBookToGroup('buttonGroup-' + i)" id="">
+            <option value="" disabled selected>Seleccione su grupo</option>
+            <option *ngFor="let groups of groupList"  value="groups">{{groups}}</option>
+          </select>
+        </div>        
       </div>
 
       <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>

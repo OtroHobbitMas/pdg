@@ -15,6 +15,6 @@ export class User {
     friends: Array<User>;
     books: Array<Book>;
     tags: Array<Tag>;
-
+    Groups: Object;
 }
 

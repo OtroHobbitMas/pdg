@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit {
   KeyUSER: string = "";
   keyOrdenAmigosList: any[] = [];
   keyOrdenBooksList: any[] = [];
+  amigoEmail: any; 
   
 
   ngFormProfile = new FormGroup({
@@ -425,7 +426,8 @@ export class ProfileComponent implements OnInit {
       });
       
   }
-  //-----------------------------------------------------END get Mislibros------------------------------------------
+  //-----------------------------------------------------END get Mislibros------------------------------------------  
+
   async getMisAmigos(){
     let Key;
     let NombreAmigo = {};
@@ -446,6 +448,7 @@ export class ProfileComponent implements OnInit {
                 misAmigos.forEach((Amigos) => {
                   const AmigosChildKey = Amigos.key;
                   const AmigosChildData = Amigos.val();
+                  
                 if (AmigosChildKey == "ImagenAmigo"){
                   this.keyOrdenAmigosList.push(keyAmigos);
                   ImagenAmigo = AmigosChildData;                    
