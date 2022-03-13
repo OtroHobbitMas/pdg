@@ -12,6 +12,7 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TagService } from 'src/app/services/tag.service';
 import { BookService } from 'src/app/services/book.service';
 import { User } from 'src/app/models/user';
+import { Group } from 'src/app/models/group';
 
 
 
@@ -37,7 +38,9 @@ export class ProfileComponent implements OnInit {
   KeyUSER: string = "";
   keyOrdenAmigosList: any[] = [];
   keyOrdenBooksList: any[] = [];
-  amigoEmail: any; 
+  amigoEmail: any;
+  misGroupsList: any[] = [];
+  groupList: Group[];
   
 
   ngFormProfile = new FormGroup({
@@ -70,8 +73,22 @@ export class ProfileComponent implements OnInit {
             x["$key"] = element.key;
             this.registerList.push(x as User);
 
-          });        
+          });
+          this.archieveGroups(this.groupList,this.registerList);          
+          this.getMisAmigos();        
         });
+
+        this.userService.getGroups()
+        .snapshotChanges().subscribe(item => {
+          this.groupList = [];
+          item.forEach(element => {
+            let x = element.payload.toJSON();
+            x["$key"] = element.key;
+            this.groupList.push(x as Group);
+          });
+          this.archieveGroups(this.groupList,this.registerList);
+          this.getMisGrupos();
+        });  
       
       //  await this.PrintConsistance();
       //  await this.UpdatePerfilPhoto();
@@ -80,23 +97,21 @@ export class ProfileComponent implements OnInit {
     }
 
 
+    archieveGroups(list,list2){
+      this.groupList = list;
+      this.registerList = list2;
+    }
 
 
-
-
-
-
-
-
-  goToHome() {
-    this.router.navigate(['/home']);
-  }
-  goToProfile() {
-    this.router.navigate(['/profile']);
-  }
-  goToTags(){
-    this.router.navigate(['/tags']);
-  }
+    goToHome() {
+      this.router.navigate(['/home']);
+    }
+    goToProfile() {
+      this.router.navigate(['/profile']);
+    }
+    goToTags(){
+      this.router.navigate(['/tags']);
+    }
 
   async  doLogout() {
     await this.authService.logout();
@@ -122,7 +137,6 @@ export class ProfileComponent implements OnInit {
             $this.getDescriptionUser(profile.email);
             $this.getMisLibros();
             $this.getMisTags();
-            $this.getMisAmigos();
           });
         }
       } else {
@@ -178,6 +192,38 @@ export class ProfileComponent implements OnInit {
       
       this.toastr.success('Photo subida', 'Exitosamente');
     }
+  }
+
+  getMisGrupos(){
+    const Email = firebase.auth().currentUser.email;
+    let entries;
+    let contador = 0;
+
+    this.registerList.forEach((element,index) => {
+      if (Email==element.email){
+        if ("Groups" in element){
+          entries = Object.keys(element.Groups);
+          for (let i = 0; i < entries.length; i++) {
+            this.misGroupsList.push({name: element.Groups[entries[i]].groupName});
+          }
+        }
+      }      
+    });
+
+    this.groupList.forEach((element,index) => {
+      if (this.misGroupsList[contador].name==element.name){
+        if ("Images" in element){
+          entries = Object.keys(element.Images);
+          this.misGroupsList[contador].Images = element.Images[entries[0]].ImgUrl;
+          contador ++;
+        } else {
+          this.misGroupsList[contador].Images = "../../../../../../assets/img/NoImage.png";
+          contador ++;
+        }
+      }      
+    });
+
+    contador = 0;
   }
 
   //-----------------------------------------------------Update perfil photo----------------------------------------------
@@ -428,50 +474,41 @@ export class ProfileComponent implements OnInit {
   }
   //-----------------------------------------------------END get Mislibros------------------------------------------  
 
-  async getMisAmigos(){
-    let Key;
-    let NombreAmigo = {};
-    let ImagenAmigo = {};
-    let keyAmigos;
+  getMisAmigos(){
+    let entries;
+    let contador = 0;
+    console.log("this.registerList");
+    console.log(this.registerList);
+
     const Email = firebase.auth().currentUser.email;
+    this.registerList.forEach((element,index) => {
+      if (Email==element.email){
+        if ("Amigos" in element){
+          entries = Object.keys(element.Amigos);
+          for (let i = 0; i < entries.length; i++) {
+            this.misAmigosList.push({name: element.Amigos[entries[i]].NombreAmigo});      
+          }
+          
+        }
+      }      
+    });
 
-      await this.firebase.database.ref("register").once("value", (users) => {
-        users.forEach((user) => {
-
-          const childKey = user.key;
-          const childData = user.val();
-          if (childData.email == Email) {
-            Key = childKey;
-            user.forEach((info) => {
-              info.forEach((misAmigos) => {
-                keyAmigos = misAmigos.key;
-                misAmigos.forEach((Amigos) => {
-                  const AmigosChildKey = Amigos.key;
-                  const AmigosChildData = Amigos.val();
-                  
-                if (AmigosChildKey == "ImagenAmigo"){
-                  this.keyOrdenAmigosList.push(keyAmigos);
-                  ImagenAmigo = AmigosChildData;                    
-                } 
-                if (AmigosChildKey == "NombreAmigo"){
-
-                  NombreAmigo = AmigosChildData;
-
-                  if (Object.entries(NombreAmigo).length != 0 && Object.entries(ImagenAmigo).length != 0){
-                    
-                    
-                    this.misAmigosList.push({ImagenAmigo,NombreAmigo});
-                     
-                  }
-                }  
-
-                });
-                
-              });
-            });
-          }        
-        });
-      });
+    this.registerList.forEach((element,index) => {
+      if (this.misAmigosList[contador]) {
+        if (this.misAmigosList[contador].name==element.name + " " + element.lname){
+          if ("Images" in element){
+            entries = Object.keys(element.Images);
+            let index = entries.length-1;
+            this.misAmigosList[contador].Images = element.Images[entries[index]].ImgUrl;
+            contador ++;
+          } else {
+            this.misAmigosList[contador].Images = "../../../../../../assets/img/NoImage.png";
+            contador ++;
+          }
+        } 
+      }       
+    });
+    contador = 0;
   }
   //-----------------------------------------------------Start get MisTags------------------------------------------
    

@@ -99,10 +99,20 @@
 
         <h1 class="name" style="margin-top: 20px;">Mis Amigos</h1>
         <div *ngFor="let misAmigos of misAmigosList; let i = index" class="{{'containerAmigos'+i}}" id="friendsContainer">
-            <img id="{{'foto'+i}}" [src]="misAmigos.ImagenAmigo" alt="foto" class="friendImg">
-            <p class="friendsName">{{misAmigos.NombreAmigo}}</p>
+            <img id="{{'foto'+i}}" [src]="misAmigos.Images" alt="foto" class="friendImg">
+            <p class="friendsName">{{misAmigos.name}}</p>
             <img (click)="deleteFriend('eliminate-'+i)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg2">
         </div>
+
+        <div >
+            <h1 class="name" style="margin-top: 20px;">Mis grupos</h1>
+            <div *ngFor="let misgrupos of misGroupsList; let i = index" class="{{'containerAmigos'+i}}" id="friendsContainer">
+                <img id="{{'foto'+i}}" [src]="misgrupos.Images" alt="foto" class="friendImg">
+                <p class="friendsName">{{misgrupos.name}}</p>
+                <img (click)="deleteFriend('eliminate-'+i)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg2">
+            </div>
+        </div>
+        
 
 
     </div>

@@ -13,6 +13,7 @@ import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { BookService } from 'src/app/services/book.service';
 // import { User } from 'src/app/models/user';
 import { User } from 'src/app/models/user';
+import { Book } from 'src/app/models/book';
 
 @Component({ 
   selector: 'app-home',
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
     private filter: FilterPipe) {}
 
     registerList: User[];
-    bookList: User[];
+    bookList: Book[];
     // bookList: any[] = [];
     bookComents: any[] = [];
     bookListRecomended;
@@ -58,8 +59,10 @@ export class HomeComponent implements OnInit {
     macthRecomended: any[] = [];
     nameGroup: string;
     groupList: any[] = [];
+    booksList: any[] = [];
     activate = false;
-    
+    activateComentD = false;
+    comentario: string;
 
     ngOnInit(): void {
       // this.initChat();
@@ -73,7 +76,7 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
-        this.getMyGroups(this.registerList);
+        this.getMyGroupsAndBooks(this.registerList);
       });
       
       this.bookService.getBooks()
@@ -82,10 +85,10 @@ export class HomeComponent implements OnInit {
         item.forEach((element) => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.bookList.push(x as User);
+          this.bookList.push(x as Book);
         });
         $this.getBooksByTag(this.bookList);
-        $this.coments(this.bookList);
+        $this.coments(this.bookList,this.registerList);
       });
       
     }
@@ -95,8 +98,8 @@ export class HomeComponent implements OnInit {
     let Key;
     let arr = [];
     let tagsLibros;
-    console.log("lista");
-    console.log(lista);
+    // console.log("lista");
+    // console.log(lista);
 
     const Email = firebase.auth().currentUser.email;
 
@@ -154,9 +157,37 @@ export class HomeComponent implements OnInit {
     this.activate = true;
   }
 
+  async sendComentario(nombreLibro){
 
-  getMyGroups(list){
+    const Email = firebase.auth().currentUser.email;
+
+    if(this.comentario != ''){
+      let Key;
+
+     await this.bookList.forEach((element,index) => {
+        if ("Title" in element){
+          if (element.Title == nombreLibro) {
+            Key = element.$key;
+          }      
+        }
+      });
+
+      console.log("Key");
+      console.log(Key);
+
+      this.firebase.database.ref("books").child(Key).child("Comentarios").push({
+        Comment: this.comentario,
+        User: Email
+      });
+      
+      this.toastr.success('Comentario enviado', 'Exitosamente');
+    }
+  }
+
+
+  getMyGroupsAndBooks(list){
     let entries;
+    let entriesBooks;
 
     list.forEach((element,index) => {
       if ("Groups" in element){
@@ -167,41 +198,60 @@ export class HomeComponent implements OnInit {
           }
         }        
       }
+      if ("MisLibros" in element){
+        entriesBooks = Object.keys(element.MisLibros);
+        for (let i = 0; i < entriesBooks.length; i++) {
+          this.booksList.push(element.MisLibros[entriesBooks[i]].Titulo);
+        }        
+      }
     });
-    console.log("this.groupList");
-    console.log(this.groupList);
   }
 
-   async coments(books){
+  activateComent(){
+    this.activateComentD = true;
+  }
 
-    let arr = [];
-    let flag = 0;
-    let flag2 = 0;
-    let $this = this;
+   async coments(books,register){
 
-    var rango = Object.keys(books[0]).map((key) => [(key), books[0][key]]);
-      for (let i = 0; i < books.length; i++) {                          
-        for (let j = 0; j < rango.length; j++) {
-          if (flag == 0){
-            var result = Object.keys(books[i]).map((key) => [(key), books[i][key]]);
-          } else if (j == result[i].length){
-            var result = Object.keys(books[i]).map((key) => [(key), books[i][key]]);
+    let contador = 0;
+    let entries;
+
+    await books.forEach((element) => {
+        if ("Comentarios" in element){
+          entries = Object.keys(element.Comentarios);
+          for (let i = 0; i < entries.length; i++) {
+            this.bookComents.push({Comment: element.Comentarios[entries[i]].Comment, User: element.Comentarios[entries[i]].User, Title: element.Title}); 
           }
+          
+        }      
+    });
+    
 
-          if (result[i][0]=="Comentarios"){
-            var result2 = Object.keys(result[i][1]).map((key) => [(key), result[i][1][key]]);
-            for (let k = 0; k < result2.length; k++) {
-              let temp = result2[k][1];
-              temp.img="../../../../../../assets/img/NoImage.png";
-              $this.bookComents.push(temp);
-            }
-            break
+    await register.forEach((element) => {
+      if (this.bookComents[contador]) {
+        if (this.bookComents[contador].User== element.email){
+          if ("Images" in element){            
+            entries = Object.keys(element.Images);
+            let index = entries.length-1;
+            console.log("element.name");
+            console.log(element.name);
+            this.bookComents[contador].Images = element.Images[entries[index]].ImgUrl;
+            this.bookComents[contador].name = element.name + " " + element.lname;
+            contador ++;
+          } else {
+            console.log("element.name");
+            console.log(element.name);
+            this.bookComents[contador].Images = "../../../../../../assets/img/NoImage.png";
+            this.bookComents[contador].name = element.name + " " + element.lname;
+            contador ++;
           }
-          flag ++;         
-        }  
-      }
-      console.log("this.bookComents");
-      console.log(this.bookComents);
+        } 
+      }       
+    });
+    contador = 0;
+    console.log("this.bookComents");
+    console.log(this.bookComents);
+      
     }
 
       UserAcount (){
@@ -363,9 +413,9 @@ export class HomeComponent implements OnInit {
         const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
-          console.log("entramos", childKey);
+          // console.log("entramos", childKey);
         }
-        console.log("recorrido", childKey);
+        // console.log("recorrido", childKey);
       });
     });
 
@@ -375,9 +425,9 @@ export class HomeComponent implements OnInit {
       userExist = this.registerList.find(user => user.email == ContactNumber);
       ContactNumber = userExist && userExist.email || undefined;
       if (!userExist) {
-        console.log("Este usuario no existe")
+        // console.log("Este usuario no existe")
       } else {
-        console.log(ContactName, ContactNumber);
+        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,
@@ -388,9 +438,9 @@ export class HomeComponent implements OnInit {
       // Es teléfono
       userExist = this.registerList.find(user => user.telefono.e164Number == ContactNumber && user);
       if (!userExist) {
-        console.log("Este usuario no existe")
+        // console.log("Este usuario no existe")
       } else {
-        console.log(ContactName, ContactNumber);
+        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,

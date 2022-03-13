@@ -16,5 +16,7 @@ export class User {
     books: Array<Book>;
     tags: Array<Tag>;
     Groups: Object;
+    Amigos: Object;
+    Images: Object;
 }
 

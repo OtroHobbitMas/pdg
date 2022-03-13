@@ -17,7 +17,7 @@
       
 
       <div class="descripcion">
-        <a href="">{{ book.Descripcion }}</a>
+        <p>{{ book.Descripcion }}</p>
       </div>
 
       <div class="btnContainer">
@@ -39,16 +39,25 @@
         </div>        
       </div>
 
-      <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>
-      <div *ngFor="let bookComent of bookComents | filter: searchBoxHome" class="comentarios">
-        <div class="comentario" *ngIf="bookComent.code == i">
-          <img class="commentPhoto" [src]="bookComent.img" alt="">
-          <label class="user">{{ bookComent.User }}</label><br />
-          <label class="commentText">{{ bookComent.Comment }}</label>
+      <div *ngFor="let bookComent of bookComents">
+        <div *ngIf="bookComent.Title == book.Title">
+          <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>
+          <div class="comentarios">
+            <div class="comentario">
+              <img class="commentPhoto" [src]="bookComent.Images" alt="">
+              <label class="user">{{ bookComent.name }}</label><br />
+              <label class="commentText">{{ bookComent.Comment }}</label>
+            </div>
+          </div>
         </div>
       </div>
-
-
+      
+      <button (click)="activateComent()">Agregar comentario</button>
+      <div *ngIf="activateComentD == true">
+        <input type="text" placeholder="Escriba su comentario" [(ngModel)]="comentario">
+        <button (click)="sendComentario(book.Title)">Enviar</button>
+      </div>
+      
     </div>
 
   </div>
