@@ -1,3 +1,4 @@
+import { TagService } from './../../../services/tag.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -40,6 +41,7 @@ export class HomeComponent implements OnInit {
 
 
   constructor(public authService: AuthService,
+    private tagService: TagService,
     private firebaseAuth:AngularFireAuth, 
     private userService: UserService,
     private bookService: BookService,
@@ -60,9 +62,13 @@ export class HomeComponent implements OnInit {
     nameGroup: string;
     groupList: any[] = [];
     booksList: any[] = [];
+    booksListGroup: any[] = [];
+    tagsList: any[] = [];
     activate = false;
     activateComentD = false;
     comentario: string;
+    arrTagsBooks: any[] = [];
+    tag: string;
 
     ngOnInit(): void {
       // this.initChat();
@@ -78,6 +84,17 @@ export class HomeComponent implements OnInit {
         });
         this.getMyGroupsAndBooks(this.registerList);
       });
+
+      this.tagService.getTags()    
+      .snapshotChanges().subscribe(item => {
+        this.tagsList = [];
+        item.forEach(element => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.tagsList.push(x as User);
+        });
+        console.log(this.tagsList);
+      });
       
       this.bookService.getBooks()
       .snapshotChanges().subscribe(item => {
@@ -87,70 +104,57 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.bookList.push(x as Book);
         });
-        $this.getBooksByTag(this.bookList);
+        this.macthRecomended = this.bookList;
+        $this.callTags(this.bookList,this.tagsList);
         $this.coments(this.bookList,this.registerList);
-      });
-      
+      });  
     }
 
-    async getBooksByTag(lista)
-  {
+    async callTags(lista,tags){
     let Key;
-    let arr = [];
-    let tagsLibros;
-    // console.log("lista");
-    // console.log(lista);
+    let entries;
 
     const Email = firebase.auth().currentUser.email;
-
-    await this.firebase.database.ref("register").once("value", (users) => {
-      users.forEach((user) => {
-        // console.log("entre nivel1");
-        const childKey = user.key;
-        const childData = user.val();
-        if (childData.email == Email) {
-          Key = childKey;
-          user.forEach((info) => {
-            info.forEach((MisTags) => {
-              MisTags.forEach((Tags) => {
-                const TagsChildKey = Tags.key;
-                const TagsChildData = Tags.val();
-                // console.log("TagsChildKey:" + TagsChildKey);
-                // console.log("TagsChildData:" + TagsChildData);
-              if (TagsChildKey == "Tag"){
-                
-                arr.push(TagsChildData);
-                
-              }
-              });
-              
-            });
-          });
-        }        
-      });
-    });
-    console.log(arr);
-    
-    for (let i = 0; i < lista.length; i++) {
-      tagsLibros = Object.values(lista[i].Tags);
-      for (let j = 0; j < arr.length; j++) {
-        
-        for (let k = 0; k < tagsLibros.length; k++) {
-          if (tagsLibros[k] == arr[j]){
-            this.macthRecomended.push(lista[i]);            
-          }          
-        }
-        
-        
+    lista.forEach((element) => {
+      if ("Tags" in element){
+        entries = Object.values(element.Tags);
+        this.arrTagsBooks.push({tags: entries, name: element.Title});
       }
-      
+    });
+    // console.log(this.arrTagsBooks);
+    this.tagsList = Object.values(tags[0]);   
+  }
+
+  getBooksByTag(){
+    let entries;
+    console.log("this.tag");
+    console.log(this.tag);
+
+    if (this.tag == "All") {
+      this.macthRecomended = this.booksList;
+    } else {
+      this.macthRecomended = [];
+      this.bookList.forEach((element,index) => {
+        if ("Tags" in element){
+          entries = Object.values(element.Tags);
+          console.log(entries);
+          for (let i = 0; i < entries.length; i++) {
+            if (this.tag == entries[i]) {
+              this.macthRecomended.push(element);
+            }
+          }
+          
+        }
+      });      
     }
+    console.log("this.macthRecomended");
+    console.log(this.macthRecomended);
 
     if (this.macthRecomended.length == 0){
-      this.macthRecomended = lista;
+      this.macthRecomended = this.bookList;
     }
 
-
+    
   }
 
   activateSelect(){
@@ -194,14 +198,14 @@ export class HomeComponent implements OnInit {
         entries = Object.keys(element.Groups);
         for (let i = 0; i < entries.length; i++) {
           if (element.Groups[entries[i]].category == "owner") {
-            this.groupList.push(element.Groups[entries[i]].groupName);
+            this.booksListGroup.push(element.Groups[entries[i]].groupName);
           }
         }        
       }
       if ("MisLibros" in element){
         entriesBooks = Object.keys(element.MisLibros);
         for (let i = 0; i < entriesBooks.length; i++) {
-          this.booksList.push(element.MisLibros[entriesBooks[i]].Titulo);
+          this.booksListGroup.push(element.MisLibros[entriesBooks[i]].Titulo);
         }        
       }
     });

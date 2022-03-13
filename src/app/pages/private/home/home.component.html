@@ -4,6 +4,13 @@
   [(ngModel)]="searchBoxHome" />
 
 <div class="container">
+  <div style="margin-top: 20%;">
+    <select (change)="getBooksByTag()" [(ngModel)]="tag">
+      <option value="All" selected>Todos</option>
+      <option *ngFor="let tag of tagsList" [value]="tag">{{tag}}</option>
+    </select>
+  </div>
+  
   <div *ngFor="let book of macthRecomended | filter: searchBoxHome; let i = index">
     <img id="{{ 'imagen' + i }}" [src]="book.Portada" alt="imagenes" class="bookImg" />
     
@@ -28,13 +35,13 @@
           style="width: 50%">
           Agregar a mi lista
         </button>
-        <button *ngIf="groupList.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%">
+        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%">
           Agregar a mi grupo
         </button>
         <div *ngIf="activate == true">
           <select (change)="addBookToGroup('buttonGroup-' + i)" id="">
             <option value="" disabled selected>Seleccione su grupo</option>
-            <option *ngFor="let groups of groupList"  value="groups">{{groups}}</option>
+            <option *ngFor="let groups of booksListGroup"  value="groups">{{groups}}</option>
           </select>
         </div>        
       </div>
