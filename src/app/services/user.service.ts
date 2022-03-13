@@ -82,7 +82,6 @@ export class UserService {
       integrants: group.integrants, 
       privacity: group.privacity,
       tags: group.tags,
-      id: group.id,
     });
   }
 

@@ -21,7 +21,7 @@ export class GroupComponent implements OnInit {
   fileUrl: string;
   ImgUrl:  string;
   ImgGUrl:  string;
-  Currentimg: string;
+  Currentimg = "../../../../../../assets/img/NoImage.png";
   registerList: User[];
   groupList: Group[];
   amigosList: any[] = [];
@@ -31,8 +31,7 @@ export class GroupComponent implements OnInit {
   searchBoxExternal= '';
   selectedGroup: any[] = [];
   selectedIntegrants: any[] = []; 
-  selectedTags: any[] = []; 
-  id: number;
+  selectedTags: any[] = [];
   permiso = true;
   permisoPublico = false;
   nameOwner: string;
@@ -72,8 +71,8 @@ export class GroupComponent implements OnInit {
           x["$key"] = element.key;
           this.groupList.push(x as Group);
         });
-        this.id = this.groupList.length;
-        this.archieveGroups(this.groupList,this.id);
+        this.archieveGroups(this.groupList);
+        this.getImgGroups();
       });
 
       this.userService.getRegister()
@@ -97,8 +96,7 @@ export class GroupComponent implements OnInit {
     description: new FormControl(),
     integrants: new FormControl(),    
     privacity: new FormControl(),
-    tags: new FormControl(),      
-    id: new FormControl(),
+    tags: new FormControl(),
   });
 
   getUrl(event){
@@ -108,6 +106,7 @@ export class GroupComponent implements OnInit {
   async getImg(event){
     this.ImgUrl = event;
    await this.SendImage();
+   await this.UpdatePerfilPhoto();
   //  await this.UpdatePerfilPhoto(Email);
   }
   
@@ -120,10 +119,6 @@ export class GroupComponent implements OnInit {
     this.viewsearchGroup = true;
     this.firstPage = false;
     this.nextImage = false;
-    this.getImgGroups();
-    this.selectedTags = [];
-    this.selectedGroup = [];
-    this.selectedIntegrants = [];
   }
 
   goBack(){
@@ -162,9 +157,8 @@ export class GroupComponent implements OnInit {
     
   }
 
-  archieveGroups(arr,arr2){
+  archieveGroups(arr){
     this.groupList = arr;
-    this.id = arr2;
   }
 
   getImgGroups(){
@@ -208,6 +202,9 @@ export class GroupComponent implements OnInit {
     this.firstPage = false;
     this.viewCreateGroup = false;
     this.nextImage = false;
+    this.selectedGroup = [];
+    this.selectedIntegrants = [];
+    this.selectedTags = [];
     this.selectedGroup.push(this.groupList[id]);
     this.selectedIntegrants.push(Object.values(this.selectedGroup[0].integrants));    
     this.selectedTags.push(Object.values(this.selectedGroup[0].tags));
@@ -306,7 +303,6 @@ export class GroupComponent implements OnInit {
 
   async onSubmit(){
     this.owner = firebase.auth().currentUser.email;
-    console.log(this.id);
     const nombreGrupo = this.ngForm.controls.name.value;
     let nameExist = this.groupList.find(group => group.name == nombreGrupo);
     let keyOwner;
@@ -381,24 +377,21 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  async UpdatePerfilPhoto(Mail){
-
+  async UpdatePerfilPhoto(){
+    const nombreGrupo = this.ngForm.controls.name.value;
     let Key;
 
-    const Email = Mail;
-
-    await this.firebase.database.ref("register").once("value", (users) => {
+    await this.firebase.database.ref("groups").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
         const childData = user.val();     
-        if (childData.email == Email) {
+        if (childData.name == nombreGrupo) {
           Key = childKey;
           user.forEach((info) => {
             info.forEach((Images) => {
               Images.forEach((ImgUrl) => {
                 const ImagesChildKey = ImgUrl.key;
                 const ImagesChildData = ImgUrl.val();
-                const filter = /https:/gm;
 
                 if (ImagesChildKey == "ImgUrl"){
                   this.Currentimg = ImagesChildData;
@@ -412,21 +405,7 @@ export class GroupComponent implements OnInit {
 
     if(!this.Currentimg) {
       this.Currentimg = "../../../../../../assets/img/NoImage.png";
-      const query: string = ".container .Photoimg";
-      const Photoimg: any = document.querySelector(query);
-      // const query2: string = "#app .profile";
-      // const profile: any = document.querySelector(query2);
-      Photoimg.src = this.Currentimg;
-      // profile.src = this.Currentimg;
-    } else {
-      const query: string = ".container .Photoimg";
-      const Photoimg: any = document.querySelector(query);
-      // const query2: string = "#app .profile";
-      // const profile: any = document.querySelector(query2);
-      Photoimg.src = this.Currentimg;
-      // profile.src = this.Currentimg;     
     }
-    
   }
 
 }

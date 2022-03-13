@@ -14,8 +14,6 @@
         
         <input style="display: none;" [(ngModel)]="owner" class="input" formControlName="owner" type="text">
 
-        <input  [(ngModel)]="id" formControlName="id" type="number">
-
         <label for="name">Nombre del Grupo</label>
         <div class="field">
             <input class="input" formControlName="name" type="text" placeholder="Nombre del Grupo" required>
@@ -61,7 +59,7 @@
       </form>
       <div *ngIf="nextImage == true" >
         <app-file-upload  (imgUrlEmitter)="getImg($event)"></app-file-upload> 
-        <img class="createGroupPhotoimg"  src="../../../../../../assets/img/NoImage.png" srcset="" alt="" id="img">
+        <img class="createGroupPhotoimg"  [src]="Currentimg" srcset="" alt="" id="img">
       </div>
 <!-- ---------------------------------------------Search Groups view--------------------------------------------- -->      
 
