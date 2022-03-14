@@ -113,6 +113,7 @@ export class GroupComponent implements OnInit {
   createGroup(){
     this.firstPage = false;
     this.viewCreateGroup = true;
+    this.ngForm.reset();
   }
 
   searchGroupF(){
