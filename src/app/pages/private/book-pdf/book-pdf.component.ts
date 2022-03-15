@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MessageI } from 'src/app/models/MessageI';
 import { ChatService } from 'src/app/services/chat.service';
 import { FormControl } from "@angular/forms";
 import { Subscription } from 'rxjs';
+import { AngularEpubViewerComponent } from 'angular-epub-viewer';
+
 
 @Component({
   selector: 'app-book-pdf',
@@ -12,6 +14,32 @@ import { Subscription } from 'rxjs';
 })
 
 export class BookPDFComponent implements OnInit {
+
+
+  //AQUI EMPIEZA EPUB
+  @ViewChild('epubViewer')
+  epubViewer: AngularEpubViewerComponent;
+
+  
+
+ 
+  openFile() {
+    // let book = this.epubViewer.epub("https://s3.amazonaws.com/moby-dick/moby-dick.epub");
+    // // this.epubViewer.openLink("https://s3.amazonaws.com/epubjs/books/moby-dick/OPS/package.opf");
+    // // this.epubViewer.openLink("https://drive.google.com/file/d/1OY8EbZlLCbtRkMDcSM0hpSu8-MEjwZbj/view?usp=sharing");
+    // this.epubViewer.openFile(book);
+    // // this.epubViewer.openLink("")
+    this.epubViewer.setStyle("color:","blue");
+  }
+
+  nextPage(){
+    this.epubViewer.setStyle("color:","blue");
+  }
+
+  
+
+
+  //AQUÍ ACABA
   
   msgs: Array<MessageI> =[{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50"},{"user":"../../../../../../assets/img/NoImage.png","content":"Adiossss","time":"8:50"},{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50"}];
   msgForm: FormControl;
@@ -23,13 +51,21 @@ export class BookPDFComponent implements OnInit {
       newMgs: undefined
   };
 
-  constructor(public chatService:ChatService) {
+
+  constructor(public chatService:ChatService ) {
     this.msgForm = new FormControl();
    }
 
   ngOnInit(): void { 
     this.initChat();
   }
+
+  ngAfterViewInit(){
+    console.log(this);
+    this.epubViewer.openLink("https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07");
+  }
+
+ 
 
   showFiller = false;
   

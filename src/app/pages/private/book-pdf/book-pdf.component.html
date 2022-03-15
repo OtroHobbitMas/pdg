@@ -1,5 +1,7 @@
 <app-navigation-bar></app-navigation-bar>
 
+<!-- <script src="../dist/epub.js"></script>
+<script src="js/reader.js"></script> -->
 <div class="name">{{name}}</div>
 
 <mat-drawer-container class="example-container" autosize>
@@ -14,13 +16,32 @@
     </mat-drawer>
 
     <div class="example-sidenav-content">
-        <button type="button" mat-button (click)="drawer.toggle()">Go to chat</button>
+        <!-- <button type="button" mat-button (click)="drawer.toggle()">Go to chat</button>
         <div class="page">
             <pdf-viewer [src]="pdfSrc" [render-text]="true" [original-size]="false" style="height: 90vh; width: 95vw;"
                 (pages-initialized)="pageInitialized($event)" [zoom-scale]="'page-width'" [page]="50"></pdf-viewer>
+        </div> -->
+        <!-- 
+        <div class="epubContainer">
+            <angular-epub-viewer epub="src\assets\HarryPotter1.epub" ></angular-epub-viewer>
+            <button (click)="epubViewer.previousPage()">Previous page</button>
+            <button (click)="epubViewer.nextPage()">Next page</button>
+        </div> -->
+
+        <div class="epubContainer" style="height: 500px; width: 80%;">
+            <angular-epub-viewer padding="10px" #epubViewer></angular-epub-viewer>
+
         </div>
+        <!-- <button (click)="epubViewer.openLink('https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07')" >cargar</button> -->
+        <!-- <input type="file" accept="application/epub+zip" (change)="openFile($event)"> -->
+        <!-- <button (click)="epubViewer.setStyle('width:','80%')">estilo</button> -->
+        <button (click)="epubViewer.previousPage()">Previous page</button>
+        <button (click)="epubViewer.nextPage()">Next page</button>
+       
 
     </div>
+
+
 
 </mat-drawer-container>
 

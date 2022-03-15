@@ -20,6 +20,7 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule, AngularFirestore }    from '@angular/fire/firestore';
 import { AngularFireStorageModule, AngularFireStorage }    from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularEpubViewerModule } from 'angular-epub-viewer';
 
 //bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -48,7 +49,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BookChatComponent } from './pages/private/book-chat/book-chat.component';
 
 
-
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,6 +70,7 @@ import { BookChatComponent } from './pages/private/book-chat/book-chat.component
     BookChatComponent,
   ],
   imports: [
+    AngularEpubViewerModule,
     MatSidenavModule,
     PdfViewerModule,
     BrowserModule,

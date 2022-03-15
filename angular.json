@@ -39,7 +39,10 @@
               "./node_modules/intl-tel-input/build/css/intlTelInput.css"
             ],
             "scripts": ["node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js"]
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/epubjs/build/epub.js",
+              "node_modules/epubjs/build/libs/zip.min.js",
+              "node_modules/epubjs/build/hooks.js"]
           },
           "configurations": {
             "production": {
@@ -107,7 +110,10 @@
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "../node_modules/epubjs/build/libs/zip.min.js",
+              "../node_modules/epubjs/build/epub.js"
+            ]
           }
         },
         "lint": {
