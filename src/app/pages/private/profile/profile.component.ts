@@ -1,28 +1,25 @@
-import { FilterPipe } from 'src/app/pipes/filter.pipe';
-import { Component, OnInit} from "@angular/core";
+import { FilterPipe } from "src/app/pipes/filter.pipe";
+import { Component, OnInit } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
 import { UserService } from "src/app/services/user.service";
 import { AngularFireAuth } from "@angular/fire/auth";
-import {  FormControl,FormGroup} from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import * as firebase from "firebase";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
-import { TagService } from 'src/app/services/tag.service';
-import { BookService } from 'src/app/services/book.service';
-import { User } from 'src/app/models/user';
-import { Group } from 'src/app/models/group';
-
-
+import { NgbCarouselConfig } from "@ng-bootstrap/ng-bootstrap";
+import { TagService } from "src/app/services/tag.service";
+import { BookService } from "src/app/services/book.service";
+import { User } from "src/app/models/user";
+import { Group } from "src/app/models/group";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  selector: "app-profile",
+  templateUrl: "./profile.component.html",
+  styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent implements OnInit {
-  
   userInfoList: User[];
   misTagsList: any[] = [];
   misLibrosList: any[] = [];
@@ -41,14 +38,13 @@ export class ProfileComponent implements OnInit {
   amigoEmail: any;
   misGroupsList: any[] = [];
   groupList: Group[];
-  
 
   ngFormProfile = new FormGroup({
-    descripcion: new FormControl(),      
+    descripcion: new FormControl(),
   });
 
-  constructor( 
-    private _config:NgbCarouselConfig,
+  constructor(
+    private _config: NgbCarouselConfig,
     public authService: AuthService,
     private firebaseAuth: AngularFireAuth,
     private userService: UserService,
@@ -56,66 +52,70 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
-    private filterpipe:FilterPipe,
-    private tagService: TagService) 
-    { }
+    private filterpipe: FilterPipe,
+    private tagService: TagService
+  ) {}
 
-    async ngOnInit(){
-      this.UserAcount();      
-  
-      this.userService
-        .getRegister()
-        .snapshotChanges()
-        .subscribe((item) => {
-          this.registerList = [];
-          item.forEach((element) => {
-            let x = element.payload.toJSON();
-            x["$key"] = element.key;
-            this.registerList.push(x as User);
+  async ngOnInit() {
+    this.UserAcount();
 
-          });
-          this.archieveGroups(this.groupList,this.registerList);          
-          this.getMisAmigos();        
+    this.userService
+      .getRegister()
+      .snapshotChanges()
+      .subscribe((item) => {
+        this.registerList = [];
+        item.forEach((element) => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.registerList.push(x as User);
         });
+        this.archieveGroups(this.groupList, this.registerList);
+        this.getMisAmigos();
+      });
 
-        this.userService.getGroups()
-        .snapshotChanges().subscribe(item => {
-          this.groupList = [];
-          item.forEach(element => {
-            let x = element.payload.toJSON();
-            x["$key"] = element.key;
-            this.groupList.push(x as Group);
-          });
-          this.archieveGroups(this.groupList,this.registerList);
-          this.getMisGrupos();
-        });  
-      
-      //  await this.PrintConsistance();
-      //  await this.UpdatePerfilPhoto();
-      //  await this.WhoIsWritingMe();
-      //  await this.SearchImg();
-    }
+    this.userService
+      .getGroups()
+      .snapshotChanges()
+      .subscribe((item) => {
+        this.groupList = [];
+        item.forEach((element) => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.groupList.push(x as Group);
+        });
+        this.archieveGroups(this.groupList, this.registerList);
+        this.getMisGrupos();
+      });
 
+    //  await this.PrintConsistance();
+    //  await this.UpdatePerfilPhoto();
+    //  await this.WhoIsWritingMe();
+    //  await this.SearchImg();
+  }
 
-    archieveGroups(list,list2){
-      this.groupList = list;
-      this.registerList = list2;
-    }
+  archieveGroups(list, list2) {
+    this.groupList = list;
+    this.registerList = list2;
+  }
 
+  goToHome() {
+    this.router.navigate(["/home"]);
+  }
+  goToProfile() {
+    this.router.navigate(["/profile"]);
+  }
+  goToTags() {
+    this.router.navigate(["/tags"]);
+  }
+  goToBook(i: string) {
+    console.log(this.misLibrosList[i]);
+    // console.log(this.misLibrosList[i].link);
+    this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink}]);
+  }
 
-    goToHome() {
-      this.router.navigate(['/home']);
-    }
-    goToProfile() {
-      this.router.navigate(['/profile']);
-    }
-    goToTags(){
-      this.router.navigate(['/tags']);
-    }
-
-  async  doLogout() {
+  async doLogout() {
     await this.authService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(["/"]);
   }
 
   UserAcount() {
@@ -145,23 +145,21 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  //---------------------------------------------------INIT DROP ZONE--------------------------------------------------------  
+  //---------------------------------------------------INIT DROP ZONE--------------------------------------------------------
   fileUrl: string;
-  ImgUrl:  string;
-  ImgGUrl:  string;
+  ImgUrl: string;
+  ImgGUrl: string;
 
-  getUrl(event){
+  getUrl(event) {
     this.fileUrl = event;
   }
 
-  async getImg(event){
+  async getImg(event) {
     this.ImgUrl = event;
     const Email = firebase.auth().currentUser.email;
-   await this.SendImage();
-   await this.UpdatePerfilPhoto(Email);
+    await this.SendImage();
+    await this.UpdatePerfilPhoto(Email);
   }
-
-  
 
   // async getGroupImg(event){
   //   this.ImgGUrl = event;
@@ -169,10 +167,9 @@ export class ProfileComponent implements OnInit {
   //  await this.groupImage();
   // }
 
-  async SendImage (){
-
-    if(this.ImgUrl){
-      let Key;      
+  async SendImage() {
+    if (this.ImgUrl) {
+      let Key;
       const Email = firebase.auth().currentUser.email;
 
       await this.firebase.database.ref("register").once("value", (users) => {
@@ -182,45 +179,48 @@ export class ProfileComponent implements OnInit {
           if (childData.email == Email) {
             Key = childKey;
           }
-                   
         });
       });
 
       this.firebase.database.ref("register").child(Key).child("Images").push({
-        ImgUrl: this.ImgUrl
+        ImgUrl: this.ImgUrl,
       });
-      
-      this.toastr.success('Photo subida', 'Exitosamente');
+
+      this.toastr.success("Photo subida", "Exitosamente");
     }
   }
 
-  getMisGrupos(){
+  getMisGrupos() {
     const Email = firebase.auth().currentUser.email;
     let entries;
     let contador = 0;
 
-    this.registerList.forEach((element,index) => {
-      if (Email==element.email){
-        if ("Groups" in element){
+    this.registerList.forEach((element, index) => {
+      if (Email == element.email) {
+        if ("Groups" in element) {
           entries = Object.keys(element.Groups);
           for (let i = 0; i < entries.length; i++) {
-            this.misGroupsList.push({name: element.Groups[entries[i]].groupName});
+            this.misGroupsList.push({
+              name: element.Groups[entries[i]].groupName,
+            });
           }
         }
-      }      
+      }
     });
 
-    this.groupList.forEach((element,index) => {
-      if (this.misGroupsList[contador].name==element.name){
-        if ("Images" in element){
+    this.groupList.forEach((element, index) => {
+      if (this.misGroupsList[contador].name == element.name) {
+        if ("Images" in element) {
           entries = Object.keys(element.Images);
-          this.misGroupsList[contador].Images = element.Images[entries[0]].ImgUrl;
-          contador ++;
+          this.misGroupsList[contador].Images =
+            element.Images[entries[0]].ImgUrl;
+          contador++;
         } else {
-          this.misGroupsList[contador].Images = "../../../../../../assets/img/NoImage.png";
-          contador ++;
+          this.misGroupsList[contador].Images =
+            "../../../../../../assets/img/NoImage.png";
+          contador++;
         }
-      }      
+      }
     });
 
     contador = 0;
@@ -228,8 +228,7 @@ export class ProfileComponent implements OnInit {
 
   //-----------------------------------------------------Update perfil photo----------------------------------------------
 
-  async UpdatePerfilPhoto(Mail){
-
+  async UpdatePerfilPhoto(Mail) {
     let Key;
 
     const Email = Mail;
@@ -237,7 +236,7 @@ export class ProfileComponent implements OnInit {
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
-        const childData = user.val();     
+        const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
           user.forEach((info) => {
@@ -247,9 +246,9 @@ export class ProfileComponent implements OnInit {
                 const ImagesChildData = ImgUrl.val();
                 const filter = /https:/gm;
 
-                if (ImagesChildKey == "ImgUrl"){
+                if (ImagesChildKey == "ImgUrl") {
                   this.Currentimg = ImagesChildData;
-                } 
+                }
               });
             });
           });
@@ -257,7 +256,7 @@ export class ProfileComponent implements OnInit {
       });
     });
 
-    if(!this.Currentimg) {
+    if (!this.Currentimg) {
       this.Currentimg = "../../../../../../assets/img/NoImage.png";
       const query: string = ".container .Photoimg";
       const Photoimg: any = document.querySelector(query);
@@ -271,95 +270,89 @@ export class ProfileComponent implements OnInit {
       // const query2: string = "#app .profile";
       // const profile: any = document.querySelector(query2);
       Photoimg.src = this.Currentimg;
-      // profile.src = this.Currentimg;     
+      // profile.src = this.Currentimg;
     }
-    
   }
   //-----------------------------------------------------End Update perfil photo--------------------------------------
 
- //-----------------------------------------------------Search IMg----------------------------------------------  
-//   async SearchImg(){
+  //-----------------------------------------------------Search IMg----------------------------------------------
+  //   async SearchImg(){
 
-//     let Key;
-//     let ContactNumber = this.FormAdd.controls.Numbercontact.value;
+  //     let Key;
+  //     let ContactNumber = this.FormAdd.controls.Numbercontact.value;
 
+  //     await this.firebase.database.ref("register").once("value", (users) => {
+  //       users.forEach((user) => {
+  //         const childKey = user.key;
+  //         const childData = user.val();
+  //  // PRIMERA PASADA PARA RECORRER PRIMERA CAPA
+  //         if (childData.email == ContactNumber || childData.telefono.e164Number == ContactNumber) {
+  //           Key = childKey;
+  //           // SEGUNDA PASADA PARA RECORRER DENTRO DEL USUARIO
+  //           user.forEach((info) => {
+  //             const infoChildKey = info.key;
+  //             const infoChildData = info.val();
+  //             // SEGUNDA PASADA PARA RECORRER DENTRO DE CONTACTS
+  //             info.forEach((Images) => {
+  //               const imagesChildKey = Images.key;
+  //               const imagesChilData = Images.val();
+  //               // SEGUNDA PASADA PARA RECORRER LOS NUMERO Y NOMBRE
+  //               Images.forEach((ImgUrl) => {
+  //                 const ImagesChildKey = ImgUrl.key;
+  //                 const ImagesChildData = ImgUrl.val();
+  //                 const filter = /https:/gm;
 
-//     await this.firebase.database.ref("register").once("value", (users) => {
-//       users.forEach((user) => {
-//         const childKey = user.key;
-//         const childData = user.val();
-//  // PRIMERA PASADA PARA RECORRER PRIMERA CAPA       
-//         if (childData.email == ContactNumber || childData.telefono.e164Number == ContactNumber) {
-//           Key = childKey;
-//           // SEGUNDA PASADA PARA RECORRER DENTRO DEL USUARIO
-//           user.forEach((info) => {
-//             const infoChildKey = info.key;
-//             const infoChildData = info.val();
-//             // SEGUNDA PASADA PARA RECORRER DENTRO DE CONTACTS
-//             info.forEach((Images) => {
-//               const imagesChildKey = Images.key;
-//               const imagesChilData = Images.val();
-//               // SEGUNDA PASADA PARA RECORRER LOS NUMERO Y NOMBRE
-//               Images.forEach((ImgUrl) => {
-//                 const ImagesChildKey = ImgUrl.key;
-//                 const ImagesChildData = ImgUrl.val();
-//                 const filter = /https:/gm;
+  //                 if (ImagesChildKey == "ImgUrl"){
+  //                   this.ImageSelected = ImagesChildData;
+  //                 }
 
-//                 if (ImagesChildKey == "ImgUrl"){
-//                   this.ImageSelected = ImagesChildData;
-//                 }
-                
-//               });
-//             });
-//           });
-//         }
-//       });
-//     });
-//     return this.ImageSelected;
-//   }
-//-----------------------------------------------------ENd Search IMg----------------------------------------------
-//-----------------------------------------------------Start get name----------------------------------------------
+  //               });
+  //             });
+  //           });
+  //         }
+  //       });
+  //     });
+  //     return this.ImageSelected;
+  //   }
+  //-----------------------------------------------------ENd Search IMg----------------------------------------------
+  //-----------------------------------------------------Start get name----------------------------------------------
 
-  async getNameUser(Mail){
-
+  async getNameUser(Mail) {
     let Key;
     const Email = Mail;
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
-        const childData = user.val();     
+        const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
-          if (childData.lname != '' && childData.name != ''){
+          if (childData.lname != "" && childData.name != "") {
             this.UserName = childData.name;
-            this.UserLastName = childData.lname;            
-            this.FulName = this.UserName.concat(" "+this.UserLastName);
-          }          
+            this.UserLastName = childData.lname;
+            this.FulName = this.UserName.concat(" " + this.UserLastName);
+          }
         }
       });
     });
 
-    if(this.UserName != '') {
-      
+    if (this.UserName != "") {
       const query: string = ".container .name";
       document.querySelector(query).innerHTML = this.FulName;
-
     } else {
       const query: string = ".container .name";
       document.querySelector(query).innerHTML = "Nombre no registrado";
-      this.toastr.error('Error al buscar el nombre', 'Error');   
+      this.toastr.error("Error al buscar el nombre", "Error");
     }
-    
   }
   //-----------------------------------------------------End get name----------------------------------------------
   //-----------------------------------------------------Start Send descrition------------------------------------------
-  async SendDescription (){
+  async SendDescription() {
     const query: string = ".container .inputDescripcion";
     const Descript: any = document.querySelector(query);
     const Description = Descript.value;
 
-    if(Description != ''){
-      let Key;      
+    if (Description != "") {
+      let Key;
       const Email = firebase.auth().currentUser.email;
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
@@ -368,28 +361,30 @@ export class ProfileComponent implements OnInit {
           if (childData.email == Email) {
             Key = childKey;
           }
-                   
         });
       });
-  
-      this.firebase.database.ref("register").child(Key).child("Descripcion").push({
-        Descripcion: Description
-      });
-      
-      this.toastr.success('Descripcion actualizada', 'Exitosamente');
+
+      this.firebase.database
+        .ref("register")
+        .child(Key)
+        .child("Descripcion")
+        .push({
+          Descripcion: Description,
+        });
+
+      this.toastr.success("Descripcion actualizada", "Exitosamente");
     }
   }
   //-----------------------------------------------------END Send descrition------------------------------------------
   //-----------------------------------------------------Start Get descrition------------------------------------------
-  async getDescriptionUser(Mail){
-
+  async getDescriptionUser(Mail) {
     let Key;
     // firebase.auth().currentUser.email
     const Email = Mail;
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
         const childKey = user.key;
-        const childData = user.val();     
+        const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
           user.forEach((info) => {
@@ -398,194 +393,172 @@ export class ProfileComponent implements OnInit {
                 const DescriptionChildKey = DescriptionText.key;
                 const DescriptionChildData = DescriptionText.val();
 
-                if (DescriptionChildKey == "Descripcion"){
+                if (DescriptionChildKey == "Descripcion") {
                   this.CurrentDescription = DescriptionChildData;
-                } 
+                }
               });
             });
-          });         
+          });
         }
       });
     });
 
-    if(this.CurrentDescription != '') {
-      
+    if (this.CurrentDescription != "") {
       const query: string = ".inputDescripcion";
-      const element: any  = document.querySelector(query);
+      const element: any = document.querySelector(query);
       element.value = this.CurrentDescription;
-
     }
     const query: string = "#descripcionID";
     const Descripcion: any = document.querySelector(query);
-    let DescripcionValue = Descripcion.value
+    let DescripcionValue = Descripcion.value;
 
-    if (DescripcionValue == 'undefined'){
-      DescripcionValue = "Ingresa tu descripción"
-    }  
-    
-    
+    if (DescripcionValue == "undefined") {
+      DescripcionValue = "Ingresa tu descripción";
+    }
   }
   //-----------------------------------------------------Start get Mislibros------------------------------------------
-  async getMisLibros(){
-    let Key;
-    let Autor = {};
-    let Titulo = {};
-    let Imagen = {};
-    let keyLibros;
+  async getMisLibros() {
     const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("register").once("value", (users) => {
-        users.forEach((user) => {
-
-          const childKey = user.key;
-          const childData = user.val();
-          if (childData.email == Email) {
-            Key = childKey;
-            user.forEach((info) => {
-              info.forEach((MisLibros) => {
-                keyLibros = MisLibros.key;
-
-                MisLibros.forEach((Libros) => {
-                  const LibrosChildKey = Libros.key;
-                  const LibrosChildData = Libros.val();
-                if (LibrosChildKey == "Autor"){
-                  this.keyOrdenBooksList.push(keyLibros);
-                  Autor = LibrosChildData;
-                  
-                } else if (LibrosChildKey == "Imagen"){
-
-                  Imagen = LibrosChildData;
-
-                } else if (LibrosChildKey == "Titulo"){
-                  Titulo = LibrosChildData;
-                  if (Autor != '' && Imagen != '' && Titulo != ''){
-                    
-                    this.misLibrosList.push({Autor,Imagen,Titulo});
-                  }
-                }                
-                });
-                
-              });
-            });
-          }        
-        });
+    await this.firebase.database.ref("register").once("value", (users) => {
+      let usersData = users.val();
+      let user;
+      Object.keys(usersData).forEach((key) => {
+        if (usersData[key].email == Email) {
+          user = usersData[key];
+        }
       });
-      
+      Object.keys(user.MisLibros).forEach((key) => {
+        this.misLibrosList.push(user.MisLibros[key]);
+      });
+    });
   }
-  //-----------------------------------------------------END get Mislibros------------------------------------------  
 
-  getMisAmigos(){
+  //-----------------------------------------------------END get Mislibros------------------------------------------
+
+  getMisAmigos() {
     let entries;
     let contador = 0;
-    console.log("this.registerList");
-    console.log(this.registerList);
+    // console.log("this.registerList");
+    // console.log(this.registerList);
 
     const Email = firebase.auth().currentUser.email;
-    this.registerList.forEach((element,index) => {
-      if (Email==element.email){
-        if ("Amigos" in element){
+    this.registerList.forEach((element, index) => {
+      if (Email == element.email) {
+        if ("Amigos" in element) {
           entries = Object.keys(element.Amigos);
           for (let i = 0; i < entries.length; i++) {
-            this.misAmigosList.push({name: element.Amigos[entries[i]].NombreAmigo});      
+            this.misAmigosList.push({
+              name: element.Amigos[entries[i]].NombreAmigo,
+            });
           }
-          
         }
-      }      
+      }
     });
 
-    this.registerList.forEach((element,index) => {
+    this.registerList.forEach((element, index) => {
       if (this.misAmigosList[contador]) {
-        if (this.misAmigosList[contador].name==element.name + " " + element.lname){
-          if ("Images" in element){
+        if (
+          this.misAmigosList[contador].name ==
+          element.name + " " + element.lname
+        ) {
+          if ("Images" in element) {
             entries = Object.keys(element.Images);
-            let index = entries.length-1;
-            this.misAmigosList[contador].Images = element.Images[entries[index]].ImgUrl;
-            contador ++;
+            let index = entries.length - 1;
+            this.misAmigosList[contador].Images =
+              element.Images[entries[index]].ImgUrl;
+            contador++;
           } else {
-            this.misAmigosList[contador].Images = "../../../../../../assets/img/NoImage.png";
-            contador ++;
+            this.misAmigosList[contador].Images =
+              "../../../../../../assets/img/NoImage.png";
+            contador++;
           }
-        } 
-      }       
+        }
+      }
     });
     contador = 0;
   }
   //-----------------------------------------------------Start get MisTags------------------------------------------
-   
-  async getMisTags(){
+
+  async getMisTags() {
     let Key;
     let Tags = {};
     let keyTAGS;
 
     const Email = firebase.auth().currentUser.email;
 
-      await this.firebase.database.ref("register").once("value", (users) => {
-        users.forEach((user) => {
-          // console.log("entre nivel1");
-          const childKey = user.key;
-          const childData = user.val();
-          if (childData.email == Email) {
-            this.KeyUSER = childKey;
-            user.forEach((info) => {              
-              info.forEach((MisTags) => {
-                const pruebakey = MisTags.key;
-                keyTAGS = pruebakey;
-                
-                MisTags.forEach((Tag) => {
-                  const TagChildKey = Tag.key;
-                  const TagChildData = Tag.val();
-                if (TagChildKey == "Tag"){
+    await this.firebase.database.ref("register").once("value", (users) => {
+      users.forEach((user) => {
+        // console.log("entre nivel1");
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.email == Email) {
+          this.KeyUSER = childKey;
+          user.forEach((info) => {
+            info.forEach((MisTags) => {
+              const pruebakey = MisTags.key;
+              keyTAGS = pruebakey;
+
+              MisTags.forEach((Tag) => {
+                const TagChildKey = Tag.key;
+                const TagChildData = Tag.val();
+                if (TagChildKey == "Tag") {
                   Tags = TagChildData;
                   // console.log(aut);
                   // this.misTagsList.push({Tags:TagChildData});
-                  if (Tags != ''){
+                  if (Tags != "") {
                     // console.log("info key");
                     // console.log(keyTAGS);
                     this.keyOrdenList.push(keyTAGS);
-                    this.misTagsList.push({Tags});
+                    this.misTagsList.push({ Tags });
                   }
-                }              
-                });
-                
+                }
               });
             });
-          }        
-        });
+          });
+        }
       });
+    });
   }
   //-----------------------------------------------------END get MisTags------------------------------------------
 
-  async deleteSth(i){
+  async deleteSth(i) {
     let index = i.split("-");
-    let query2: string = "#contTag"+index[1];
+    let query2: string = "#contTag" + index[1];
     let cont: any = document.querySelector(query2);
-    cont.style.display = 'none';
-    this.tagService.deleteTag(this.keyOrdenList[index[1]],this.KeyUSER);
-    this.toastr.warning('Tag eliminado', 'Exitosamente');    
+    cont.style.display = "none";
+    this.tagService.deleteTag(this.keyOrdenList[index[1]], this.KeyUSER);
+    this.toastr.warning("Tag eliminado", "Exitosamente");
   }
 
-  async deleteBook(i){
+  async deleteBook(i) {
     let index = i.split("-");
-    let query2: string = "#mislibros"+index[1];
+    let query2: string = "#mislibros" + index[1];
     let cont: any = document.querySelector(query2);
     //por el carrusel no encuentra el query2
-    console.log(cont);
-    cont.style.display = 'none';
-    
-    this.bookService.deleteBooks(this.keyOrdenBooksList[index[1]],this.KeyUSER);
-    this.toastr.warning('Libro eliminado', 'Exitosamente');    
+    // console.log(cont);
+    cont.style.display = "none";
+
+    this.bookService.deleteBooks(
+      this.keyOrdenBooksList[index[1]],
+      this.KeyUSER
+    );
+    this.toastr.warning("Libro eliminado", "Exitosamente");
   }
 
-  async deleteFriend(i){
+  async deleteFriend(i) {
     let index = i.split("-");
-    let query2: string = ".containerAmigos"+index[1];
+    let query2: string = ".containerAmigos" + index[1];
     let cont: any = document.querySelector(query2);
-    cont.style.display = 'none';
-    this.userService.deleteFriends(this.keyOrdenAmigosList[index[1]],this.KeyUSER);
-    this.toastr.warning('Amigo eliminado', 'Exitosamente');    
+    cont.style.display = "none";
+    this.userService.deleteFriends(
+      this.keyOrdenAmigosList[index[1]],
+      this.KeyUSER
+    );
+    this.toastr.warning("Amigo eliminado", "Exitosamente");
   }
 
-  async editUserName(register: User){
+  async editUserName(register: User) {
     let variable;
     this.userService.updateUsername(variable);
   }

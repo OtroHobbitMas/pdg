@@ -4,7 +4,8 @@ import { MessageI } from 'src/app/models/MessageI';
 import { ChatService } from 'src/app/services/chat.service';
 import { FormControl } from "@angular/forms";
 import { Subscription } from 'rxjs';
-import { AngularEpubViewerComponent } from 'angular-epub-viewer';
+import { AngularEpubViewerComponent, AngularEpubViewerModule } from 'angular-epub-viewer';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -32,10 +33,6 @@ export class BookPDFComponent implements OnInit {
     this.epubViewer.setStyle("color:","blue");
   }
 
-  nextPage(){
-    this.epubViewer.setStyle("color:","blue");
-  }
-
   
 
 
@@ -50,19 +47,31 @@ export class BookPDFComponent implements OnInit {
       connection: undefined,
       newMgs: undefined
   };
+  url;
+  pag;
+  title;
 
 
-  constructor(public chatService:ChatService ) {
+  constructor(public chatService:ChatService, public route: ActivatedRoute ) {
     this.msgForm = new FormControl();
    }
 
   ngOnInit(): void { 
     this.initChat();
+
+    this.url=this.route.snapshot.paramMap.get("url");
+    this.pag=this.route.snapshot.paramMap.get("Pag");
+    this.title=this.route.snapshot.paramMap.get("title");    
+  
+
   }
 
   ngAfterViewInit(){
-    console.log(this);
-    this.epubViewer.openLink("https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07");
+    // console.log(this);
+
+    this.epubViewer.openLink(this.url);
+
+    // this.epubViewer.openLink("https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07");
   }
 
  

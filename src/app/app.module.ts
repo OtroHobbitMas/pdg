@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from "@angular/common";
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +19,7 @@ import { AngularFirestoreModule, AngularFirestore }    from '@angular/fire/fires
 import { AngularFireStorageModule, AngularFireStorage }    from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularEpubViewerModule } from 'angular-epub-viewer';
+
 
 //bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -47,6 +46,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 //PDF Viewer
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BookChatComponent } from './pages/private/book-chat/book-chat.component';
+
 
 
  
