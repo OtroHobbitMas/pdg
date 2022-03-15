@@ -380,7 +380,8 @@ export class ExternalProfilesComponent implements OnInit {
           if (childData.lname != '' && childData.name != ''){
             this.UserName = childData.name;
             this.UserLastName = childData.lname;            
-            this.FulName = this.UserName.concat(" "+this.UserLastName);
+            // this.FulName = this.UserName.concat(" "+this.UserLastName);
+            this.FulName = this.UserName+" "+this.UserLastName;
           }
           user.forEach((info) => {
             info.forEach((Description) => {

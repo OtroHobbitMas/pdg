@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { Group } from '../models/group';
 import { User } from '../models/user';
 
 @Injectable({
@@ -8,6 +9,7 @@ import { User } from '../models/user';
 export class UserService {
 
   registerList: AngularFireList<any>;
+  groupsList: AngularFireList<any>;
   private collection: string;
   private subCollectionPhone: string;
 
@@ -20,6 +22,12 @@ export class UserService {
      this.registerList = this.firebase.list(this.collection);
      
     return this.registerList;
+  }
+
+  getGroups(){
+    this.groupsList = this.firebase.list('groups');
+     
+    return this.groupsList;
   }
 
   public findById(email: string) {
@@ -64,6 +72,17 @@ export class UserService {
       lname: user.lname
     });
 
+  }
+
+  createGroup(group: Group){
+    this.firebase.list('groups').push({
+      owner: group.owner,
+      name: group.name,
+      description: group.description,
+      integrants: group.integrants, 
+      privacity: group.privacity,
+      tags: group.tags,
+    });
   }
 
 }

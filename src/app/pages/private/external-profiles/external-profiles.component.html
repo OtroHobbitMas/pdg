@@ -19,7 +19,7 @@
 
             <div class="card-body">
                 <h1 style="display: none;" id="{{'correo'+i}}"  align="center" >{{user.email}}</h1>
-                <h1 class="card-title" (click)="viewExternalProfile(user.email)" id="{{'nombre'+i}}"  align="center">{{user.name}}{{user.lname}}</h1>
+                <h1 class="card-title" (click)="viewExternalProfile(user.email)" id="{{'nombre'+i}}"  align="center">{{user.name}} {{user.lname}}</h1>
                 <p class="card-text" id="{{'descripcion'+i}}"  align="center">Aquí irá la descripción de cada persona. Lorem ipsum dolor sit amet consectetur, adipisicing elit</p>
                 <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalProfile(user.email)">Ver Perfil</button>
                 <button class="button is-info"  id="{{'button-'+i}}" (click)="addFriend(i)">{{mensajeButton}}</button>

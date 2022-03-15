@@ -1,3 +1,4 @@
+import { TagService } from './../../../services/tag.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,6 +14,7 @@ import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { BookService } from 'src/app/services/book.service';
 // import { User } from 'src/app/models/user';
 import { User } from 'src/app/models/user';
+import { Book } from 'src/app/models/book';
 
 @Component({   
   selector: 'app-home',
@@ -46,6 +48,7 @@ export class HomeComponent implements OnInit {
 
 
   constructor(public authService: AuthService,
+    private tagService: TagService,
     private firebaseAuth:AngularFireAuth, 
     private userService: UserService,
     private bookService: BookService,
@@ -55,15 +58,24 @@ export class HomeComponent implements OnInit {
     private filter: FilterPipe) {}
 
     registerList: User[];
-    bookList: User[];
+    bookList: Book[];
     // bookList: any[] = [];
     bookComents: any[] = [];
     bookListRecomended;
     bookTags: any[] = [];
     register= [];
     itemRef: any;
-    macthRecomended: any[] = [];;
-    
+    macthRecomended: any[] = [];
+    nameGroup: string;
+    groupList: any[] = [];
+    booksList: any[] = [];
+    booksListGroup: any[] = [];
+    tagsList: any[] = [];
+    activate = false;
+    activateComentD = false;
+    comentario: string;
+    arrTagsBooks: any[] = [];
+    tag: string;
 
     ngOnInit(): void {
       // this.initChat();
@@ -77,6 +89,18 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
+        this.getMyGroupsAndBooks(this.registerList);
+      });
+
+      this.tagService.getTags()    
+      .snapshotChanges().subscribe(item => {
+        this.tagsList = [];
+        item.forEach(element => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.tagsList.push(x as User);
+        });
+        console.log(this.tagsList);
       });
       
       this.bookService.getBooks()
@@ -85,109 +109,160 @@ export class HomeComponent implements OnInit {
         item.forEach((element) => {
           let x = element.payload.toJSON();
           x["$key"] = element.key;
-          this.bookList.push(x as User);
+          this.bookList.push(x as Book);
         });
-        $this.getBooksByTag(this.bookList);
-        $this.coments(this.bookList);
-      });
-      
+        this.macthRecomended = this.bookList;
+        $this.callTags(this.bookList,this.tagsList);
+        $this.coments(this.bookList,this.registerList);
+      });  
     }
 
-    async getBooksByTag(lista)
-  {
+    async callTags(lista,tags){
     let Key;
-    let arr = [];
-    let tagsLibros;
-    console.log("lista");
-    console.log(lista);
+    let entries;
+
+    const Email = firebase.auth().currentUser.email;
+    lista.forEach((element) => {
+      if ("Tags" in element){
+        entries = Object.values(element.Tags);
+        this.arrTagsBooks.push({tags: entries, name: element.Title});
+      }
+    });
+    // console.log(this.arrTagsBooks);
+    this.tagsList = Object.values(tags[0]);   
+  }
+
+  getBooksByTag(){
+    let entries;
+    console.log("this.tag");
+    console.log(this.tag);
+
+    if (this.tag == "All") {
+      this.macthRecomended = this.booksList;
+    } else {
+      this.macthRecomended = [];
+      this.bookList.forEach((element,index) => {
+        if ("Tags" in element){
+          entries = Object.values(element.Tags);
+          console.log(entries);
+          for (let i = 0; i < entries.length; i++) {
+            if (this.tag == entries[i]) {
+              this.macthRecomended.push(element);
+            }
+          }
+          
+        }
+      });      
+    }
+    console.log("this.macthRecomended");
+    console.log(this.macthRecomended);
+
+    if (this.macthRecomended.length == 0){
+      this.macthRecomended = this.bookList;
+    }
+
+    
+  }
+
+  activateSelect(){
+    this.activate = true;
+  }
+
+  async sendComentario(nombreLibro){
 
     const Email = firebase.auth().currentUser.email;
 
-    await this.firebase.database.ref("register").once("value", (users) => {
-      users.forEach((user) => {
-        // console.log("entre nivel1");
-        const childKey = user.key;
-        const childData = user.val();
-        if (childData.email == Email) {
-          Key = childKey;
-          user.forEach((info) => {
-            info.forEach((MisTags) => {
-              MisTags.forEach((Tags) => {
-                const TagsChildKey = Tags.key;
-                const TagsChildData = Tags.val();
-                // console.log("TagsChildKey:" + TagsChildKey);
-                // console.log("TagsChildData:" + TagsChildData);
-              if (TagsChildKey == "Tag"){
-                
-                arr.push(TagsChildData);
-                
-              }
-              });
-              
-            });
-          });
-        }        
-      });
-    });
-    console.log(arr);
-    
-    for (let i = 0; i < lista.length; i++) {
-      tagsLibros = Object.values(lista[i].Tags);
-      // console.log(tagsLibros);
-      for (let j = 0; j < arr.length; j++) {
-        
-        for (let k = 0; k < tagsLibros.length; k++) {
-          // console.log(tagsLibros[k]+ " vs "+arr[j]);
-          if (tagsLibros[k] == arr[j]){
-            this.macthRecomended.push(lista[i]);            
-          }          
+    if(this.comentario != ''){
+      let Key;
+
+     await this.bookList.forEach((element,index) => {
+        if ("Title" in element){
+          if (element.Title == nombreLibro) {
+            Key = element.$key;
+          }      
         }
-        
-        
-      }
+      });
+
+      console.log("Key");
+      console.log(Key);
+
+      this.firebase.database.ref("books").child(Key).child("Comentarios").push({
+        Comment: this.comentario,
+        User: Email
+      });
       
+      this.toastr.success('Comentario enviado', 'Exitosamente');
     }
-    // for (let i = 0; i < lista.length; i++) {
-    //     tagsLibros = Object.values(lista[i].Tags);
-        
-    //     this.bookTags.push({tag: tagsLibros, code: i});              
-    // }
-    // console.log("this.bookTags");
-    // console.log(this.bookTags);  
-
-
   }
 
-   async coments(books){
 
-    let arr = [];
-    let flag = 0;
-    let flag2 = 0;
-    let $this = this;
+  getMyGroupsAndBooks(list){
+    let entries;
+    let entriesBooks;
 
-    var rango = Object.keys(books[0]).map((key) => [(key), books[0][key]]);
-      for (let i = 0; i < books.length; i++) {                          
-        for (let j = 0; j < rango.length; j++) {
-          if (flag == 0){
-            var result = Object.keys(books[i]).map((key) => [(key), books[i][key]]);
-          } else if (j == result[i].length){
-            var result = Object.keys(books[i]).map((key) => [(key), books[i][key]]);
+    list.forEach((element,index) => {
+      if ("Groups" in element){
+        entries = Object.keys(element.Groups);
+        for (let i = 0; i < entries.length; i++) {
+          if (element.Groups[entries[i]].category == "owner") {
+            this.booksListGroup.push(element.Groups[entries[i]].groupName);
           }
-
-          if (result[i][0]=="Comentarios"){
-            var result2 = Object.keys(result[i][1]).map((key) => [(key), result[i][1][key]]);
-            for (let k = 0; k < result2.length; k++) {
-              let temp = result2[k][1];
-              temp.img="../../../../../../assets/img/NoImage.png";
-              $this.bookComents.push(temp);
-            }
-            break
-          }
-          flag ++;         
-        }  
+        }        
       }
-      console.log("this.bookComents");
-      console.log(this.bookComents);
+      if ("MisLibros" in element){
+        entriesBooks = Object.keys(element.MisLibros);
+        for (let i = 0; i < entriesBooks.length; i++) {
+          this.booksListGroup.push(element.MisLibros[entriesBooks[i]].Titulo);
+        }        
+      }
+    });
+  }
+
+  activateComent(){
+    this.activateComentD = true;
+  }
+
+   async coments(books,register){
+
+    let contador = 0;
+    let entries;
+
+    await books.forEach((element) => {
+        if ("Comentarios" in element){
+          entries = Object.keys(element.Comentarios);
+          for (let i = 0; i < entries.length; i++) {
+            this.bookComents.push({Comment: element.Comentarios[entries[i]].Comment, User: element.Comentarios[entries[i]].User, Title: element.Title}); 
+          }
+          
+        }      
+    });
+    
+
+    await register.forEach((element) => {
+      if (this.bookComents[contador]) {
+        if (this.bookComents[contador].User== element.email){
+          if ("Images" in element){            
+            entries = Object.keys(element.Images);
+            let index = entries.length-1;
+            console.log("element.name");
+            console.log(element.name);
+            this.bookComents[contador].Images = element.Images[entries[index]].ImgUrl;
+            this.bookComents[contador].name = element.name + " " + element.lname;
+            contador ++;
+          } else {
+            console.log("element.name");
+            console.log(element.name);
+            this.bookComents[contador].Images = "../../../../../../assets/img/NoImage.png";
+            this.bookComents[contador].name = element.name + " " + element.lname;
+            contador ++;
+          }
+        } 
+      }       
+    });
+    contador = 0;
+    console.log("this.bookComents");
+    console.log(this.bookComents);
+      
     }
 
       UserAcount (){
@@ -240,7 +315,7 @@ export class HomeComponent implements OnInit {
 
     const Email = firebase.auth().currentUser.email;
       let imgText = "imagen";
-    this.imagen = document.querySelector('#'+imgText+index[1]);         
+      this.imagen = document.querySelector('#'+imgText+index[1]);         
       this.imagen = this.imagen.src;  
 
       let titText = "titulo";
@@ -299,21 +374,40 @@ export class HomeComponent implements OnInit {
     this.arr = [];  
   }
   
+  async addBookToGroup(i){
+    let keygroup;
+    let index = i.split("-");
+    let imgText = "imagen";
+    this.imagen = document.querySelector('#'+imgText+index[1]);         
+    this.imagen = this.imagen.src;  
 
-  // PerfilPhoto(){
-  //   const query: string = '#app .PerfilPhoto';
-  //   const PerfilPhoto: any = document.querySelector(query);
-    
-  //   if (this.countPhoto == 0) {
-  //     this.countPhoto = 1;
-  //     PerfilPhoto.style.left = 0;
-  //   } else {
-  //     this.countPhoto = 0;
-  //     PerfilPhoto.style.left = "-100vh";
-  //   }
-  // }
+    let titText = "titulo";
+    this.titulo = document.querySelector('#'+titText+index[1]);      
+    this.titulo = this.titulo.textContent;
 
-  // countPhoto : number = 0;
+    let autorText = "autor";
+    this.autor = document.querySelector('#'+autorText+index[1]);      
+    this.autor = this.autor.textContent;
+
+    await this.firebase.database.ref("groups").once("value", (users) => {
+      users.forEach((user) => {
+        // console.log("entre nivel1");
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.name == this.groupList[index[1]]) {
+          keygroup = childKey;
+        }        
+      });
+    });
+    if (keygroup) {
+      this.firebase.database.ref("groups").child(keygroup).child("books").push({
+        Autor: this.autor,
+        Imagen: this.imagen,
+        Titulo: this.titulo
+      });
+      this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
+    }   
+  }
   
   async SendContact() {
     
@@ -330,9 +424,9 @@ export class HomeComponent implements OnInit {
         const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
-          console.log("entramos", childKey);
+          // console.log("entramos", childKey);
         }
-        console.log("recorrido", childKey);
+        // console.log("recorrido", childKey);
       });
     });
 
@@ -342,9 +436,9 @@ export class HomeComponent implements OnInit {
       userExist = this.registerList.find(user => user.email == ContactNumber);
       ContactNumber = userExist && userExist.email || undefined;
       if (!userExist) {
-        console.log("Este usuario no existe")
+        // console.log("Este usuario no existe")
       } else {
-        console.log(ContactName, ContactNumber);
+        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,
@@ -355,9 +449,9 @@ export class HomeComponent implements OnInit {
       // Es teléfono
       userExist = this.registerList.find(user => user.telefono.e164Number == ContactNumber && user);
       if (!userExist) {
-        console.log("Este usuario no existe")
+        // console.log("Este usuario no existe")
       } else {
-        console.log(ContactName, ContactNumber);
+        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,

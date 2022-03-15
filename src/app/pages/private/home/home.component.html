@@ -4,6 +4,13 @@
   [(ngModel)]="searchBoxHome" />
 
 <div class="container">
+  <div style="margin-top: 20%;">
+    <select (change)="getBooksByTag()" [(ngModel)]="tag">
+      <option value="All" selected>Todos</option>
+      <option *ngFor="let tag of tagsList" [value]="tag">{{tag}}</option>
+    </select>
+  </div>
+  
   <div *ngFor="let book of macthRecomended | filter: searchBoxHome; let i = index">
     <img id="{{ 'imagen' + i }}" [src]="book.Portada" alt="imagenes" class="bookImg" />
     
@@ -12,12 +19,22 @@
       <h2 id="{{ 'autor' + i }}" align="center">{{ book.Autor }}</h2>
 
       <div class="contenedorStars">
-        <img class="stars" style="width: 50%" src="../../../../assets/img/stars.png" alt="" />
+        <!-- <img class="stars" style="width: 50%" src="../../../../assets/img/stars.png" alt="" /> -->
+        <label class="rating-label"><strong>Average rating is {{book.Stars}} <code>readonly</code></strong>
+          <input
+            class="rating"
+            max="5"
+            readonly
+            step="0.01"
+            style="--fill:rgb(224, 248, 0);--value:{{book.Stars}}"
+            type="range"
+            value="{{book.Stars}}">
+        </label>
       </div>
       
 
       <div class="descripcion">
-        <a href="">{{ book.Descripcion }}</a>
+        <p>{{ book.Descripcion }}</p>
       </div>
 
       <div class="btnContainer">
@@ -28,18 +45,36 @@
           style="width: 50%">
           Agregar a mi lista
         </button>
+        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%">
+          Agregar a mi grupo
+        </button>
+        <div *ngIf="activate == true">
+          <select (change)="addBookToGroup('buttonGroup-' + i)" id="">
+            <option value="" disabled selected>Seleccione su grupo</option>
+            <option *ngFor="let groups of booksListGroup"  value="groups">{{groups}}</option>
+          </select>
+        </div>        
       </div>
 
-      <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>
-      <div *ngFor="let bookComent of bookComents | filter: searchBoxHome" class="comentarios">
-        <div class="comentario" *ngIf="bookComent.code == i">
-          <img class="commentPhoto" [src]="bookComent.img" alt="">
-          <label class="user">{{ bookComent.User }}</label><br />
-          <label class="commentText">{{ bookComent.Comment }}</label>
+      <div *ngFor="let bookComent of bookComents">
+        <div *ngIf="bookComent.Title == book.Title">
+          <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>
+          <div class="comentarios">
+            <div class="comentario">
+              <img class="commentPhoto" [src]="bookComent.Images" alt="">
+              <label class="user">{{ bookComent.name }}</label><br />
+              <label class="commentText">{{ bookComent.Comment }}</label>
+            </div>
+          </div>
         </div>
       </div>
-
-
+      
+      <button (click)="activateComent()">Agregar comentario</button>
+      <div *ngIf="activateComentD == true">
+        <input type="text" placeholder="Escriba su comentario" [(ngModel)]="comentario">
+        <button (click)="sendComentario(book.Title)">Enviar</button>
+      </div>
+      
     </div>
 
   </div>
