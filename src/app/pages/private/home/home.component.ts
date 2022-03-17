@@ -192,6 +192,8 @@ export class HomeComponent implements OnInit {
       });
       
       this.toastr.success('Comentario enviado', 'Exitosamente');
+      this.comentario = "";
+      this.activateComentD = false;
     }
   }
 
@@ -224,44 +226,48 @@ export class HomeComponent implements OnInit {
 
    async coments(books,register){
 
-    let contador = 0;
     let entries;
+    let bookComentLocal = [];
+    this.bookComents = [];
+    bookComentLocal = this.bookComents;
+    console.log("bookComentLocal");
+    console.log(bookComentLocal);
+    console.log("this.bookComents");
+    console.log(this.bookComents);
 
     await books.forEach((element) => {
         if ("Comentarios" in element){
           entries = Object.keys(element.Comentarios);
           for (let i = 0; i < entries.length; i++) {
-            this.bookComents.push({Comment: element.Comentarios[entries[i]].Comment, User: element.Comentarios[entries[i]].User, Title: element.Title}); 
+            bookComentLocal.push({Comment: element.Comentarios[entries[i]].Comment, User: element.Comentarios[entries[i]].User, Title: element.Title}); 
           }
           
         }      
     });
-    
+    console.log(" register");
+    console.log(register);
 
     await register.forEach((element) => {
-      if (this.bookComents[contador]) {
-        if (this.bookComents[contador].User== element.email){
-          if ("Images" in element){            
-            entries = Object.keys(element.Images);
-            let index = entries.length-1;
-            console.log("element.name");
-            console.log(element.name);
-            this.bookComents[contador].Images = element.Images[entries[index]].ImgUrl;
-            this.bookComents[contador].name = element.name + " " + element.lname;
-            contador ++;
-          } else {
-            console.log("element.name");
-            console.log(element.name);
-            this.bookComents[contador].Images = "../../../../../../assets/img/NoImage.png";
-            this.bookComents[contador].name = element.name + " " + element.lname;
-            contador ++;
-          }
-        } 
+      if (bookComentLocal.length != 0) {
+
+        for (let i = 0; i < bookComentLocal.length; i++) {
+
+          if (bookComentLocal[i].User== element.email){
+            if ("Images" in element){            
+              entries = Object.keys(element.Images);
+              let index = entries.length-1;
+              bookComentLocal[i].Images = element.Images[entries[index]].ImgUrl;
+              bookComentLocal[i].name = element.name + " " + element.lname;
+            } else {
+              bookComentLocal[i].Images = "../../../../../../assets/img/NoImage.png";
+              bookComentLocal[i].name = element.name + " " + element.lname;
+            }
+          }  
+        }  
       }       
     });
-    contador = 0;
-    console.log("this.bookComents");
-    console.log(this.bookComents);
+    console.log("bookComentLocal");
+    console.log(bookComentLocal);
       
     }
 
@@ -372,6 +378,10 @@ export class HomeComponent implements OnInit {
     this.contador = 0;
     this.confirm = false;
     this.arr = [];  
+  }
+
+  goToPerfil(email){
+    this.router.navigate(['externalProfiles',{email: email}]);
   }
   
   async addBookToGroup(i){

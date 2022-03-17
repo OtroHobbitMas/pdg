@@ -10,6 +10,7 @@ import * as firebase from "firebase";
 import { Group } from "src/app/models/group";
 import { TagService } from 'src/app/services/tag.service';
 import { User } from 'src/app/models/user';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-group',
@@ -36,12 +37,17 @@ export class GroupComponent implements OnInit {
   permisoPublico = false;
   nameOwner: string;
   userName: string;
+  myGroups: any[] = [];
+  librosGrupo: any[] = [];
+  name;
 
   constructor(
     private tagService: TagService,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
-    private userService: UserService,) { }
+    private userService: UserService,
+    public route: ActivatedRoute,
+    private router: Router,) { }
 
   viewCreateGroup = false;
   firstPage = true;
@@ -50,6 +56,7 @@ export class GroupComponent implements OnInit {
   viewInsideGroup = false;
 
   ngOnInit(): void {
+    let $this = this;
     
     this.tagService.getTags()    
       .snapshotChanges().subscribe(item => {
@@ -60,7 +67,7 @@ export class GroupComponent implements OnInit {
           this.tagsList.push(x as User);          
         });
         this.tagsList = Object.values(this.tagsList[0]);
-        console.log(this.tagsList);
+        // console.log(this.tagsList);
     });
 
     this.userService.getGroups()
@@ -83,9 +90,16 @@ export class GroupComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
+        this.getMygroups();
+        
       });
-            
-    this.UserAcount();
+      setTimeout(function () { 
+        $this.name=$this.route.snapshot.paramMap.get("name");
+        if ($this.name) {
+          $this.viewExternalGroup($this.name);          
+        }        
+        }, 1000);
+      
   }
   
 
@@ -131,32 +145,54 @@ export class GroupComponent implements OnInit {
     this.viewInsideGroup = false;
   }
   
-  UserAcount() {
-    // var user = this.firebaseAuth.auth.currentUser;
-    let $this = this;
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        // User is signed in.
+  getMygroups (){
+    let entries;
+    this.owner = firebase.auth().currentUser.email;
 
-        if (user != null) {
-          user.providerData.forEach(function (profile) {
-            // console.log("Sign-in provider: " + profile.providerId);
-            // console.log("  Provider-specific UID: " + profile.uid);
-            // console.log("  Name: " + profile.displayName);
-            console.log("  Email: " + profile.email);
-            // $this.nameUser = profile.displayName + " " + rofile.displayName;
-            $this.owner = profile.email;
-            $this.getAmigos();
-            // console.log("  Phone Number: " + profile.photoURL);
-          });
+    this.registerList.forEach((element,index) => {
+      if (element.email == this.owner) {
+        if ("Groups" in element){
+          entries = Object.keys(element.Groups);
+          for (let i = 0; i < entries.length; i++) {
+            this.myGroups.push({name: element.Groups[entries[i]].groupName});          
+          }
         }
-        // console.log(user);
-      } else {
-        // No user is signed in.
-      }
+      }      
     });
-    
+    // console.log(" BEFORE this.myGroups");
+    // console.log(this.myGroups);
+
+    // console.log(" groupList");
+    // console.log(this.groupList);
+
+    if (this.groupList.length != 0) {
+      this.groupList.forEach((element,index) => {
+        
+        for (let i = 0; i < this.myGroups.length; i++) {
+          // console.log("this.myGroups[i].name");
+          // console.log(this.myGroups[i].name);
+          // console.log("element.name");
+          // console.log(element.name);
+          if (this.myGroups[i].name == element.name){
+            // console.log("entre");
+            if ("Images" in element){
+              entries = Object.keys(element.Images);
+              this.myGroups[i].Images = element.Images;
+            }else {
+              this.myGroups[i].Images = "../../../../../../assets/img/NoImage.png";
+            }
+            this.myGroups[i].description = element.description;
+          } 
+        }  
+      });
+      
+    }
+    // console.log("this.myGroups");
+    // console.log(this.myGroups);
+
   }
+
+  
 
   archieveGroups(arr){
     this.groupList = arr;
@@ -176,6 +212,7 @@ export class GroupComponent implements OnInit {
   }
 
   async addToTheGroup(nombreGrupo){
+    this.owner = firebase.auth().currentUser.email;
     let key;
     await this.firebase.database.ref("register").once("value", (users,index) => {
       users.forEach((user) => {
@@ -197,7 +234,7 @@ export class GroupComponent implements OnInit {
   }
   
 
-  viewExternalGroup(id){
+  viewExternalGroup(name){
     this.viewInsideGroup = true;
     this.viewsearchGroup = false;
     this.firstPage = false;
@@ -206,33 +243,67 @@ export class GroupComponent implements OnInit {
     this.selectedGroup = [];
     this.selectedIntegrants = [];
     this.selectedTags = [];
-    this.selectedGroup.push(this.groupList[id]);
-    this.selectedIntegrants.push(Object.values(this.selectedGroup[0].integrants));    
-    this.selectedTags.push(Object.values(this.selectedGroup[0].tags));
-    this.registerList.forEach((element,index) => {
-      if (this.groupList[id].owner == element.email) {
-        this.nameOwner = element.name + " " + element.lname;
-      }
-      if ("lname" in element && "name" in element){
-        this.userName = element.name + " " + element.lname;
+    this.librosGrupo = [];
+    let activeUser = firebase.auth().currentUser.email;
+    let temp: any[] = [];
+
+    let entries;
+    console.log("this.groupList");
+    console.log(this.groupList);
+    console.log("this.registerList");
+    console.log(this.registerList);
+
+    this.groupList.forEach((element,index) => {
+      if (this.groupList[index].name == name){
+        // console.log("element");
+        // console.log(element);
+        entries = Object.keys(element.Images);
+        this.selectedGroup.push(element);
+        this.selectedIntegrants.push(Object.values(element.integrants))
+        this.selectedTags.push(Object.values(element.tags));
+        if (element.books) {
+          temp.push(Object.values(element.books));
+        }  
       }
     });
-    console.log("this.userName");
-    console.log(this.userName);
+    this.librosGrupo = temp[0];
+    // console.log("this.groupList");
+    // console.log(this.groupList);
+    
+    this.registerList.forEach((element,index) => {
+      for (let i = 0; i < this.groupList.length; i++) {
+        if (this.groupList[i].owner == element.email) {
+          this.nameOwner = element.name + " " + element.lname;
+        }
+        if (activeUser == element.email){
+          this.userName = element.name + " " + element.lname;
+        }  
+      }  
+    });    
+    
+    // console.log("this.userName");
+    // console.log(this.userName);
 
     for (let i = 0; i < this.selectedIntegrants.length; i++) {
-      if (this.userName != this.selectedIntegrants[i] && this.owner != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "privado") {
+      if (this.userName != this.selectedIntegrants[i] && activeUser != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "privado") {
         this.permiso = false;
       }
-      if (this.userName != this.selectedIntegrants[i] && this.owner != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "publico") {
+      if (this.userName != this.selectedIntegrants[i] && activeUser != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "publico") {
         this.permisoPublico = true;
       }      
     }
+    // console.log("this.librosGrupo");
+    // console.log(this.librosGrupo);
+  }
+
+  goToPerfil(email){
+    this.router.navigate(['externalProfiles',{email: email}]);
   }
 
 
   async getAmigos(){
-    console.log(this.owner); 
+    // console.log(this.owner);
+    this.owner = firebase.auth().currentUser.email; 
 
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
@@ -256,8 +327,8 @@ export class GroupComponent implements OnInit {
         }        
       });
     });
-    console.log("this.amigosList");
-    console.log(this.amigosList);
+    // console.log("this.amigosList");
+    // console.log(this.amigosList);
   }
 
   async deleteSth(integrante,nombreGrupo,id){
@@ -265,10 +336,10 @@ export class GroupComponent implements OnInit {
     // let query2: string = "#contTag"+index[1];
     // let cont: any = document.querySelector(query2);
     // cont.style.display = 'none';
-    console.log("this.registerList");
-    console.log(this.registerList);
-    console.log("id");
-    console.log(id);
+    // console.log("this.registerList");
+    // console.log(this.registerList);
+    // console.log("id");
+    // console.log(id);
     let KeyUSER;
     let Keygroup;
     await this.firebase.database.ref("register").once("value", (users) => {
@@ -277,7 +348,7 @@ export class GroupComponent implements OnInit {
         const childKey = user.key;
         const childData = user.val();
         if (childData.name + " " + childData.lname == integrante[0]) {
-          console.log("entre");
+          // console.log("entre");
           KeyUSER = childKey;
           user.forEach((info) => {              
             info.forEach((MisGrupos) => {
@@ -285,8 +356,8 @@ export class GroupComponent implements OnInit {
                 MisGrupos.forEach((Groups) => {
                   const GroupsChildKey = Groups.key;
                   const GroupsChildData = Groups.val();
-                  console.log("GroupsChildKey");
-                  console.log(GroupsChildKey);
+                  // console.log("GroupsChildKey");
+                  // console.log(GroupsChildKey);
                 if (GroupsChildKey == "groupName" && GroupsChildData == nombreGrupo){
                   Keygroup = MisgruposChildKey;
                 }              
@@ -311,7 +382,7 @@ export class GroupComponent implements OnInit {
     let contador = 0;
 
     if (nameExist) {
-      console.log("Ya existe este nombre");
+      // console.log("Ya existe este nombre");
       this.toastr.error('Ese nombre ya esta registrado', 'Intenta otro nombre', {
         positionClass: 'toast-top-center'
       });

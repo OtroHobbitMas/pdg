@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-external-profiles',
@@ -22,7 +23,8 @@ export class ExternalProfilesComponent implements OnInit {
     private router: Router,
     private firebase: AngularFireDatabase,
     private toastr: ToastrService,
-    private filter: FilterPipe) { }
+    private filter: FilterPipe,
+    public route: ActivatedRoute) { }
 
     registerList: User[];
     imgUser: any[] = [];
@@ -39,9 +41,11 @@ export class ExternalProfilesComponent implements OnInit {
     Currentimg = '';
     searchBoxExternal= '';
     mensajeButton = 'Seguir';
+    call;
 
 
   ngOnInit(): void {
+    
     let $this = this;
       this.UserAcount();
       this.userService.getRegister()
@@ -52,8 +56,9 @@ export class ExternalProfilesComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
-        console.warn("this.registerList");
+        console.log("this.registerList");
         console.log(this.registerList);
+
         this.registerListNew = Object.values(this.registerList);
         const Email = firebase.auth().currentUser.email;
 
@@ -72,7 +77,10 @@ export class ExternalProfilesComponent implements OnInit {
         $this.getImgUsers(this.registerList);
         $this.searchFriends(this.registerList);
       });
-      
+      this.call=this.route.snapshot.paramMap.get("email");
+      if (this.call) {
+        this.viewExternalProfile(this.call);
+      } 
   }
 
   UserAcount (){    
@@ -102,92 +110,43 @@ export class ExternalProfilesComponent implements OnInit {
   }
 
   async getImgUsers(arrList){
-    let $this = this;
     const Email = firebase.auth().currentUser.email;
-    let Key;
     let entries;
-    let email;
-    const filter = '@';    
-    console.warn("arrList");
-    console.log(arrList);
+    let entriesDescipcion;
+    console.log(" Entro en get iIMG this.registerList");
+    console.log(this.registerList);
 
-    setTimeout(function(){
-
-      for (let i = 0; i < arrList.length; i++) {
-
-        entries = Object.values(arrList[i]);
-        for (let j = 0; j < entries.length; j++) {
-          if (typeof entries[j] != 'object'){
-            if (entries[j].match(filter)) {
-            
-              email = entries[j];
-               $this.firebase.database.ref("register").once("value", (users) => {
-                users.forEach((user) => {
-                  const childKey = user.key;
-                  const childData = user.val();     
-                  if (childData.email == email) {
-                    Key = childKey;
-                    user.forEach((info) => {
-                      info.forEach((Images) => {
-                        Images.forEach((ImgUrl) => {
-                          const ImagesChildKey = ImgUrl.key;
-                          const ImagesChildData = ImgUrl.val();
-          
-                          if (ImagesChildKey == "ImgUrl"){
-                            $this.imgUser.push(ImagesChildData);
-                          } 
-                        });
-                      });
-                    });
-                  }
-                });
-              });
-            }
-          }
-                  
-        }
-
-        
-        if ($this.imgUser != undefined){
-          if ($this.imgUser.length >= 1){
-            let lastImg = $this.imgUser[$this.imgUser.length - 1];
-            let query: string = "#imagen"+i;
-            let Userimg: any = document.querySelector(query);
-            Userimg.src = lastImg;
-          } else {
-            let lastImg = $this.imgUser[0];
-            let query: string = "#imagen"+i;
-            let Userimg: any = document.querySelector(query);
-            Userimg.src = lastImg;
-          }  
-        } else{
-        
-          let lastImg = "../../../../../../assets/img/NoImage.png";
-          let query: string = "#imagen"+i;
-          let Userimg: any = document.querySelector(query);
-          Userimg.src = lastImg;
-        }
+    this.registerList.forEach((element,index) => {
+      if ("Images" in element){
+        entries = Object.keys(element.Images);
+        this.registerList[index].Images = element.Images[entries[entries.length-1]].ImgUrl;
+      } else {
+        this.registerList[index].Images = "../../../../../../assets/img/NoImage.png";
       }
 
-     }, 500);
-    
-    this.imgUser = [];
+      if ("Descripcion" in element){
+        entriesDescipcion = Object.values(element.Descripcion);
+        console.log("entriesDescipcion");
+        console.log(entriesDescipcion);
+        console.log("entriesDescipcion[entriesDescipcion.length-1]");
+        console.log(entriesDescipcion[entriesDescipcion.length-1].Descripcion);
+        this.registerList[index].Descripcion = entriesDescipcion[entriesDescipcion.length-1].Descripcion;
+      } else {
+        this.registerList[index].Descripcion = "Sin descripcion";
+      }
+
+    });
+
+    console.log("this.registerList");
+    console.log(this.registerList);
   }
 
   async searchFriends(array){
     let Key;
     const Email = firebase.auth().currentUser.email;
-    console.warn("array");
-    console.log(array);
-    console.log("LEGNTH = "+array.length);
-    // console.warn("array EMAIL");
-    // console.log(array[0].email);
         
-
-      // console.log(this.autor);
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -207,12 +166,9 @@ export class ExternalProfilesComponent implements OnInit {
           }        
         });
       });
-      console.warn("this.arr");
-      console.log(this.arr);
+
       for (let i = 0; i < array.length; i++){
         for (let j = 0; j < this.arr.length; j++){
-          console.log("array.email "+array[i]);
-          console.log("this.array "+this.arr[i]);
           if (array[i].email==this.arr[j]){
             this.mensajeButton = "Amigo";
           }
@@ -239,10 +195,8 @@ export class ExternalProfilesComponent implements OnInit {
       this.correoExternoUser = correoAmigoText;
     }
 
-      // console.log(this.autor);
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -262,7 +216,7 @@ export class ExternalProfilesComponent implements OnInit {
           }        
         });
       });
-      console.log(this.arr);
+
       if (this.arr==undefined){
         this.firebase.database.ref("register").child(Key).child("Amigos").push({
           Contacto: correoAmigoText,

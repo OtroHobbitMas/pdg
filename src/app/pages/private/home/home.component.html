@@ -62,7 +62,7 @@
           <div class="comentarios">
             <div class="comentario">
               <img class="commentPhoto" [src]="bookComent.Images" alt="">
-              <label class="user">{{ bookComent.name }}</label><br />
+              <label (click)="goToPerfil(bookComent.User)" class="user">{{ bookComent.name }}</label><br />
               <label class="commentText">{{ bookComent.Comment }}</label>
             </div>
           </div>

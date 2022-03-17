@@ -14,13 +14,13 @@
         <h1 id="name">Encuentra Amigos</h1>
 
         <div class="card" style="width: 18rem; margin-bottom: 15px;" *ngFor="let user of registerList | filterExternalProfiles:searchBoxExternal; let i = index" >
-            <img class="card-img-top" alt="Card image cap" ng-change="viewExternalProfile(user.email)" (click)="viewExternalProfile(user.email)" id="{{'imagen'+i}}"  src="../../../../../../assets/img/NoImage.png" alt="imagenes" class="userImg">
+            <img class="card-img-top" alt="Card image cap" (click)="viewExternalProfile(user.email)" id="{{'imagen'+i}}"  [src]="user.Images" alt="imagenes" class="userImg">
               
 
             <div class="card-body">
                 <h1 style="display: none;" id="{{'correo'+i}}"  align="center" >{{user.email}}</h1>
                 <h1 class="card-title" (click)="viewExternalProfile(user.email)" id="{{'nombre'+i}}"  align="center">{{user.name}} {{user.lname}}</h1>
-                <p class="card-text" id="{{'descripcion'+i}}"  align="center">Aquí irá la descripción de cada persona. Lorem ipsum dolor sit amet consectetur, adipisicing elit</p>
+                <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.Descripcion}}</p>
                 <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalProfile(user.email)">Ver Perfil</button>
                 <button class="button is-info"  id="{{'button-'+i}}" (click)="addFriend(i)">{{mensajeButton}}</button>
             </div>  

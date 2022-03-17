@@ -108,7 +108,7 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(["/tags"]);
   }
   goToBook(i: string) {
-    console.log(this.misLibrosList[i]);
+    // console.log(this.misLibrosList[i]);
     // console.log(this.misLibrosList[i].link);
     this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink}]);
   }
@@ -193,7 +193,6 @@ export class ProfileComponent implements OnInit {
   getMisGrupos() {
     const Email = firebase.auth().currentUser.email;
     let entries;
-    let contador = 0;
 
     this.registerList.forEach((element, index) => {
       if (Email == element.email) {
@@ -209,21 +208,19 @@ export class ProfileComponent implements OnInit {
     });
 
     this.groupList.forEach((element, index) => {
-      if (this.misGroupsList[contador].name == element.name) {
-        if ("Images" in element) {
-          entries = Object.keys(element.Images);
-          this.misGroupsList[contador].Images =
-            element.Images[entries[0]].ImgUrl;
-          contador++;
-        } else {
-          this.misGroupsList[contador].Images =
-            "../../../../../../assets/img/NoImage.png";
-          contador++;
+      for (let i = 0; i < this.misGroupsList.length; i++) {
+        if (this.misGroupsList[i].name == element.name) {
+          if ("Images" in element) {
+            entries = Object.keys(element.Images);
+            this.misGroupsList[i].Images =
+              element.Images[entries[0]].ImgUrl;
+          } else {
+            this.misGroupsList[i].Images =
+              "../../../../../../assets/img/NoImage.png";
+          }
         }
-      }
+      }  
     });
-
-    contador = 0;
   }
 
   //-----------------------------------------------------Update perfil photo----------------------------------------------
@@ -364,11 +361,7 @@ export class ProfileComponent implements OnInit {
         });
       });
 
-      this.firebase.database
-        .ref("register")
-        .child(Key)
-        .child("Descripcion")
-        .push({
+      this.firebase.database.ref("register").child(Key).child("Descripcion").push({
           Descripcion: Description,
         });
 
@@ -428,9 +421,11 @@ export class ProfileComponent implements OnInit {
           user = usersData[key];
         }
       });
-      Object.keys(user.MisLibros).forEach((key) => {
-        this.misLibrosList.push(user.MisLibros[key]);
-      });
+      if (user.MisLibros) {
+        Object.keys(user.MisLibros).forEach((key) => {
+          this.misLibrosList.push(user.MisLibros[key]);
+        });
+      }  
     });
   }
 
@@ -456,28 +451,35 @@ export class ProfileComponent implements OnInit {
       }
     });
 
+
     this.registerList.forEach((element, index) => {
       if (this.misAmigosList[contador]) {
-        if (
-          this.misAmigosList[contador].name ==
-          element.name + " " + element.lname
-        ) {
+        if (this.misAmigosList[contador].name == element.name + " " + element.lname) {
+          this.misAmigosList[contador].User = element.email;
           if ("Images" in element) {
             entries = Object.keys(element.Images);
             let index = entries.length - 1;
-            this.misAmigosList[contador].Images =
-              element.Images[entries[index]].ImgUrl;
+            this.misAmigosList[contador].Images = element.Images[entries[index]].ImgUrl;
             contador++;
           } else {
-            this.misAmigosList[contador].Images =
-              "../../../../../../assets/img/NoImage.png";
+            this.misAmigosList[contador].Images = "../../../../../../assets/img/NoImage.png";
             contador++;
           }
+          
         }
       }
     });
     contador = 0;
   }
+
+  goToPerfil(email){
+    this.router.navigate(['externalProfiles',{email: email}]);
+  }
+
+  goToGroup(name){
+    this.router.navigate(['groups',{name: name}]);
+  }
+
   //-----------------------------------------------------Start get MisTags------------------------------------------
 
   async getMisTags() {

@@ -8,7 +8,6 @@ export class User {
     email: string;
     lname: string;
     name: string;
-    description: string;
     urlImage: string; 
     password: string;
     telefono: Phone;
@@ -18,5 +17,6 @@ export class User {
     Groups: Object;
     Amigos: Object;
     Images: Object;
+    Descripcion: Object;
 }
 

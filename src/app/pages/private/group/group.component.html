@@ -5,7 +5,19 @@
     <div *ngIf="firstPage == true" style="margin-top: 25% !important;" class="containerButtons">
       <button (click)="createGroup()">Crear grupo</button>
       <button (click)="searchGroupF()">Buscar grupo</button>
-      <h1 style="margin-top: 30%;">Sube el scroll :D</h1>
+      <h1 style="margin-top: 30%;">Mis grupos</h1>
+      <input type="text" name="searchBoxExternal" placeholder="Buscar ..." [(ngModel)]="searchBoxExternal">
+      <div class="card" style="width: 18rem; margin-bottom: 15px;" *ngFor="let user of myGroups | filterExternalProfiles:searchBoxExternal; let i = index" >
+        <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"  [src]="user.Images" alt="imagenes" class="groupImg">
+          
+
+        <div class="card-body">
+            <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}"  align="center">{{user.name}}</h1>
+            <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.description}}</p>
+            <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver Grupo</button>
+        </div>  
+        
+    </div>
     </div> 
 
 <!-- ---------------------------------------------------Create Group----------------------------------------------- -->    
@@ -71,14 +83,14 @@
         <h1 id="name">Encuentra grupos</h1>
 
         <div class="card" style="width: 18rem; margin-bottom: 15px;" *ngFor="let user of groupList | filterExternalProfiles:searchBoxExternal; let i = index" >
-            <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(i)" id="{{'imagenGroup'+i}}"  [src]="user.Images" alt="imagenes" class="groupImg">
+            <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"  [src]="user.Images" alt="imagenes" class="groupImg">
               
 
             <div class="card-body">
-                <h1 class="card-title" (click)="viewExternalGroup(i)" id="{{'nombre'+i}}"  align="center">{{user.name}}</h1>
+                <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}"  align="center">{{user.name}}</h1>
                 <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.description}}</p>
                 <p class="card-text" id="{{'privacity'+i}}"  align="center">{{user.privacity}}</p>
-                <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(i)">Ver Grupo</button>
+                <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver Grupo</button>
             </div>  
             
         </div> 
@@ -186,20 +198,20 @@
 
           <div *ngIf="permiso == true" class="librosContainer">
 
-            <h1 class="name" style="margin-top: 40px;">Libros del grupo</h1>
+            <h1 *ngIf="librosGrupo" class="name" style="margin-top: 40px;">Libros del grupo</h1>
             <ngb-carousel>
-                <ng-template *ngFor="let misLibros of misLibrosList; let i = index" id="{{'mislibros'+i}}" ngbSlide>
+                <ng-template *ngFor="let librosGrupo of librosGrupo; let i = index" id="{{'librosGrupo'+i}}" ngbSlide>
                     <div>
                         <img *ngIf="select.owner == owner" (click)="deleteBook('eliminate-'+i)" id="{{'eliminate'+i}}"
                             src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg">
                         <div class="picsum-img-wrapper">
-                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen"
+                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="librosGrupo.Imagen"
                                 alt="Random first slide">
 
                         </div>
                         <div class="carousel-caption" style="z-index: 0;">
-                            <h3 id="{{'titulo'+i}}" align="center">{{misLibros.Titulo}}</h3>
-                            <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{misLibros.Autor}}</p>
+                            <h3 id="{{'titulo'+i}}" align="center">{{librosGrupo.Titulo}}</h3>
+                            <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{librosGrupo.Autor}}</p>
                         </div>
                     </div>
                 </ng-template>
