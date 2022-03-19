@@ -11,6 +11,7 @@ import { Group } from "src/app/models/group";
 import { TagService } from 'src/app/services/tag.service';
 import { User } from 'src/app/models/user';
 import {ActivatedRoute} from '@angular/router';
+import { cpuUsage } from "process";
 
 @Component({
   selector: 'app-group',
@@ -40,6 +41,7 @@ export class GroupComponent implements OnInit {
   myGroups: any[] = [];
   librosGrupo: any[] = [];
   name;
+  openedGruop:string="";
 
   constructor(
     private tagService: TagService,
@@ -304,12 +306,19 @@ export class GroupComponent implements OnInit {
 
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
+<<<<<<< HEAD
         
         entriesIntegrants = Object.values(element.integrants);
 
         for (let i = 0; i < entriesIntegrants.length; i++) {
           this.selectedIntegrants.push(entriesIntegrants[i].name);
         }
+=======
+        this.openedGruop=name;
+        // console.log("element");
+        // console.log(element);
+        entries = Object.keys(element.Images);
+>>>>>>> 6bb611ec98295955e8aa561e5bcf9cc8369ec9e1
         this.selectedGroup.push(element);
         
         this.selectedTags.push(Object.values(element.tags));
@@ -319,6 +328,7 @@ export class GroupComponent implements OnInit {
       }
     });
     this.librosGrupo = temp[0];
+    console.log("libros grupo",this.librosGrupo);
     // console.log("this.groupList");
     // console.log(this.groupList);
     
@@ -350,6 +360,12 @@ export class GroupComponent implements OnInit {
 
   goToPerfil(email){
     this.router.navigate(['externalProfiles',{email: email}]);
+  }
+
+  goToBook(i: string) {
+    // console.log("CLICK LIBRO",this.librosGrupo[i]);
+    // console.log("GRUPO",this.openedGruop);
+    this.router.navigate(['/book',{Pag: this.librosGrupo[i].pag, title: this.librosGrupo[i].Titulo,url: this.librosGrupo[i].alink,group:this.openedGruop}]);
   }
 
 

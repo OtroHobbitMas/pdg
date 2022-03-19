@@ -16,7 +16,8 @@ export class ChatService {
   connect() {
     return new Observable(observer => {
       // this.socket = io('http://192.168.0.23:3000');
-      this.socket = io('http://192.168.1.56:3000',{ transports: ['websocket'] });
+      this.socket = io('192.168.10.15:3000',{ transports: ['websocket'] }); 
+      //AQUI CAMBIO LA IP V4
       this.socket.on('connect', () => {
         this.socket.emit("connected");
         observer.next();

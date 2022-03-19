@@ -110,7 +110,7 @@ export class ProfileComponent implements OnInit {
   goToBook(i: string) {
     // console.log(this.misLibrosList[i]);
     // console.log(this.misLibrosList[i].link);
-    this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink}]);
+    this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink,group:""}]);
   }
 
   async doLogout() {

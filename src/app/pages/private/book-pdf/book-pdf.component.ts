@@ -38,7 +38,7 @@ export class BookPDFComponent implements OnInit {
 
   //AQUÍ ACABA
   
-  msgs: Array<MessageI> =[{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50"},{"user":"../../../../../../assets/img/NoImage.png","content":"Adiossss","time":"8:50"},{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50"}];
+  msgs: Array<MessageI> =[{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Harry Potter y la  Piedra Filosofal","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Hp","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Adiossss","time":"8:50","book":"HA","group":"hola123"}];
   msgForm: FormControl;
   subscriptionList: {
     connection: Subscription,
@@ -50,6 +50,8 @@ export class BookPDFComponent implements OnInit {
   url;
   pag;
   title;
+  group;
+  isGroup=false;
 
 
   constructor(public chatService:ChatService, public route: ActivatedRoute ) {
@@ -57,12 +59,15 @@ export class BookPDFComponent implements OnInit {
    }
 
   ngOnInit(): void { 
-    this.initChat();
 
     this.url=this.route.snapshot.paramMap.get("url");
     this.pag=this.route.snapshot.paramMap.get("Pag");
     this.title=this.route.snapshot.paramMap.get("title");    
-  
+    this.group=this.route.snapshot.paramMap.get("group");
+    if(this.group!=""){
+      this.isGroup=true;
+      this.initChat();
+    }
 
   }
 
@@ -99,7 +104,11 @@ export class BookPDFComponent implements OnInit {
     this.subscriptionList.connection = this.chatService.connect().subscribe(_ => {
       console.log("Nos conectamos");
       this.subscriptionList.newMgs = this.chatService.getNewMsgs().subscribe((msg: MessageI) => {
-        this.msgs.push(msg);
+        
+        if(msg.group==this.group && msg.book==this.title){
+          this.msgs.push(msg);
+        }
+
       });
     });
   }
@@ -108,7 +117,9 @@ export class BookPDFComponent implements OnInit {
     const msg: MessageI = {
       content: this.msgForm.value,
       time: Date.now().toString(),
-      user: "../../../../../../assets/img/NoImage.png"
+      user: "../../../../../../assets/img/NoImage.png",
+      group: this.group,
+      book:this.title 
     }
     this.chatService.sendMsg(msg);
     this.msgForm.setValue("");
