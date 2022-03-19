@@ -165,7 +165,7 @@ export class GroupComponent implements OnInit {
     // console.log(" groupList");
     // console.log(this.groupList);
 
-    if (this.groupList.length != 0) {
+    if (this.groupList) {
       this.groupList.forEach((element,index) => {
         
         for (let i = 0; i < this.myGroups.length; i++) {

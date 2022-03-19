@@ -41,7 +41,7 @@
         <button class="button is-info" style="margin-right: 10px; width: 25%">
           Leer
         </button>
-        <button class="button is-info" id="{{ 'button-' + i }}" (click)="addBookToUser('button-' + i)"
+        <button class="button is-info" id="{{ 'button-' + i }}" (click)="addBookToUser(i)"
           style="width: 50%">
           Agregar a mi lista
         </button>
@@ -49,9 +49,9 @@
           Agregar a mi grupo
         </button>
         <div *ngIf="activate == true">
-          <select (change)="addBookToGroup('buttonGroup-' + i)" id="">
+          <select (change)="addBookToGroup(i)" [(ngModel)]="groupValue">
             <option value="" disabled selected>Seleccione su grupo</option>
-            <option *ngFor="let groups of booksListGroup"  value="groups">{{groups}}</option>
+            <option *ngFor="let groups of booksListGroup"  [ngValue]="groups">{{groups}}</option>
           </select>
         </div>        
       </div>
