@@ -18,6 +18,16 @@ export class UserService {
     this.subCollectionPhone= "telefono";
   }
 
+  async getUserImg(email:string){
+    let image = ""
+    await this.firebase.database.ref(this.collection).orderByChild('email').equalTo(email).limitToLast(1).once("value", (user) =>{
+    user = user.val()
+    let Images = user[Object.keys(user)[0]].Images;
+    image = Images[Object.keys(Images)[-1]].ImgUrl;    
+    } )
+    return image
+  }
+
   getRegister(){
      this.registerList = this.firebase.list(this.collection);
      

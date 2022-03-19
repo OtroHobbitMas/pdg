@@ -6,6 +6,11 @@ import { FormControl } from "@angular/forms";
 import { Subscription } from 'rxjs';
 import { AngularEpubViewerComponent, AngularEpubViewerModule } from 'angular-epub-viewer';
 import {ActivatedRoute} from '@angular/router';
+import * as firebase from "firebase";
+import { AngularFireDatabase } from '@angular/fire/database';
+import { UserService } from 'src/app/services/user.service';
+
+
 
 
 @Component({
@@ -54,7 +59,8 @@ export class BookPDFComponent implements OnInit {
   isGroup=false;
 
 
-  constructor(public chatService:ChatService, public route: ActivatedRoute ) {
+    constructor(public chatService:ChatService, public route: ActivatedRoute, private firebase: AngularFireDatabase, 
+      public userService : UserService) {
     this.msgForm = new FormControl();
    }
 
@@ -69,6 +75,7 @@ export class BookPDFComponent implements OnInit {
       this.initChat();
     }
 
+
   }
 
   ngAfterViewInit(){
@@ -77,6 +84,9 @@ export class BookPDFComponent implements OnInit {
     this.epubViewer.openLink(this.url);
 
     // this.epubViewer.openLink("https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07");
+
+   
+
   }
 
  
@@ -85,20 +95,6 @@ export class BookPDFComponent implements OnInit {
   
   public name: string = "Harry Potter y la Piedra Filosofal"; 
 
-  // pdfSrc = "https://drive.google.com/file/d/1jq3wKpEloUZlT3PjqSn0GGhfuytXJbhD/view?usp=sharing";
-  pdfSrc="../../../../assets/HarryPotter-PiedraFilosofal.pdf";
-
-  pageRendered(e: CustomEvent) {
-    console.log('(page-rendered)', e);
-  }
-
-  pageInitialized(e: CustomEvent) {
-    console.log('(pages-initialized:)', e);
-  }
-
-  onProgress(progressData) {
-    console.log('(progress)', progressData); // do anything with progress data. For example progress indicator
-  }
 
   initChat() {
     this.subscriptionList.connection = this.chatService.connect().subscribe(_ => {
@@ -113,11 +109,17 @@ export class BookPDFComponent implements OnInit {
     });
   }
 
-  sendMsg() {
+  async sendMsg() {
+    // console.log(firebase.auth().currentUser);
+    let img= ""
+    await this.userService.getUserImg(firebase.auth().currentUser.email).then(value =>{
+      img = value 
+    });
+
     const msg: MessageI = {
       content: this.msgForm.value,
       time: Date.now().toString(),
-      user: "../../../../../../assets/img/NoImage.png",
+      user: img == "" ? "../../../../../../assets/img/NoImage.png" : img,
       group: this.group,
       book:this.title 
     }
