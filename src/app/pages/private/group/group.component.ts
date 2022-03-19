@@ -306,19 +306,16 @@ export class GroupComponent implements OnInit {
 
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
-<<<<<<< HEAD
         
         entriesIntegrants = Object.values(element.integrants);
 
         for (let i = 0; i < entriesIntegrants.length; i++) {
           this.selectedIntegrants.push(entriesIntegrants[i].name);
         }
-=======
         this.openedGruop=name;
         // console.log("element");
         // console.log(element);
         entries = Object.keys(element.Images);
->>>>>>> 6bb611ec98295955e8aa561e5bcf9cc8369ec9e1
         this.selectedGroup.push(element);
         
         this.selectedTags.push(Object.values(element.tags));
