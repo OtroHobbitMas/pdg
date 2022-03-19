@@ -15,6 +15,7 @@ import { BookService } from 'src/app/services/book.service';
 // import { User } from 'src/app/models/user';
 import { User } from 'src/app/models/user';
 import { Book } from 'src/app/models/book';
+import { Group } from 'src/app/models/group';
 
 @Component({   
   selector: 'app-home',
@@ -67,7 +68,7 @@ export class HomeComponent implements OnInit {
     itemRef: any;
     macthRecomended: any[] = [];
     nameGroup: string;
-    groupList: any[] = [];
+    groupValue: string;
     booksList: any[] = [];
     booksListGroup: any[] = [];
     tagsList: any[] = [];
@@ -75,6 +76,7 @@ export class HomeComponent implements OnInit {
     activateComentD = false;
     comentario: string;
     arrTagsBooks: any[] = [];
+    groupList: any[] = [];
     tag: string;
 
     ngOnInit(): void {
@@ -91,6 +93,17 @@ export class HomeComponent implements OnInit {
         });
         this.getMyGroupsAndBooks(this.registerList);
       });
+
+      this.userService.getGroups()
+      .snapshotChanges().subscribe(item => {
+        this.groupList = [];
+        item.forEach(element => {
+          let x = element.payload.toJSON();
+          x["$key"] = element.key;
+          this.groupList.push(x as Group);
+        });
+      });
+
 
       this.tagService.getTags()    
       .snapshotChanges().subscribe(item => {
@@ -211,12 +224,12 @@ export class HomeComponent implements OnInit {
           }
         }        
       }
-      if ("MisLibros" in element){
-        entriesBooks = Object.keys(element.MisLibros);
-        for (let i = 0; i < entriesBooks.length; i++) {
-          this.booksListGroup.push(element.MisLibros[entriesBooks[i]].Titulo);
-        }        
-      }
+      // if ("MisLibros" in element){
+      //   entriesBooks = Object.keys(element.MisLibros);
+      //   for (let i = 0; i < entriesBooks.length; i++) {
+      //     this.booksListGroup.push(element.MisLibros[entriesBooks[i]].Titulo);
+      //   }        
+      // }
     });
   }
 
@@ -317,20 +330,13 @@ export class HomeComponent implements OnInit {
 
   async addBookToUser(i){
     let Key;
-    let index = i.split("-");
+    let alink;
 
     const Email = firebase.auth().currentUser.email;
-      let imgText = "imagen";
-      this.imagen = document.querySelector('#'+imgText+index[1]);         
-      this.imagen = this.imagen.src;  
-
-      let titText = "titulo";
-      this.titulo = document.querySelector('#'+titText+index[1]);      
-      this.titulo = this.titulo.textContent;
-
-      let autorText = "autor";
-      this.autor = document.querySelector('#'+autorText+index[1]);      
-      this.autor = this.autor.textContent;
+      this.imagen = this.macthRecomended[i].Portada;
+      this.titulo = this.macthRecomended[i].Title;
+      this.autor = this.macthRecomended[i].Nombre;
+      alink = this.macthRecomended[i].alink;
 
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
@@ -371,6 +377,8 @@ export class HomeComponent implements OnInit {
           Imagen: this.imagen,
           Titulo: this.titulo,
           Autor: this.autor,
+          alink: alink,
+          Pag: 0
         });
         this.toastr.success('Libro añadido a tu lista', 'Exitosamente');
       }
@@ -385,38 +393,75 @@ export class HomeComponent implements OnInit {
   }
   
   async addBookToGroup(i){
+    let alink;
     let keygroup;
-    let index = i.split("-");
-    let imgText = "imagen";
-    this.imagen = document.querySelector('#'+imgText+index[1]);         
-    this.imagen = this.imagen.src;  
-
-    let titText = "titulo";
-    this.titulo = document.querySelector('#'+titText+index[1]);      
-    this.titulo = this.titulo.textContent;
-
-    let autorText = "autor";
-    this.autor = document.querySelector('#'+autorText+index[1]);      
-    this.autor = this.autor.textContent;
+    let booksinGroup: any[] = [];
+    let entries;
+    // console.log("i");
+    // console.log(i);
+    // console.log("this.groupValue");
+    // console.log(this.groupValue);
+    
+    this.titulo = this.macthRecomended[i].Title;
+    this.imagen = this.macthRecomended[i].Portada;
+    this.autor = this.macthRecomended[i].Nombre;
+    alink = this.macthRecomended[i].alink;
+    
 
     await this.firebase.database.ref("groups").once("value", (users) => {
       users.forEach((user) => {
         // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
-        if (childData.name == this.groupList[index[1]]) {
+        if (childData.name == this.groupValue) {
           keygroup = childKey;
         }        
       });
     });
-    if (keygroup) {
+    
+    this.groupList.forEach((element) => {
+
+      if (element.name == this.groupValue) {
+        if ("books" in element){
+          entries = Object.keys(element.books);
+          for (let i = 0; i < entries.length; i++) {
+            booksinGroup.push(element.books[entries[i]].Titulo);     
+          }
+             
+        }
+      } 
+    });
+
+    if (booksinGroup.length == 0) {
       this.firebase.database.ref("groups").child(keygroup).child("books").push({
         Autor: this.autor,
         Imagen: this.imagen,
-        Titulo: this.titulo
+        Titulo: this.titulo,
+        alink: alink,
+        Pag: 0
       });
       this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
-    }   
+    }
+
+    for (let i = 0; i < booksinGroup.length; i++) {
+      if (this.titulo != booksinGroup[i]){
+        if (keygroup) {
+          this.firebase.database.ref("groups").child(keygroup).child("books").push({
+            Autor: this.autor,
+            Imagen: this.imagen,
+            Titulo: this.titulo,
+            alink: alink,
+            Pag: 0
+          });
+          this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
+        }
+        break;  
+      } else {
+        this.toastr.error('El libro ya se encuentra en el grupo');
+        break;
+      }
+    }
+     
   }
   
   async SendContact() {

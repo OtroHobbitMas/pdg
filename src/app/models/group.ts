@@ -7,7 +7,7 @@ export class Group {
     owner: string;
     name: string;
     description: string;
-    integrants: string; 
+    integrants: Object; 
     privacity: string;
     tags: Array<Tag>;
     id: number;
