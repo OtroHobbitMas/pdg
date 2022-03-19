@@ -79,7 +79,6 @@ export class UserService {
       owner: group.owner,
       name: group.name,
       description: group.description,
-      integrants: group.integrants, 
       privacity: group.privacity,
       tags: group.tags,
     });

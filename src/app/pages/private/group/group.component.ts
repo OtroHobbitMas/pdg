@@ -91,7 +91,7 @@ export class GroupComponent implements OnInit {
           this.registerList.push(x as User);
         });
         this.getMygroups();
-        
+        this.getAmigos();
       });
       setTimeout(function () { 
         $this.name=$this.route.snapshot.paramMap.get("name");
@@ -214,6 +214,12 @@ export class GroupComponent implements OnInit {
   async addToTheGroup(nombreGrupo){
     this.owner = firebase.auth().currentUser.email;
     let key;
+    let keygroup;
+    let nombre;
+    let entries;
+    let integrantes: any[] = [];
+    let estoy;
+
     await this.firebase.database.ref("register").once("value", (users,index) => {
       users.forEach((user) => {
         // console.log("entre nivel1");
@@ -221,16 +227,58 @@ export class GroupComponent implements OnInit {
         const childData = user.val();
         if (childData.email == this.owner) {
           key = childKey;
+          nombre = childData.name + " " + childData.lname;
         }        
       });
     });
-    this.toastr.success('Te agregaste a este grupo', 'Exitosamente', {
-      positionClass: 'toast-top-center'
+    await this.firebase.database.ref("groups").once("value", (users,index) => {
+      users.forEach((user) => {
+        // console.log("entre nivel1");
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.name == nombreGrupo) {
+          keygroup = childKey;
+        }        
+      });
     });
-    this.firebase.database.ref("register").child(key).child("Groups").push({
-      groupName: nombreGrupo,
-      category: "integrant"
+    
+    this.groupList.forEach((element,index) => {
+      if ("integrants" in element){
+        
+        entries = Object.values(element.integrants);
+
+        for (let i = 0; i < entries.length; i++) {
+          integrantes.push(entries[i].name);
+        }
+      }
     });
+
+    for (let i = 0; i < integrantes.length; i++) {
+        if (integrantes[i] != nombre) {
+          estoy = false;
+        } else {
+          estoy = true;
+        }
+    }
+    
+    if (estoy == false){
+      this.firebase.database.ref("register").child(key).child("Groups").push({
+        groupName: nombreGrupo,
+        category: "integrant"
+      });
+      this.firebase.database.ref("groups").child(keygroup).child("integrants").push({
+        name: nombre,
+      });
+      this.toastr.success('Te agregaste a este grupo', 'Exitosamente', {
+        positionClass: 'toast-top-center'
+      });
+    } else {
+      this.toastr.error('Ya estas en este grupo', '', {
+        positionClass: 'toast-top-center'
+      });
+    }
+    
+    
   }
   
 
@@ -248,6 +296,7 @@ export class GroupComponent implements OnInit {
     let temp: any[] = [];
 
     let entries;
+    let entriesIntegrants;
     console.log("this.groupList");
     console.log(this.groupList);
     console.log("this.registerList");
@@ -255,11 +304,14 @@ export class GroupComponent implements OnInit {
 
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
-        // console.log("element");
-        // console.log(element);
-        entries = Object.keys(element.Images);
+        
+        entriesIntegrants = Object.values(element.integrants);
+
+        for (let i = 0; i < entriesIntegrants.length; i++) {
+          this.selectedIntegrants.push(entriesIntegrants[i].name);
+        }
         this.selectedGroup.push(element);
-        this.selectedIntegrants.push(Object.values(element.integrants))
+        
         this.selectedTags.push(Object.values(element.tags));
         if (element.books) {
           temp.push(Object.values(element.books));
@@ -304,6 +356,7 @@ export class GroupComponent implements OnInit {
   async getAmigos(){
     // console.log(this.owner);
     this.owner = firebase.auth().currentUser.email; 
+    this.amigosList = [];
 
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
@@ -327,8 +380,8 @@ export class GroupComponent implements OnInit {
         }        
       });
     });
-    // console.log("this.amigosList");
-    // console.log(this.amigosList);
+    console.log("this.amigosList");
+    console.log(this.amigosList);
   }
 
   async deleteSth(integrante,nombreGrupo,id){
@@ -376,8 +429,11 @@ export class GroupComponent implements OnInit {
   async onSubmit(){
     this.owner = firebase.auth().currentUser.email;
     const nombreGrupo = this.ngForm.controls.name.value;
+    const integrant = this.ngForm.controls.integrants.value;
+
     let nameExist = this.groupList.find(group => group.name == nombreGrupo);
     let keyOwner;
+    let keyGroup;
     let keyIntegrants = [];
     let contador = 0;
 
@@ -391,10 +447,10 @@ export class GroupComponent implements OnInit {
         positionClass: 'toast-top-center'
       });
       this.userService.createGroup(this.ngForm.value);
+      
       this.nextImage = true;
       await this.firebase.database.ref("register").once("value", (users,index) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == this.owner) {
@@ -406,6 +462,27 @@ export class GroupComponent implements OnInit {
           }        
         });
       });
+
+      await this.firebase.database.ref("groups").once("value", (users,index) => {
+        users.forEach((user) => {
+          const childKey = user.key;
+          const childData = user.val();
+          if (childData.name == nombreGrupo) {
+            keyGroup = childKey;
+          }       
+        });
+      });
+      
+      if (keyGroup) {
+        for (let i = 0; i < integrant.length; i++) {
+          this.firebase.database.ref("groups").child(keyGroup).child("integrants").push({
+            name: integrant[i],
+          });
+        }
+        
+      }
+      
+
       if (keyOwner) {
         this.firebase.database.ref("register").child(keyOwner).child("Groups").push({
           groupName: nombreGrupo,
