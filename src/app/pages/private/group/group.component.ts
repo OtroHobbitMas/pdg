@@ -402,11 +402,6 @@ export class GroupComponent implements OnInit {
       }  
     });
 
-    if(this.selectedGroup[0].owner == activeUser){
-      this.permisoAdd = false;
-      this.permisoAdmin = false;
-    }
-
     for (let i = 0; i < this.selectedIntegrants.length; i++) {
       if(this.userName == this.selectedIntegrants[i]){
         this.permisoAdd = false;
@@ -417,6 +412,11 @@ export class GroupComponent implements OnInit {
       }    
     }
     
+    if(this.selectedGroup[0].owner == activeUser){
+      this.permisoAdd = false;
+      this.permisoAdmin = false;
+      this.permisoVisual = true;
+    }
   }
 
   goToPerfil(email){
