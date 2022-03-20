@@ -307,10 +307,12 @@ export class GroupComponent implements OnInit {
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
         
-        entriesIntegrants = Object.values(element.integrants);
-
-        for (let i = 0; i < entriesIntegrants.length; i++) {
-          this.selectedIntegrants.push(entriesIntegrants[i].name);
+        if("integrants" in element){
+          entriesIntegrants = Object.values(element.integrants);
+  
+          for (let i = 0; i < entriesIntegrants.length; i++) {
+            this.selectedIntegrants.push(entriesIntegrants[i].name);
+          }
         }
         this.openedGruop=name;
         // console.log("element");
