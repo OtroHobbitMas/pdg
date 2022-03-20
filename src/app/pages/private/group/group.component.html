@@ -107,7 +107,7 @@
               <img class="Photoimg" [src]="select.Images" srcset="" alt="" id="img">
           </div>
 
-          <button *ngIf="permiso == false || permisoPublico == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
+          <button *ngIf="permisoAdd == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
                   style="padding: 5px;">Ingresar al grupo</button>
 
           <div class="ContainerDescription">
@@ -144,7 +144,7 @@
           </div>
 
 
-          <div *ngIf="permiso == true" class="integrantsContainer">
+          <div *ngIf="permisoVisual == true" class="integrantsContainer">
 
             <h1 class="integrants" style="margin-top: 20px;">Integrantes</h1>
 
@@ -173,7 +173,6 @@
 
           <div class="tagsContainer">
 
-              <h1 class="name" style="margin-top: 20px;">Mis tags</h1>
 
               <table class="table">
                   <thead>
@@ -196,7 +195,7 @@
                   tags</button>
           </div>
 
-          <div *ngIf="permiso == true" class="librosContainer">
+          <div *ngIf="permisoVisual == true" class="librosContainer">
 
             <h1 *ngIf="librosGrupo" class="name" style="margin-top: 40px;">Libros del grupo</h1>
             <ngb-carousel>

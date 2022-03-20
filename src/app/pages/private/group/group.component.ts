@@ -34,14 +34,15 @@ export class GroupComponent implements OnInit {
   selectedGroup: any[] = [];
   selectedIntegrants: any[] = []; 
   selectedTags: any[] = [];
-  permiso = true;
-  permisoPublico = false;
+  permisoVisual = true;
+  permisoAdd = true;
   nameOwner: string;
   userName: string;
   myGroups: any[] = [];
   librosGrupo: any[] = [];
   name;
   openedGruop:string="";
+  desaparecerBoton = true;
 
   constructor(
     private tagService: TagService,
@@ -69,7 +70,6 @@ export class GroupComponent implements OnInit {
           this.tagsList.push(x as User);          
         });
         this.tagsList = Object.values(this.tagsList[0]);
-        // console.log(this.tagsList);
     });
 
     this.userService.getGroups()
@@ -161,22 +161,12 @@ export class GroupComponent implements OnInit {
         }
       }      
     });
-    // console.log(" BEFORE this.myGroups");
-    // console.log(this.myGroups);
-
-    // console.log(" groupList");
-    // console.log(this.groupList);
 
     if (this.groupList) {
       this.groupList.forEach((element,index) => {
         
         for (let i = 0; i < this.myGroups.length; i++) {
-          // console.log("this.myGroups[i].name");
-          // console.log(this.myGroups[i].name);
-          // console.log("element.name");
-          // console.log(element.name);
           if (this.myGroups[i].name == element.name){
-            // console.log("entre");
             if ("Images" in element){
               entries = Object.keys(element.Images);
               this.myGroups[i].Images = element.Images;
@@ -189,8 +179,6 @@ export class GroupComponent implements OnInit {
       });
       
     }
-    // console.log("this.myGroups");
-    // console.log(this.myGroups);
 
   }
 
@@ -224,7 +212,6 @@ export class GroupComponent implements OnInit {
 
     await this.firebase.database.ref("register").once("value", (users,index) => {
       users.forEach((user) => {
-        // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
         if (childData.email == this.owner) {
@@ -235,7 +222,6 @@ export class GroupComponent implements OnInit {
     });
     await this.firebase.database.ref("groups").once("value", (users,index) => {
       users.forEach((user) => {
-        // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
         if (childData.name == nombreGrupo) {
@@ -274,6 +260,9 @@ export class GroupComponent implements OnInit {
       this.toastr.success('Te agregaste a este grupo', 'Exitosamente', {
         positionClass: 'toast-top-center'
       });
+      this.selectedIntegrants.push(nombre);
+      this.permisoAdd = false;
+      this.permisoVisual = true;
     } else {
       this.toastr.error('Ya estas en este grupo', '', {
         positionClass: 'toast-top-center'
@@ -299,10 +288,6 @@ export class GroupComponent implements OnInit {
 
     let entries;
     let entriesIntegrants;
-    console.log("this.groupList");
-    console.log(this.groupList);
-    console.log("this.registerList");
-    console.log(this.registerList);
 
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
@@ -315,8 +300,7 @@ export class GroupComponent implements OnInit {
           }
         }
         this.openedGruop=name;
-        // console.log("element");
-        // console.log(element);
+        
         entries = Object.keys(element.Images);
         this.selectedGroup.push(element);
         
@@ -326,35 +310,37 @@ export class GroupComponent implements OnInit {
         }  
       }
     });
+    
+
+
     this.librosGrupo = temp[0];
-    console.log("libros grupo",this.librosGrupo);
-    // console.log("this.groupList");
-    // console.log(this.groupList);
+    // console.log("libros grupo",this.librosGrupo);
     
     this.registerList.forEach((element,index) => {
       for (let i = 0; i < this.groupList.length; i++) {
-        if (this.groupList[i].owner == element.email) {
+        if (this.selectedGroup[0].owner == element.email) {
           this.nameOwner = element.name + " " + element.lname;
         }
         if (activeUser == element.email){
           this.userName = element.name + " " + element.lname;
         }  
       }  
-    });    
-    
-    // console.log("this.userName");
-    // console.log(this.userName);
+    });
+
+    if(this.selectedGroup[0].owner == activeUser){
+      this.permisoAdd = false;
+    }
 
     for (let i = 0; i < this.selectedIntegrants.length; i++) {
-      if (this.userName != this.selectedIntegrants[i] && activeUser != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "privado") {
-        this.permiso = false;
+      if(this.userName == this.selectedIntegrants[i]){
+        this.permisoAdd = false;
       }
-      if (this.userName != this.selectedIntegrants[i] && activeUser != this.selectedGroup[0].owner && this.selectedGroup[0].privacity == "publico") {
-        this.permisoPublico = true;
-      }      
+      
+      if (this.userName != this.selectedIntegrants[i] && this.selectedGroup[0].privacity == "privado"){
+        this.permisoVisual = false;
+      }    
     }
-    // console.log("this.librosGrupo");
-    // console.log(this.librosGrupo);
+    
   }
 
   goToPerfil(email){
@@ -369,7 +355,6 @@ export class GroupComponent implements OnInit {
 
 
   async getAmigos(){
-    // console.log(this.owner);
     this.owner = firebase.auth().currentUser.email; 
     this.amigosList = [];
 
@@ -395,28 +380,16 @@ export class GroupComponent implements OnInit {
         }        
       });
     });
-    console.log("this.amigosList");
-    console.log(this.amigosList);
   }
 
   async deleteSth(integrante,nombreGrupo,id){
-    // let index = i.split("-");
-    // let query2: string = "#contTag"+index[1];
-    // let cont: any = document.querySelector(query2);
-    // cont.style.display = 'none';
-    // console.log("this.registerList");
-    // console.log(this.registerList);
-    // console.log("id");
-    // console.log(id);
     let KeyUSER;
     let Keygroup;
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
-        // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
         if (childData.name + " " + childData.lname == integrante[0]) {
-          // console.log("entre");
           KeyUSER = childKey;
           user.forEach((info) => {              
             info.forEach((MisGrupos) => {
@@ -424,8 +397,6 @@ export class GroupComponent implements OnInit {
                 MisGrupos.forEach((Groups) => {
                   const GroupsChildKey = Groups.key;
                   const GroupsChildData = Groups.val();
-                  // console.log("GroupsChildKey");
-                  // console.log(GroupsChildKey);
                 if (GroupsChildKey == "groupName" && GroupsChildData == nombreGrupo){
                   Keygroup = MisgruposChildKey;
                 }              
@@ -453,7 +424,6 @@ export class GroupComponent implements OnInit {
     let contador = 0;
 
     if (nameExist) {
-      // console.log("Ya existe este nombre");
       this.toastr.error('Ese nombre ya esta registrado', 'Intenta otro nombre', {
         positionClass: 'toast-top-center'
       });
