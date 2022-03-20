@@ -46,7 +46,7 @@ export class ChatService {
     this.socket.emit('newMsg', msg);
   }
   sendpageChange(info: pageChange){
-    console.log(info)
+    console.log("Service",info)
     this.socket.emit("pageChange",info)
   }
 

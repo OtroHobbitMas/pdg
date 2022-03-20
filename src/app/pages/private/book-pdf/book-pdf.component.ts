@@ -117,11 +117,13 @@ export class BookPDFComponent implements OnInit {
     });
   }
   nextPage(){
-    this.chatService.sendpageChange({group: this.group,book:this.title,page:"Next"})
+    const pageInfo: pageChange = {group: this.group,book:this.title,page:"Next"}
+    this.chatService.sendpageChange(pageInfo)
     this.epubViewer.nextPage()
   }
   previousPage(){
-    this.chatService.sendpageChange({group: this.group,book:this.title,page:"Previous"})
+    const pageInfo: pageChange = {group: this.group,book:this.title,page:"Previous"}
+    this.chatService.sendpageChange(pageInfo)
     this.epubViewer.previousPage()
   }
   async sendMsg() {
