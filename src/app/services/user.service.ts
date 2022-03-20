@@ -62,6 +62,17 @@ export class UserService {
     this.firebase.database.ref(this.collection).child($key).child("friends").child(tagkey).remove();
   }
 
+  deleteGroups(tagkey: string,$key: string)
+  {
+    console.log("delete $key");
+    console.log(tagkey);
+    this.firebase.database.ref("groups").child($key).child("integrants").child(tagkey).remove();
+  }
+
+  updateDescripcionGroup($key: string,value: string){
+    this.firebase.database.ref("groups").child($key).child("description").set(value);
+  }
+
   updateUsername(user: User)
   {
     console.log("user.$key");

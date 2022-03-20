@@ -109,21 +109,24 @@
 
           <button *ngIf="permisoAdd == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
                   style="padding: 5px;">Ingresar al grupo</button>
+          <button *ngIf="permisoAdd == false && permisoAdmin == true" (click)="quitGroup(select.name)" type="submit" class="button is-danger"
+          style="padding: 5px;">Abandonar grupo</button>
 
           <div class="ContainerDescription">
               <h1 class="name">{{select.name}}</h1>
 
               <h2 class="integrants" style="margin-top: 20px;">Descripción</h2>
               <div *ngIf="select.owner == owner">
-                <textarea type="text"
-                  class="inputDescripcion">{{select.description}}</textarea>
-              </div>
-              <div *ngIf="select.owner != owner">
-                <textarea disabled type="text"
+                <textarea type="text" [(ngModel)]='descripcion'
                   class="inputDescripcion">{{select.description}}</textarea>
               </div>
               
-              <button *ngIf="select.owner == owner" (click)="SendDescription()" type="submit" class="button is-info"
+              <div *ngIf="select.owner != owner">
+                <textarea disabled type="text" [(ngModel)]='descripcion'
+                  class="inputDescripcion">{{select.description}}</textarea>
+              </div>
+              
+              <button *ngIf="select.owner == owner" (click)="SendDescription(select.name)" type="submit" class="button is-info"
                   style="padding: 5px;">Actualizar
                   descripción</button>
           </div>
@@ -164,9 +167,9 @@
                     </tr>
                 </tbody>
             </table>
-            <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
+           <!--  <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
                 style="padding: 5px; width: max-content;">Añadir nuevos
-                tags</button>
+                tags</button> -->
         </div>
 
 

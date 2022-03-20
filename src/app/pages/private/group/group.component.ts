@@ -36,6 +36,7 @@ export class GroupComponent implements OnInit {
   selectedTags: any[] = [];
   permisoVisual = true;
   permisoAdd = true;
+  permisoAdmin = true;
   nameOwner: string;
   userName: string;
   myGroups: any[] = [];
@@ -43,6 +44,7 @@ export class GroupComponent implements OnInit {
   name;
   openedGruop:string="";
   desaparecerBoton = true;
+  descripcion = "";
 
   constructor(
     private tagService: TagService,
@@ -201,6 +203,75 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  SendDescription(nombreGrupo){
+    let groupKey;
+    
+    console.log("this.descripcion");
+    console.log(this.descripcion);
+
+    this.groupList.forEach((element) => {
+      if (element.name == nombreGrupo) {
+        groupKey = element.$key;
+        console.log("groupKey");
+        console.log(groupKey); 
+      }
+    });
+
+    this.userService.updateDescripcionGroup(
+      groupKey,
+      this.descripcion
+    );
+
+    this.toastr.success('Descripcion actualizada', 'Exitosamente', {
+      positionClass: 'toast-top-center'
+    });
+  }
+
+  quitGroup(nombreGrupo){
+    let entries;
+    let keyTodelete;
+    let keys;
+    let groupKey;
+
+    this.groupList.forEach((element) => {
+      if (element.name == nombreGrupo) {
+        groupKey = element.$key;
+        console.log("groupKey");
+        console.log(groupKey);
+        if ("integrants" in element){          
+          entries = Object.values(element.integrants);
+          keys = Object.keys(element.integrants);
+  
+          for (let i = 0; i < entries.length; i++) {
+            if (entries[i].name == this.userName){
+              keyTodelete = keys[i];
+            }
+          }
+        } 
+      }
+    });
+
+    this.userService.deleteGroups(
+      keyTodelete,
+      groupKey
+    );
+
+    this.toastr.error('Abandonaste este grupo', 'Exitosamente', {
+      positionClass: 'toast-top-center'
+    });
+
+    for (let i = 0; i < this.selectedIntegrants.length; i++) {
+      if (this.userName == this.selectedIntegrants[i]) {
+        this.selectedIntegrants.splice(i, 1);
+        this.permisoAdd = true;
+        console.log(this.selectedIntegrants);
+        if (this.userName != this.selectedIntegrants[i] && this.selectedGroup[0].privacity == "privado"){
+          this.permisoVisual = false;
+        } 
+      }
+    }
+  }
+
   async addToTheGroup(nombreGrupo){
     this.owner = firebase.auth().currentUser.email;
     let key;
@@ -279,6 +350,9 @@ export class GroupComponent implements OnInit {
     this.firstPage = false;
     this.viewCreateGroup = false;
     this.nextImage = false;
+    this.permisoVisual= true;
+    this.permisoAdmin = true;
+    this.permisoAdd = true;
     this.selectedGroup = [];
     this.selectedIntegrants = [];
     this.selectedTags = [];
@@ -303,6 +377,7 @@ export class GroupComponent implements OnInit {
         
         entries = Object.keys(element.Images);
         this.selectedGroup.push(element);
+        this.descripcion = element.description;
         
         this.selectedTags.push(Object.values(element.tags));
         if (element.books) {
@@ -329,6 +404,7 @@ export class GroupComponent implements OnInit {
 
     if(this.selectedGroup[0].owner == activeUser){
       this.permisoAdd = false;
+      this.permisoAdmin = false;
     }
 
     for (let i = 0; i < this.selectedIntegrants.length; i++) {
