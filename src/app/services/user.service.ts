@@ -23,8 +23,8 @@ export class UserService {
     await this.firebase.database.ref(this.collection).orderByChild('email').equalTo(email).limitToLast(1).once("value", (user) =>{
     user = user.val()
     let Images = user[Object.keys(user)[0]].Images;
-    image = Images[(Object.keys(Images)).at(-1)].ImgUrl;    
-    console.log(Object.keys(Images))
+    let keys = Object.keys(Images)
+    image = Images[keys[keys.length -1]].ImgUrl;  
     } )
     return image
   }

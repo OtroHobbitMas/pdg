@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MessageI } from 'src/app/models/MessageI';
+import { pageChange } from 'src/app/models/pageChange';
 import { ChatService } from 'src/app/services/chat.service';
 import { FormControl } from "@angular/forms";
 import { Subscription } from 'rxjs';
@@ -47,10 +48,12 @@ export class BookPDFComponent implements OnInit {
   msgForm: FormControl;
   subscriptionList: {
     connection: Subscription,
-    newMgs: Subscription
+    newMgs: Subscription,
+    pageUpdate: Subscription
   } = {
       connection: undefined,
-      newMgs: undefined
+      newMgs: undefined,
+      pageUpdate: undefined
   };
   url;
   pag;
@@ -104,11 +107,23 @@ export class BookPDFComponent implements OnInit {
         if(msg.group==this.group && msg.book==this.title){
           this.msgs.push(msg);
         }
-
       });
+      this.subscriptionList.pageUpdate = this.chatService.getChangePage().subscribe((info: pageChange) =>{
+        if(info.group==this.group && info.book==this.title){
+          if(info.page == "Next") this.epubViewer.nextPage()
+          else if(info.page == "Previous") this.epubViewer.previousPage()
+        }
+      })
     });
   }
-
+  nextPage(){
+    this.chatService.sendpageChange({group: this.group,book:this.title,page:"Next"})
+    this.epubViewer.nextPage()
+  }
+  previousPage(){
+    this.chatService.sendpageChange({group: this.group,book:this.title,page:"Previous"})
+    this.epubViewer.previousPage()
+  }
   async sendMsg() {
     // console.log(firebase.auth().currentUser);
     let img= ""

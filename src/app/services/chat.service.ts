@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MessageI } from '../models/MessageI';
+import { pageChange } from 'src/app/models/pageChange';
 import { io } from "socket.io-client";
 
 @Injectable({
@@ -32,10 +33,21 @@ export class ChatService {
       });
     });
   }
+  getChangePage() {
+    return new Observable(observer => {
+      this.socket.on("pageChange", info => {
+        observer.next(info);
+      });
+    });
+  }
 
   sendMsg(msg: MessageI) {
     console.log(msg)
     this.socket.emit('newMsg', msg);
+  }
+  sendpageChange(info: pageChange){
+    console.log(info)
+    this.socket.emit("pageChange",info)
   }
 
   disconnect() {
