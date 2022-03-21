@@ -335,7 +335,7 @@ export class HomeComponent implements OnInit {
     const Email = firebase.auth().currentUser.email;
       this.imagen = this.macthRecomended[i].Portada;
       this.titulo = this.macthRecomended[i].Title;
-      this.autor = this.macthRecomended[i].Nombre;
+      this.autor = this.macthRecomended[i].Autor;
       alink = this.macthRecomended[i].alink;
 
       await this.firebase.database.ref("register").once("value", (users) => {
@@ -397,10 +397,6 @@ export class HomeComponent implements OnInit {
     let keygroup;
     let booksinGroup: any[] = [];
     let entries;
-    // console.log("i");
-    // console.log(i);
-    // console.log("this.groupValue");
-    // console.log(this.groupValue);
     
     this.titulo = this.macthRecomended[i].Title;
     this.imagen = this.macthRecomended[i].Portada;
