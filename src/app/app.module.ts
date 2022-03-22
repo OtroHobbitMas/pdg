@@ -46,6 +46,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 //PDF Viewer
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BookChatComponent } from './pages/private/book-chat/book-chat.component';
+import { MyBooksComponent } from './pages/private/my-books/my-books.component';
 
 
 
@@ -68,6 +69,7 @@ import { BookChatComponent } from './pages/private/book-chat/book-chat.component
     FilterExternalProfilesPipe,
     BookPDFComponent,
     BookChatComponent,
+    MyBooksComponent,
   ],
   imports: [
     AngularEpubViewerModule,

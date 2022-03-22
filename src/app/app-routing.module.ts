@@ -12,6 +12,7 @@ import { TagsComponent } from './pages/public/tags/tags.component';
 import { ExternalProfilesComponent } from './pages/private/external-profiles/external-profiles.component';
 import { GroupComponent } from './pages/private/group/group.component';
 import { BookPDFComponent } from './pages/private/book-pdf/book-pdf.component';
+import { MyBooksComponent } from './pages/private/my-books/my-books.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectAuthorizedToHome = () => redirectLoggedInTo(['home']);
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'externalProfiles', component: ExternalProfilesComponent },
   { path: 'groups', component: GroupComponent},
   { path: 'book', component: BookPDFComponent},
+  { path: 'mybooks', component: MyBooksComponent},
   { path: '**', redirectTo: '/login' },
 
 ];
