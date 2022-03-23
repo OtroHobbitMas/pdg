@@ -59,7 +59,7 @@ export class UserService {
   {
     console.log("delete $key");
     console.log(tagkey);
-    this.firebase.database.ref(this.collection).child($key).child("friends").child(tagkey).remove();
+    this.firebase.database.ref(this.collection).child($key).child("Amigos").child(tagkey).remove();
   }
 
   deleteGroups(tagkey: string,$key: string)
