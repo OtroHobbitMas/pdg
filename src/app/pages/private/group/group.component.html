@@ -139,41 +139,44 @@
     <div class="groupContainer" *ngIf="viewInsideGroup == true">
 
       <div *ngFor="let select of selectedGroup">
-
-        <button class="button is-info" id="volver" style="align-self: left;"  (click)="goBack()">Volver</button>
-
+      
+        <button class="button is-info" id="volver" style="align-self: left;" (click)="goBack()">Volver</button>
+      
         <div class="photoContainer">
           <img class="Photoimg" [src]="select.Images" srcset="" alt="" id="img">
         </div>
-
+      
         <div class="ContainerDescription" style="margin-top: 10px;">
           <h1 class="name">{{select.name}}</h1>
-
-
+      
+      
           <div class="buttons">
             <button *ngIf="permisoAdd == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
-            style="padding: 5px; ">Ingresar al grupo</button>
-          <button *ngIf="permisoAdd == false && permisoAdmin == true" (click)="quitGroup(select.name)" type="submit"
-            class="button is-danger" style="padding: 5px;">Abandonar grupo</button>
+              style="padding: 5px; ">Ingresar al grupo</button>
+            <button *ngIf="permisoAdd == false && permisoAdmin == true" (click)="quitGroup(select.name)" type="submit"
+              class="button is-danger" style="padding: 5px;">Abandonar grupo</button>
           </div>
-
-
+      
+      
           <div class="container">
             <h2 class="integrants">Descripción</h2>
             <div *ngIf="select.owner == owner">
               <textarea class="inputDescripcion" type="text" [(ngModel)]='descripcion'
                 class="inputDescripcion">{{select.description}}</textarea>
             </div>
-          
+      
             <div *ngIf="select.owner != owner">
-              <textarea disabled type="text" [(ngModel)]='descripcion' class="inputDescripcion">{{select.description}}</textarea>
+              <textarea disabled type="text" [(ngModel)]='descripcion'
+                class="inputDescripcion">{{select.description}}</textarea>
             </div>
+            
+            <div class="buttons" style="width: 100%;">
+              <button  *ngIf="select.owner == owner" (click)="SendDescription(select.name)" type="submit" class="button is-info" >Actualizar descripción</button>
+            </div>
+          </div>
+
           
-            <button *ngIf="select.owner == owner" (click)="SendDescription(select.name)" type="submit" class="button is-info"
-              style="padding: 5px;">Actualizar
-              descripción</button>
-          </div>
-          </div>
+        </div> 
 
 
         <div class="ownerContainer">
@@ -206,15 +209,12 @@
             <tbody>
               <tr *ngFor="let integrantes of selectedIntegrants; let i = index">
                 <th id="{{'intregante'+i}}"><label>{{integrantes}}</label></th>
-                <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth(integrantes,select.name,i)" id="{{'eliminate'+i}}"
-                                        src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
+                <th *ngIf="select.owner == owner"><img  (click)="deleteSth(integrantes,select.name,i)" id="{{'eliminate'+i}}"
+                                        src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th>
 
               </tr>
             </tbody>
           </table>
-          <!--  <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
-                        style="padding: 5px; width: max-content;">Añadir nuevos
-                        tags</button> -->
         </div>
 
 
@@ -232,26 +232,32 @@
             <tbody>
               <tr *ngFor="let grouptags of selectedTags; let i = index" id="{{'contTag'+i}}">
                 <th><label id="{{'mitag'+i}}">{{grouptags}}</label></th>
-                <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth('eliminate-'+i)" id="{{'eliminate'+i}}"
-                                          src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
+                <th *ngIf="select.owner == owner"><img  (click)="deleteSth('eliminate-'+i)" id="{{'eliminate'+i}}"
+                                          src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th>
 
               </tr>
             </tbody>
           </table>
-          <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
-            style="padding: 5px; width: max-content;">Añadir nuevos
-            tags</button>
+          <div class="buttons" style="width: 100%;">
+            <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
+            style="padding: 5px; width: max-content;">Añadir nuevos tags</button>
+          </div>
+         
         </div>
 
         <div *ngIf="permisoVisual == true" class="librosContainer">
 
           <h1 *ngIf="librosGrupo" class="name" style="margin-top: 40px;">Libros del grupo</h1>
-          <ngb-carousel class="carusel">
+          <ngb-carousel>
             <ng-template *ngFor="let librosGrupo of librosGrupo; let i = index" id="{{'librosGrupo'+i}}" ngbSlide>
-              <div (click)=goToBook(i) class="carusel">
+              <div class="eliminate">
                 <img *ngIf="select.owner == owner" (click)="deleteBook('eliminate-'+i)" id="{{'eliminate'+i}}"
-                  src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg">
-                <div class="picsum-img-wrapper">
+                src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg" style="margin-bottom: 5px;">
+              </div>
+
+              <div  class="carusel">
+        
+                <div (click)=goToBook(i) class="picsum-img-wrapper">
                   <img class="portadaImg" id="{{'imagen'+i}}" [src]="librosGrupo.Imagen" alt="Random first slide">
 
                 </div>

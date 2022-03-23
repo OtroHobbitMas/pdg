@@ -65,7 +65,7 @@
 
 .field{
     width: 100%;
-    background-color:  darkorchid;
+    // background-color:  darkorchid;
 }
 
 #select{
@@ -83,10 +83,6 @@
     flex-flow: column wrap;
 }
 
-
-.groupContainer{
-    // width: 99%;
-}
 
 .photoContainer{
     margin-top: 20px;
@@ -136,4 +132,18 @@
     align-content: center;
     align-items: center;
     flex-flow: column wrap;
+    justify-content: center;
+}
+
+.tagImg{
+    height: 25px;
+    width: 25px;
+}
+
+.eliminate{
+    display: flex;
+    align-items:flex-end;
+    flex-flow: column wrap;
+    justify-content: center; 
+    width: 85%;
 }
