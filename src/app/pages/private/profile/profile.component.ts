@@ -193,7 +193,8 @@ export class ProfileComponent implements OnInit {
   getMisGrupos() {
     const Email = firebase.auth().currentUser.email;
     let entries;
-
+    this.misGroupsList = [];
+    
     this.registerList.forEach((element, index) => {
       if (Email == element.email) {
         if ("Groups" in element) {
@@ -207,20 +208,20 @@ export class ProfileComponent implements OnInit {
       }
     });
 
+
     this.groupList.forEach((element, index) => {
       for (let i = 0; i < this.misGroupsList.length; i++) {
         if (this.misGroupsList[i].name == element.name) {
           if ("Images" in element) {
             entries = Object.keys(element.Images);
-            this.misGroupsList[i].Images =
-              element.Images[entries[0]].ImgUrl;
+            this.misGroupsList[i].Images = element.Images[entries[0]].ImgUrl;
           } else {
-            this.misGroupsList[i].Images =
-              "../../../../../../assets/img/NoImage.png";
+            this.misGroupsList[i].Images = "../../../../../../assets/img/NoImage.png";
           }
         }
       }  
     });
+
   }
 
   //-----------------------------------------------------Update perfil photo----------------------------------------------
@@ -433,9 +434,9 @@ export class ProfileComponent implements OnInit {
 
   getMisAmigos() {
     let entries;
-    let contador = 0;
     // console.log("this.registerList");
     // console.log(this.registerList);
+    this.misAmigosList = [];
 
     const Email = firebase.auth().currentUser.email;
     this.registerList.forEach((element, index) => {
@@ -453,23 +454,26 @@ export class ProfileComponent implements OnInit {
 
 
     this.registerList.forEach((element, index) => {
-      if (this.misAmigosList[contador]) {
-        if (this.misAmigosList[contador].name == element.name + " " + element.lname) {
-          this.misAmigosList[contador].User = element.email;
-          if ("Images" in element) {
-            entries = Object.keys(element.Images);
-            let index = entries.length - 1;
-            this.misAmigosList[contador].Images = element.Images[entries[index]].ImgUrl;
-            contador++;
-          } else {
-            this.misAmigosList[contador].Images = "../../../../../../assets/img/NoImage.png";
-            contador++;
+      for (let i = 0; i < this.misAmigosList.length; i++) {
+
+        if (this.misAmigosList[i]) {
+          if (this.misAmigosList[i].name == element.name + " " + element.lname) {
+            this.misAmigosList[i].User = element.email;
+            if ("Images" in element) {
+              entries = Object.keys(element.Images);
+              let index = entries.length - 1;
+              this.misAmigosList[i].Images = element.Images[entries[index]].ImgUrl;
+            } else {
+              this.misAmigosList[i].Images = "../../../../../../assets/img/NoImage.png";
+            }
+            
           }
-          
         }
+        
       }
+      
     });
-    contador = 0;
+
   }
 
   goToPerfil(email){
@@ -551,18 +555,41 @@ export class ProfileComponent implements OnInit {
     this.toastr.warning("Libro eliminado", "Exitosamente");
   }
 
-  async deleteFriend(i) {
-    let index = i.split("-");
-    let query2: string = ".containerAmigos" + index[1];
+  async deleteFriend(i,deleteEmail) {
+    let query2: string = ".containerAmigos" + i;
     let cont: any = document.querySelector(query2);
     cont.style.display = "none";
+    const Email = firebase.auth().currentUser.email;
+    let myKey;
+    let entries;
+    let friendKey;
+    let keys; 
+
+    this.registerList.forEach((element) => {
+      if (element.email == Email) {
+        myKey = element.$key;
+        if ("Amigos" in element){          
+          entries = Object.values(element.Amigos);
+          keys = Object.keys(element.Amigos);
+  
+          for (let i = 0; i < entries.length; i++) {
+            if (entries[i].Contacto == deleteEmail){
+              friendKey = keys[i];
+            }
+          }
+        } 
+      }
+    });
+
+
     this.userService.deleteFriends(
-      this.keyOrdenAmigosList[index[1]],
-      this.KeyUSER
+      friendKey,
+      myKey
     );
-    this.toastr.warning("Amigo eliminado", "Exitosamente");
+    this.toastr.error("Amigo eliminado", "Exitosamente");
   }
 
+  
   async editUserName(register: User) {
     let variable;
     this.userService.updateUsername(variable);

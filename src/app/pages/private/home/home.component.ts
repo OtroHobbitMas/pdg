@@ -214,16 +214,20 @@ export class HomeComponent implements OnInit {
   getMyGroupsAndBooks(list){
     let entries;
     let entriesBooks;
+    const Email = firebase.auth().currentUser.email;
 
     list.forEach((element,index) => {
-      if ("Groups" in element){
-        entries = Object.keys(element.Groups);
-        for (let i = 0; i < entries.length; i++) {
-          if (element.Groups[entries[i]].category == "owner") {
-            this.booksListGroup.push(element.Groups[entries[i]].groupName);
-          }
-        }        
+      if (element.email == Email) {
+        if ("Groups" in element){
+          entries = Object.keys(element.Groups);
+          for (let i = 0; i < entries.length; i++) {
+            if (element.Groups[entries[i]].category == "owner") {
+              this.booksListGroup.push(element.Groups[entries[i]].groupName);
+            }
+          }        
+        }
       }
+      
       // if ("MisLibros" in element){
       //   entriesBooks = Object.keys(element.MisLibros);
       //   for (let i = 0; i < entriesBooks.length; i++) {

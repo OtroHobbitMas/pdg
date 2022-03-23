@@ -22,7 +22,8 @@
                 <h1 class="card-title" (click)="viewExternalProfile(user.email)" id="{{'nombre'+i}}"  align="center">{{user.name}} {{user.lname}}</h1>
                 <div style="width: 100%;" class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.Descripcion}}</div> 
                 <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalProfile(user.email)">Ver Perfil</button>
-                <button class="button is-info"  id="{{'button-'+i}}" (click)="addFriend(i)">{{mensajeButton}}</button>
+                <!-- <button class="button is-info" id="{{'button-'+i}}" (click)="addFriend(i)">{{mensajeButton[i]}}</button>
+                <button class="button is-info" *ngIf="mensajeButton.length == 0" id="{{'button-'+i}}" (click)="addFriend(i)">Seguir</button> -->
             </div>  
             
         </div> 
@@ -41,7 +42,7 @@
         <div class="perfilContainer" >
 
             <div class="photoContainer">                
-                <img  class="Photoimg" src="../../../../../../assets/img/NoImage.png" srcset="" alt="" id="img">
+                <img  class="Photoimg" [src]="Currentimg" srcset="" alt="" id="img">
             </div>
 
                            
@@ -51,7 +52,7 @@
             </div>
 
             <br><button id="boton" (click)="addFriendInsidePerfil()" type="submit" class="button is-info"
-            style="padding: 5px;">Seguir</button><br>
+            style="padding: 5px;">{{mensaje}}</button><br>
 
 
           <div class="ContainerTags" >

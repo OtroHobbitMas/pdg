@@ -38,15 +38,14 @@ export class ExternalProfilesComponent implements OnInit {
     UserLastName = '';            
     FulName = '';
     correoExt = '';
-    Currentimg = '';
+    Currentimg = "../../../../../../assets/img/NoImage.png";
     searchBoxExternal= '';
-    mensajeButton = 'Seguir';
+    mensaje = "";
     call;
 
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     
-    let $this = this;
       this.UserAcount();
       this.userService.getRegister()
       .snapshotChanges().subscribe(item => {
@@ -56,27 +55,26 @@ export class ExternalProfilesComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
-        console.log("this.registerList");
-        console.log(this.registerList);
-
-        this.registerListNew = Object.values(this.registerList);
+        
         const Email = firebase.auth().currentUser.email;
+        this.registerListNew = Object.values(this.registerList);
 
         for (let i = 0; i < this.registerList.length; i++) {
-          this.registerListNew  = Object.values(this.registerList[i]);
+            this.registerListNew  = Object.values(this.registerList[i]);
 
-          for (let j = 0; j < this.registerListNew.length; j++) {            
-            
-            if (this.registerListNew[j]==Email) {
-              this.registerList.splice(i, 1);
+            for (let j = 0; j < this.registerListNew.length; j++) {            
+              
+              if (this.registerListNew[j]==Email) {
+                this.registerList.splice(i, 1);
+              }
+              
             }
-            
-          }
         }
+
+        this.getImgUsers(this.registerList);
         
-        $this.getImgUsers(this.registerList);
-        $this.searchFriends(this.registerList);
       });
+
       this.call=this.route.snapshot.paramMap.get("email");
       if (this.call) {
         this.viewExternalProfile(this.call);
@@ -103,7 +101,6 @@ export class ExternalProfilesComponent implements OnInit {
     });
   }
 
-
   async  doLogout() {
     await this.authService.logout();
     this.router.navigate(['/']);
@@ -113,68 +110,25 @@ export class ExternalProfilesComponent implements OnInit {
     const Email = firebase.auth().currentUser.email;
     let entries;
     let entriesDescipcion;
-    console.log(" Entro en get iIMG this.registerList");
-    console.log(this.registerList);
 
-    this.registerList.forEach((element,index) => {
+    arrList.forEach((element,index) => {
       if ("Images" in element){
         entries = Object.keys(element.Images);
-        this.registerList[index].Images = element.Images[entries[entries.length-1]].ImgUrl;
+        arrList[index].Images = element.Images[entries[entries.length-1]].ImgUrl;
       } else {
-        this.registerList[index].Images = "../../../../../../assets/img/NoImage.png";
+        arrList[index].Images = "../../../../../../assets/img/NoImage.png";
       }
 
       if ("Descripcion" in element){
         entriesDescipcion = Object.values(element.Descripcion);
-        console.log("entriesDescipcion");
-        console.log(entriesDescipcion);
-        console.log("entriesDescipcion[entriesDescipcion.length-1]");
-        console.log(entriesDescipcion[entriesDescipcion.length-1].Descripcion);
-        this.registerList[index].Descripcion = entriesDescipcion[entriesDescipcion.length-1].Descripcion;
+        arrList[index].Descripcion = entriesDescipcion[entriesDescipcion.length-1].Descripcion;
       } else {
-        this.registerList[index].Descripcion = "Sin descripcion";
+        arrList[index].Descripcion = "Sin descripcion";
       }
 
     });
-
-    console.log("this.registerList");
-    console.log(this.registerList);
   }
 
-  async searchFriends(array){
-    let Key;
-    const Email = firebase.auth().currentUser.email;
-        
-      await this.firebase.database.ref("register").once("value", (users) => {
-        users.forEach((user) => {
-          const childKey = user.key;
-          const childData = user.val();
-          if (childData.email == Email) {
-            Key = childKey;
-            user.forEach((info) => {
-              info.forEach((Amigos) => {
-                Amigos.forEach((misAmigos) => {
-                  const misAmigosChildKey = misAmigos.key;
-                  const misAmigosChildData = misAmigos.val();
-                if (misAmigosChildKey == "Contacto"){
-                    this.arr.push(misAmigosChildData);                  
-                }
-                });
-                
-              });
-            });
-          }        
-        });
-      });
-
-      for (let i = 0; i < array.length; i++){
-        for (let j = 0; j < this.arr.length; j++){
-          if (array[i].email==this.arr[j]){
-            this.mensajeButton = "Siguiendo";
-          }
-        } 
-     }           
-  }
 
   async addFriend(index){
     let Key;
@@ -256,7 +210,6 @@ export class ExternalProfilesComponent implements OnInit {
       // Verificar si ya esta agregado
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -309,7 +262,7 @@ export class ExternalProfilesComponent implements OnInit {
 
   gotoExternalProfile(){
     this.viewProfile = false;
-    this.getImgUsers(this.registerList);
+    // this.getImgUsers(this.registerList);
   }
 
   async viewExternalProfile(correoExternoUser){
@@ -323,6 +276,10 @@ export class ExternalProfilesComponent implements OnInit {
     let Titulo;
     let keyTAGS;
     let Tags = {};
+    const Email = firebase.auth().currentUser.email;
+    this.susLibrosList = [];
+    this.susTagsList = [];
+    this.Currentimg = "";
 
     let Key;
     await this.firebase.database.ref("register").once("value", (users) => {
@@ -370,11 +327,7 @@ export class ExternalProfilesComponent implements OnInit {
                 
                 if (DescriptionChildKey == "Tag"){
                   Tags = DescriptionChildData;
-                  // console.log(aut);
-                  // this.misTagsList.push({Tags:TagChildData});
                   if (Tags != ''){
-                    // console.log("info key");
-                    // console.log(keyTAGS);
                     this.susTagsList.push({Tags});
                   }
                 }
@@ -383,6 +336,34 @@ export class ExternalProfilesComponent implements OnInit {
             });
           });          
         }
+      });
+    });
+
+
+    await this.firebase.database.ref("register").once("value", (users) => {
+      users.forEach((user) => {
+        const childKey = user.key;
+        const childData = user.val();
+        if (childData.email == Email) {
+          Key = childKey;
+          user.forEach((info) => {
+            info.forEach((Amigos) => {
+              Amigos.forEach((misAmigos) => {
+                const misAmigosChildKey = misAmigos.key;
+                const misAmigosChildData = misAmigos.val();
+              if (misAmigosChildKey == "Contacto"){
+                if (misAmigosChildData == correoExternoUser) {
+                  this.mensaje = "Amigo";
+                } else {
+                  this.mensaje = "Seguir";
+                }
+                                  
+              }
+              });
+              
+            });
+          });
+        }        
       });
     });
     
@@ -403,20 +384,6 @@ export class ExternalProfilesComponent implements OnInit {
 
       if(!$this.Currentimg) {
         $this.Currentimg = "../../../../../../assets/img/NoImage.png";
-        const query: string = ".containerView .Photoimg";
-        const Photoimg: any = document.querySelector(query);
-        // const query2: string = "#app .profile";
-        // const profile: any = document.querySelector(query2);
-        Photoimg.src = $this.Currentimg;
-        // profile.src = $this.Currentimg;
-      } else {
-        const query: string = ".containerView .Photoimg";
-        const Photoimg: any = document.querySelector(query);
-        // const query2: string = "#app .profile";
-        // const profile: any = document.querySelector(query2);
-        Photoimg.src = $this.Currentimg;
-        
-        // profile.src = $this.Currentimg;     
       }
 
       if(CurrentDescription != '') {
