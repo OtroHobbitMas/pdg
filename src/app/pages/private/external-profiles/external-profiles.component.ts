@@ -170,7 +170,7 @@ export class ExternalProfilesComponent implements OnInit {
       for (let i = 0; i < array.length; i++){
         for (let j = 0; j < this.arr.length; j++){
           if (array[i].email==this.arr[j]){
-            this.mensajeButton = "Amigo";
+            this.mensajeButton = "Siguiendo";
           }
         } 
      }           

@@ -534,15 +534,18 @@ export class ProfileComponent implements OnInit {
   }
 
   async deleteBook(i) {
-    let index = i.split("-");
-    let query2: string = "#mislibros" + index[1];
+    console.log("ENTRÉ");
+    // let index = i.split("-");
+    let query2: string = "#mislibros" + i;
+    console.log("QUERY",query2);
     let cont: any = document.querySelector(query2);
+    console.log("CONT",cont);
     //por el carrusel no encuentra el query2
     // console.log(cont);
-    cont.style.display = "none";
+    // cont.style.display = "none";
 
     this.bookService.deleteBooks(
-      this.keyOrdenBooksList[index[1]],
+      this.keyOrdenBooksList[i],
       this.KeyUSER
     );
     this.toastr.warning("Libro eliminado", "Exitosamente");

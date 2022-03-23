@@ -78,22 +78,23 @@
 
             <ngb-carousel>
                 <ng-template *ngFor="let misLibros of misLibrosList; let i = index" id="{{'mislibros'+i}}" ngbSlide>
-                    <div (click)=goToBook(i)>
-                        <img (click)="deleteBook('eliminate-'+i)" id="{{'eliminate'+i}}"
-                            src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg">
-                        <div class="picsum-img-wrapper">
-                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen"
-                                alt="Random first slide">
+            
+                    <div >
 
+                        <div (click)=goToBook(i) class="picsum-img-wrapper">
+                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen" alt="Random first slide">
+            
                         </div>
                         <div class="carousel-caption" style="z-index: 0;">
+                            <img (click)="deleteBook(i)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag"
+                                class="tagImg">
                             <h3 id="{{'titulo'+i}}" align="center">{{misLibros.Titulo}}</h3>
                             <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{misLibros.Autor}}</p>
                         </div>
                     </div>
                 </ng-template>
             </ngb-carousel>
-        </div>
+            </div>
 
 
 

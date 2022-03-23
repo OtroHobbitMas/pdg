@@ -3,6 +3,8 @@ import { AuthService } from "src/app/services/auth.service";
 import * as firebase from "firebase";
 import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { NgbCarouselConfig } from "@ng-bootstrap/ng-bootstrap";
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-my-books',
@@ -11,7 +13,7 @@ import { NgbCarouselConfig } from "@ng-bootstrap/ng-bootstrap";
 })
 export class MyBooksComponent implements OnInit {
 
-  constructor(    private _config: NgbCarouselConfig, public authService: AuthService, private firebase: AngularFireDatabase) { 
+  constructor( private router:Router, private _config: NgbCarouselConfig, public authService: AuthService, private firebase: AngularFireDatabase) { 
 
   }
 
@@ -25,6 +27,12 @@ export class MyBooksComponent implements OnInit {
     }, 500);
     
 
+  }
+
+  goToBook(i: string) {
+    // console.log(this.misLibrosList[i]);
+    // console.log(this.misLibrosList[i].link);
+    this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink,group:""}]);
   }
 
 
