@@ -1,228 +1,274 @@
 <app-navigation-bar></app-navigation-bar>
 
-<div class="containerComponents">
-  <!-- ---------------------------------------------------Firt page------------------------------------------------ -->
-    <div *ngIf="firstPage == true" style="margin-top: 25% !important;" class="containerButtons">
-      <button (click)="createGroup()">Crear grupo</button>
-      <button (click)="searchGroupF()">Buscar grupo</button>
-      <h1 style="margin-top: 30%;">Mis grupos</h1>
-      <input type="text" name="searchBoxExternal" placeholder="Buscar ..." [(ngModel)]="searchBoxExternal">
-      <div class="card" style="width: 18rem; margin-bottom: 15px;" *ngFor="let user of myGroups | filterExternalProfiles:searchBoxExternal; let i = index" >
-        <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"  [src]="user.Images" alt="imagenes" class="groupImg">
-          
+<div class="app">
+  <div class="containerComponents">
+    <!-- ---------------------------------------------------Firt page------------------------------------------------ -->
+    <div *ngIf="firstPage == true" style="margin-top: 20% !important;" class="containerButtons">
+
+      <h1 class="name">Buscar un Nuevo Grupo</h1>
+
+      <button class="button is-info" id="boton" (click)="createGroup()">Crear grupo</button>
+      <button class="button is-info" (click)="searchGroupF()">Buscar grupo</button>
+
+      <h1 class="name" style="margin-top: 30px; ">Mis grupos</h1>
+      <div class="subName" style="font-size: large;">Buscar:</div>
+      <input type="text" name="searchBoxExternal" placeholder="" [(ngModel)]="searchBoxExternal">
+
+
+      <div class="card" style="width: 18rem; margin-top: 15px;"
+        *ngFor="let user of myGroups | filterExternalProfiles:searchBoxExternal; let i = index">
+        <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"
+          [src]="user.Images" alt="imagenes" class="groupImg">
+
 
         <div class="card-body">
-            <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}"  align="center">{{user.name}}</h1>
-            <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.description}}</p>
-            <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver Grupo</button>
-        </div>  
-        
+          <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}" align="center">{{user.name}}
+          </h1>
+          <p class="card-text" id="{{'descripcion'+i}}" align="center">{{user.description}}</p>
+          <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver
+            Grupo</button>
+        </div>
+
+      </div>
     </div>
-    </div> 
+  </div>
+</div>
 
-<!-- ---------------------------------------------------Create Group----------------------------------------------- -->    
-    <form style="margin-top: 15%;" *ngIf="viewCreateGroup == true" [formGroup]="ngForm" >
-      <button (click)="goBack()">Volver</button>
-        
-        <input style="display: none;" [(ngModel)]="owner" class="input" formControlName="owner" type="text">
 
-        <label for="name">Nombre del Grupo</label>
-        <div class="field">
-            <input class="input" formControlName="name" type="text" placeholder="Nombre del Grupo" required>
-        </div>
+<!-- ---------------------------------------------------Create Group----------------------------------------------- -->
+<div class="app">
+  <div class="containerComponents">
 
-        <label for="description">Descripción</label>
-        <div  class="field">
-            <input  class="input" type="text" formControlName="description"  placeholder="Descripción" required>
-        </div>
+    <form class="forms" style="margin-top: 15px;" *ngIf="viewCreateGroup == true" [formGroup]="ngForm">
+      
+      <button class="button is-info" id="volver" style="align-self: left;" (click)="goBack()">Volver</button>
 
-        <label for="tags">Agregar integrantes</label>
-        <div class="field">
-          <select required formControlName="integrants" multiple>
-            <option value="" disabled selected>Seleccione uno o multiples</option>
-            <option *ngFor="let amigos of amigosList" [value]="amigos">{{amigos}}</option>
-          </select>
-        </div>
+      <input style="display: none;" [(ngModel)]="owner" class="input" formControlName="owner" type="text">
 
-        <label for="privacity">Privacidad del grupo</label>
-        <div class="field">
-          <select required formControlName="privacity">
-            <option value="" disabled selected>Seleccione uno</option>
-            <option value="publico">Publico</option>
-            <option value="privado">Privado</option>
-          </select>
-        </div>
+      <h1 class="name" style="margin-top: 30px; ">Crear nuevo Grupo</h1>
 
-        <label for="tags">Tags del grupo</label>
-        <div class="field">
-          <select required formControlName="tags" multiple>
-            <option value="" disabled selected>Seleccione uno o multiples</option>
-            <option *ngFor="let tags of tagsList" [value]="tags">{{tags}}</option>
-          </select>
-        </div>
-       
-        <div style="padding-bottom: 25%;" class="field">
-          <div class="buttons">
-             <button [disabled]="ngForm.invalid" type="submit"class="button is-info" (click)="onSubmit()">Register</button> 
-            <!-- <button class="button is-success" (click)="goToLogin()">Back to Login</button> -->
-          </div>
-        </div>
-                
-      </form>
-      <div *ngIf="nextImage == true" >
-        <app-file-upload  (imgUrlEmitter)="getImg($event)"></app-file-upload> 
-        <img class="createGroupPhotoimg"  [src]="Currentimg" srcset="" alt="" id="img">
+      <label class="subName" for="name">Nombre del Grupo</label>
+      <div class="field">
+        <input class="input" formControlName="name" type="text" placeholder="Nombre del Grupo" required>
       </div>
-<!-- ---------------------------------------------Search Groups view--------------------------------------------- -->      
 
-      <div style="margin-top: 15%;" *ngIf="viewsearchGroup == true" class="containerSearchGroups">
-        
-        <input type="text" name="searchBoxExternal" placeholder="Buscar ..." [(ngModel)]="searchBoxExternal">
-        <button (click)="goBack()">Volver</button>
-
-        <h1 id="name">Encuentra grupos</h1>
-
-        <div class="card" style="width: 18rem; margin-bottom: 15px;" *ngFor="let user of groupList | filterExternalProfiles:searchBoxExternal; let i = index" >
-            <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"  [src]="user.Images" alt="imagenes" class="groupImg">
-              
-
-            <div class="card-body">
-                <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}"  align="center">{{user.name}}</h1>
-                <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.description}}</p>
-                <p class="card-text" id="{{'privacity'+i}}"  align="center">{{user.privacity}}</p>
-                <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver Grupo</button>
-            </div>  
-            
-        </div> 
+      <label class="subName" for="description">Descripción</label>
+      <div class="field">
+        <input class="input" type="text" formControlName="description" placeholder="Descripción" required>
       </div>
+
+      <label class="subName" for="tags">Agregar integrantes</label>
+      <div class="field" style="height: 15vh;">
+        <select  id="select" style="height: 100%;" required formControlName="integrants" multiple>
+          <option value="" disabled selected>Seleccione uno o muchos</option>
+          <option *ngFor="let amigos of amigosList" [value]="amigos">{{amigos}}</option>
+        </select>
+      </div>
+
+      <label class="subName" for="privacity">Privacidad del grupo</label>
+      <div >
+        <select id="select" required formControlName="privacity">
+          <option value="" disabled selected>Seleccione uno</option>
+          <option value="publico">Público</option>
+          <option value="privado">Privado</option>
+        </select>
+      </div>
+
+      <br> <label class="subName" for="tags">Tags del grupo</label>
+      <div class="field" style="height: 25vh;">
+        <select id="select" style="height: 100%;" required formControlName="tags" multiple>
+          <option value="" disabled selected>Seleccione uno o multiples</option>
+          <option *ngFor="let tags of tagsList" [value]="tags">{{tags}}</option>
+        </select>
+      </div>
+
+      <div style="padding-bottom: 20px; padding-top: 5px;" class="registrar">
+        <div class="buttons">
+          <button [disabled]="ngForm.invalid" type="submit" class="button is-info"
+            (click)="onSubmit()">Crear Grupo</button>
+          <!-- <button class="button is-success" (click)="goToLogin()">Back to Login</button> -->
+        </div>
+      </div>
+
+    </form>
+    <div *ngIf="nextImage == true">
+      <app-file-upload (imgUrlEmitter)="getImg($event)"></app-file-upload>
+      <img class="createGroupPhotoimg" [src]="Currentimg" srcset="" alt="" id="img">
+    </div>
+
+  </div>
+</div>
+<!-- ---------------------------------------------Search Groups view--------------------------------------------- -->
+
+<div class="app" style="margin-top: -80px;">
+  <div class="containerComponents">
+    <div *ngIf="viewsearchGroup == true" class="containerSearchGroups">
+
+      <button class="button is-info" id="volver" style="align-self: left;"  (click)="goBack()">Volver</button>
+
+      <h1 class="name" id="name" style="margin-top: 10px;">Encuentra grupos</h1>
+
+      <div class="subName" style="font-size: large;">Buscar:</div>
+      <input type="text" name="searchBoxExternal" placeholder="Buscar" style="margin-bottom: 10px;" [(ngModel)]="searchBoxExternal">
+
+      <div class="card" style="width: 18rem; margin-bottom: 15px;"
+        *ngFor="let user of groupList | filterExternalProfiles:searchBoxExternal; let i = index">
+        <img class="card-img-top" alt="Card image cap" (click)="viewExternalGroup(user.name)" id="{{'imagenGroup'+i}}"
+          [src]="user.Images" alt="imagenes" class="groupImg">
+
+
+        <div class="card-body">
+          <h1 class="card-title" (click)="viewExternalGroup(user.name)" id="{{'nombre'+i}}" align="center">{{user.name}}
+          </h1>
+          <p class="card-text" id="{{'descripcion'+i}}" align="center">{{user.description}}</p>
+          <p class="card-text" id="{{'privacity'+i}}" align="center">{{user.privacity}}</p>
+          <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalGroup(user.name)">Ver
+            Grupo</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
 <!-- ---------------------------------------------------Group perfil--------------------------------------------------- -->
-      <div style="margin-top: 15%;" class="groupContainer" *ngIf="viewInsideGroup == true">
-        
-        <div *ngFor="let select of selectedGroup">
-          <button (click)="goBack()">Volver</button>
-          <div class="photoContainer">
-              <img class="Photoimg" [src]="select.Images" srcset="" alt="" id="img">
+<div class="app" style="margin-top: -80px; padding-bottom: 30px;">
+  <div class="containerComponents">
+    <div class="groupContainer" *ngIf="viewInsideGroup == true">
+
+      <div *ngFor="let select of selectedGroup">
+
+        <button class="button is-info" id="volver" style="align-self: left;"  (click)="goBack()">Volver</button>
+
+        <div class="photoContainer">
+          <img class="Photoimg" [src]="select.Images" srcset="" alt="" id="img">
+        </div>
+
+        <div class="ContainerDescription" style="margin-top: 10px;">
+          <h1 class="name">{{select.name}}</h1>
+
+
+          <div class="buttons">
+            <button *ngIf="permisoAdd == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
+            style="padding: 5px; ">Ingresar al grupo</button>
+          <button *ngIf="permisoAdd == false && permisoAdmin == true" (click)="quitGroup(select.name)" type="submit"
+            class="button is-danger" style="padding: 5px;">Abandonar grupo</button>
           </div>
 
-          <button *ngIf="permisoAdd == true" (click)="addToTheGroup(select.name)" type="submit" class="button is-info"
-                  style="padding: 5px;">Ingresar al grupo</button>
-          <button *ngIf="permisoAdd == false && permisoAdmin == true" (click)="quitGroup(select.name)" type="submit" class="button is-danger"
-          style="padding: 5px;">Abandonar grupo</button>
 
-          <div class="ContainerDescription">
-              <h1 class="name">{{select.name}}</h1>
-
-              <h2 class="integrants" style="margin-top: 20px;">Descripción</h2>
-              <div *ngIf="select.owner == owner">
-                <textarea type="text" [(ngModel)]='descripcion'
-                  class="inputDescripcion">{{select.description}}</textarea>
-              </div>
-              
-              <div *ngIf="select.owner != owner">
-                <textarea disabled type="text" [(ngModel)]='descripcion'
-                  class="inputDescripcion">{{select.description}}</textarea>
-              </div>
-              
-              <button *ngIf="select.owner == owner" (click)="SendDescription(select.name)" type="submit" class="button is-info"
-                  style="padding: 5px;">Actualizar
-                  descripción</button>
+          <div class="container">
+            <h2 class="integrants">Descripción</h2>
+            <div *ngIf="select.owner == owner">
+              <textarea class="inputDescripcion" type="text" [(ngModel)]='descripcion'
+                class="inputDescripcion">{{select.description}}</textarea>
+            </div>
+          
+            <div *ngIf="select.owner != owner">
+              <textarea disabled type="text" [(ngModel)]='descripcion' class="inputDescripcion">{{select.description}}</textarea>
+            </div>
+          
+            <button *ngIf="select.owner == owner" (click)="SendDescription(select.name)" type="submit" class="button is-info"
+              style="padding: 5px;">Actualizar
+              descripción</button>
+          </div>
           </div>
 
-          <div class="ownerContainer">
-            <table class="table">
-              <thead>
-                  <tr>
-                      <th scope="col" style="color: #205493;">Creador</th>
-                  </tr>
-              </thead>
-              <tbody >
-                  <tr>
-                      <th><label id="{{'owner'+i}}">{{nameOwner}}</label></th>
-                  </tr>
-              </tbody>
+
+        <div class="ownerContainer">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" style="color: #205493;">Creador</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th><label id="{{'owner'+i}}">{{nameOwner}}</label></th>
+              </tr>
+            </tbody>
           </table>
-          </div>
+        </div>
 
 
-          <div *ngIf="permisoVisual == true" class="integrantsContainer">
+        <div *ngIf="permisoVisual == true" class="integrantsContainer">
 
-            <h1 class="integrants" style="margin-top: 20px;">Integrantes</h1>
+          <h1 class="integrants" style="margin-top: 20px;">Integrantes</h1>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" style="color: #205493;">integrantes</th>
-                        <th *ngIf="select.owner == owner" scope="col" style="color: #205493;">Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr *ngFor="let integrantes of selectedIntegrants; let i = index">
-                        <th id="{{'intregante'+i}}"><label>{{integrantes}}</label></th>
-                        <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth(integrantes,select.name,i)" id="{{'eliminate'+i}}"
-                                src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" style="color: #205493;">integrantes</th>
+                <th *ngIf="select.owner == owner" scope="col" style="color: #205493;">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let integrantes of selectedIntegrants; let i = index">
+                <th id="{{'intregante'+i}}"><label>{{integrantes}}</label></th>
+                <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth(integrantes,select.name,i)" id="{{'eliminate'+i}}"
+                                        src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
 
-                    </tr>
-                </tbody>
-            </table>
-           <!--  <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
-                style="padding: 5px; width: max-content;">Añadir nuevos
-                tags</button> -->
+              </tr>
+            </tbody>
+          </table>
+          <!--  <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
+                        style="padding: 5px; width: max-content;">Añadir nuevos
+                        tags</button> -->
         </div>
 
 
 
-          <div class="tagsContainer">
+        <div class="tagsContainer">
 
 
-              <table class="table">
-                  <thead>
-                      <tr>
-                          <th scope="col" style="color: #205493;">Tag</th>
-                          <th *ngIf="select.owner == owner" scope="col" style="color: #205493;">Eliminar</th>
-                      </tr>
-                  </thead>
-                  <tbody >
-                      <tr  *ngFor="let grouptags of selectedTags; let i = index" id="{{'contTag'+i}}">
-                          <th><label id="{{'mitag'+i}}">{{grouptags}}</label></th>
-                          <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth('eliminate-'+i)" id="{{'eliminate'+i}}"
-                                  src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" style="color: #205493;">Tag</th>
+                <th *ngIf="select.owner == owner" scope="col" style="color: #205493;">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let grouptags of selectedTags; let i = index" id="{{'contTag'+i}}">
+                <th><label id="{{'mitag'+i}}">{{grouptags}}</label></th>
+                <!-- <th *ngIf="select.owner == owner"><img  (click)="deleteSth('eliminate-'+i)" id="{{'eliminate'+i}}"
+                                          src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg"></th> -->
 
-                      </tr>
-                  </tbody>
-              </table>
-              <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
-                  style="padding: 5px; width: max-content;">Añadir nuevos
-                  tags</button>
-          </div>
-
-          <div *ngIf="permisoVisual == true" class="librosContainer">
-
-            <h1 *ngIf="librosGrupo" class="name" style="margin-top: 40px;">Libros del grupo</h1>
-            <ngb-carousel>
-                <ng-template *ngFor="let librosGrupo of librosGrupo; let i = index" id="{{'librosGrupo'+i}}" ngbSlide>
-                    <div  (click)=goToBook(i)>
-                        <img *ngIf="select.owner == owner" (click)="deleteBook('eliminate-'+i)" id="{{'eliminate'+i}}"
-                            src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg">
-                        <div class="picsum-img-wrapper">
-                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="librosGrupo.Imagen"
-                                alt="Random first slide">
-
-                        </div>
-                        <div class="carousel-caption" style="z-index: 0;">
-                            <h3 id="{{'titulo'+i}}" align="center">{{librosGrupo.Titulo}}</h3>
-                            <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{librosGrupo.Autor}}</p>
-                        </div>
-                    </div>
-                </ng-template>
-            </ngb-carousel>
-        </div>
+              </tr>
+            </tbody>
+          </table>
+          <button *ngIf="select.owner == owner" (click)="goToTags()" type="submit" class="button is-info"
+            style="padding: 5px; width: max-content;">Añadir nuevos
+            tags</button>
         </div>
 
-        
+        <div *ngIf="permisoVisual == true" class="librosContainer">
+
+          <h1 *ngIf="librosGrupo" class="name" style="margin-top: 40px;">Libros del grupo</h1>
+          <ngb-carousel class="carusel">
+            <ng-template *ngFor="let librosGrupo of librosGrupo; let i = index" id="{{'librosGrupo'+i}}" ngbSlide>
+              <div (click)=goToBook(i) class="carusel">
+                <img *ngIf="select.owner == owner" (click)="deleteBook('eliminate-'+i)" id="{{'eliminate'+i}}"
+                  src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg">
+                <div class="picsum-img-wrapper">
+                  <img class="portadaImg" id="{{'imagen'+i}}" [src]="librosGrupo.Imagen" alt="Random first slide">
+
+                </div>
+                <div class="carousel-caption" style="z-index: 0;">
+                  <h3 id="{{'titulo'+i}}" align="center">{{librosGrupo.Titulo}}</h3>
+                  <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{librosGrupo.Autor}}</p>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </div>
+      </div>
+
+
     </div>
+  </div>
 </div>
+
 
 <app-footer></app-footer>
