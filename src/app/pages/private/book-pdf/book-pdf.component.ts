@@ -13,7 +13,6 @@ import { UserService } from 'src/app/services/user.service';
 
 
 
-
 @Component({
   selector: 'app-book-pdf',
   templateUrl: './book-pdf.component.html',
@@ -22,28 +21,9 @@ import { UserService } from 'src/app/services/user.service';
 
 export class BookPDFComponent implements OnInit {
 
-
-  //AQUI EMPIEZA EPUB
   @ViewChild('epubViewer')
   epubViewer: AngularEpubViewerComponent;
 
-  
-
- 
-  openFile() {
-    // let book = this.epubViewer.epub("https://s3.amazonaws.com/moby-dick/moby-dick.epub");
-    // // this.epubViewer.openLink("https://s3.amazonaws.com/epubjs/books/moby-dick/OPS/package.opf");
-    // // this.epubViewer.openLink("https://drive.google.com/file/d/1OY8EbZlLCbtRkMDcSM0hpSu8-MEjwZbj/view?usp=sharing");
-    // this.epubViewer.openFile(book);
-    // // this.epubViewer.openLink("")
-    this.epubViewer.setStyle("color:","blue");
-  }
-
-  
-
-
-  //AQUÍ ACABA
-  
   msgs: Array<MessageI> =[{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Harry Potter y la  Piedra Filosofal","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Hp","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Adiossss","time":"8:50","book":"HA","group":"hola123"}];
   msgForm: FormControl;
   subscriptionList: {
@@ -60,7 +40,7 @@ export class BookPDFComponent implements OnInit {
   title;
   group;
   isGroup=false;
-
+  public name: string 
 
     constructor(public chatService:ChatService, public route: ActivatedRoute, private firebase: AngularFireDatabase, 
       public userService : UserService) {
@@ -77,27 +57,15 @@ export class BookPDFComponent implements OnInit {
       this.isGroup=true;
       this.initChat();
     }
-
+    this.name = this.title; 
 
   }
 
   ngAfterViewInit(){
-    // console.log(this);
-
     this.epubViewer.openLink(this.url);
-
-    // this.epubViewer.openLink("https://firebasestorage.googleapis.com/v0/b/tesisredsocial-be58f.appspot.com/o/books%2FROWLING%20J%20K%20-%2001%20Harry%20Potter%20Y%20La%20Piedra%20Filosofal.epub?alt=media&token=278813d9-edc1-4022-b9a1-be3a50647e07");
-
-   
-
-  }
-
- 
+  } 
 
   showFiller = false;
-  
-  public name: string = "Harry Potter y la Piedra Filosofal"; 
-
 
   initChat() {
     this.subscriptionList.connection = this.chatService.connect().subscribe(_ => {
@@ -112,20 +80,37 @@ export class BookPDFComponent implements OnInit {
         if(info.group==this.group && info.book==this.title){
           if(info.page == "Next") this.epubViewer.nextPage()
           else if(info.page == "Previous") this.epubViewer.previousPage()
+          // else if (info.page == "Continue") this.epubViewer.goTo(5); AIUDA
         }
       })
     });
   }
+
+
   nextPage(){
     const pageInfo: pageChange = {group: this.group,book:this.title,page:"Next"}
-    this.chatService.sendpageChange(pageInfo)
+
+    this.savePage(1);
+    
+    if(this.group!=""){
+      this.chatService.sendpageChange(pageInfo)
+    }
     this.epubViewer.nextPage()
   }
+
+
   previousPage(){
+
+    this.savePage(-1);
+
     const pageInfo: pageChange = {group: this.group,book:this.title,page:"Previous"}
-    this.chatService.sendpageChange(pageInfo)
+    if(this.group!=""){
+      this.chatService.sendpageChange(pageInfo)
+    }
     this.epubViewer.previousPage()
   }
+
+  
   async sendMsg() {
     // console.log(firebase.auth().currentUser);
     let img= ""
@@ -142,6 +127,66 @@ export class BookPDFComponent implements OnInit {
     }
     this.chatService.sendMsg(msg);
     this.msgForm.setValue("");
+  }
+
+  async savePage (pag: number) {
+
+    if(this.isGroup==false){
+      const email= firebase.auth().currentUser.email;
+      const ref = this.firebase.database.ref('register');
+  
+      ref.orderByChild('email').equalTo(email).limitToLast(1).once("value", (user) =>{
+  
+          console.log(user.val()); 
+          user=user.val();
+          let userKey=Object.keys(user);
+          console.log(userKey);
+          let books = user[Object.keys(user)[0]].MisLibros;
+          let bookKeys = Object.keys(books);
+        
+  
+        bookKeys.forEach(element => {
+          
+            if(books[element].Titulo==this.title){
+              console.log(books[element].Titulo);
+    
+              let currentpage = books[element].Pag;
+              this.firebase.database.ref("register").child(userKey[0]).child("MisLibros").child(element).child("Pag").set(currentpage+pag);
+    
+            }
+                  
+        });
+      
+      });
+    }else{
+      const ref = this.firebase.database.ref('groups');
+      ref.orderByChild('name').equalTo(this.group).limitToLast(1).once("value", (group) =>{
+  
+        group=group.val();
+        let groupKey=Object.keys(group);
+        let books = group[Object.keys(group)[0]].books;
+        let bookKeys = Object.keys(books);
+
+      bookKeys.forEach(element => {
+        
+          if(books[element].Titulo==this.title){
+  
+            let currentpage = books[element].Pag;
+            this.firebase.database.ref("groups").child(groupKey[0]).child("books").child(element).child("Pag").set(currentpage+pag);
+  
+          }
+                
+      });
+    
+    });
+    }
+
+    
+    
+
+
+
+
   }
 }
 

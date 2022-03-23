@@ -22,11 +22,11 @@ export class FooterComponent implements OnInit {
   }
 
   goToGroups() {
-    this.router.navigate(['/groups']);
+    this.router.navigate(['/groups']); 
   }
 
   goToBook() {
-    this.router.navigate(['/book']);
+    this.router.navigate(['/mybooks']);
   }
 
   goToExternalProfiles() {

@@ -1,10 +1,13 @@
 <app-navigation-bar></app-navigation-bar>
 
-<input class="searchBar" id="form1" type="search" name="searchBoxHome" placeholder="Buscar"
-  [(ngModel)]="searchBoxHome" />
+
+
 
 <div class="container">
-  <div style="margin-top: 20%;">
+  <div style="margin-top: 65px; margin-bottom: -21px;"><input class="searchBar" id="form1" type="search" name="searchBoxHome" placeholder="Buscar"
+    [(ngModel)]="searchBoxHome" /></div>
+
+  <div style=" margin-bottom: 3px; display: flex; justify-content: right; width: 100%;">
     <select (change)="getBooksByTag()" [(ngModel)]="tag">
       <option value="All" selected>Todos</option>
       <option *ngFor="let tag of tagsList" [value]="tag">{{tag}}</option>
@@ -20,14 +23,8 @@
 
       <div class="contenedorStars">
         <!-- <img class="stars" style="width: 50%" src="../../../../assets/img/stars.png" alt="" /> -->
-        <label class="rating-label"><strong>Average rating is {{book.Stars}} <code>readonly</code></strong>
-          <input
-            class="rating"
-            max="5"
-            readonly
-            step="0.01"
-            style="--fill:rgb(224, 248, 0);--value:{{book.Stars}}"
-            type="range"
+        <label class="rating-label">Puntaje Promedio: {{book.Stars}}
+          <input class="rating" max="5" readonly step="0.01" style=" --fill:#feca57;--value:{{book.Stars}}" type="range"
             value="{{book.Stars}}">
         </label>
       </div>
@@ -38,42 +35,45 @@
       </div>
 
       <div class="btnContainer">
-        <button class="button is-info" style="margin-right: 10px; width: 25%">
-          Leer
-        </button>
         <button class="button is-info" id="{{ 'button-' + i }}" (click)="addBookToUser(i)"
-          style="width: 50%">
-          Agregar a mi lista
+          style="width: 45%">
+          Añadir a mi lista
         </button>
-        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%">
-          Agregar a mi grupo
+        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%; margin-left: 5px;">
+          Añadir a mi grupo
         </button>
-        <div *ngIf="activate == true">
-          <select (change)="addBookToGroup(i)" [(ngModel)]="groupValue">
+        <div style="margin-top:10px "  *ngIf="activate == true">
+          <select (change)="addBookToGroup(i)"  [(ngModel)]="groupValue"> 
             <option value="" disabled selected>Seleccione su grupo</option>
             <option *ngFor="let groups of booksListGroup"  [ngValue]="groups">{{groups}}</option>
           </select>
-        </div>        
+        </div>
+        
+        <button class="button is-info" style="width: 55%; margin-top: 5px;" (click)="activateComent()">Añadir Comentario</button>
+        <div *ngIf="activateComentD == true">
+          <input  style=" margin-top: 5px;"  type="text" placeholder="Escriba su comentario" [(ngModel)]="comentario">
+          <button class="button is-info" style=" margin-top: 5px; margin-left: 2px;  width: 25%; height: 10%;" (click)="sendComentario(book.Title)">Enviar</button>
+        </div>
       </div>
 
+
+      <!-- COMENTARIOS -->
+
+      <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica; margin-top: 15px;">Comentarios</label>
       <div *ngFor="let bookComent of bookComents">
         <div *ngIf="bookComent.Title == book.Title">
-          <label style="color: #205493; font-weight: bold; font-size: medium; font-family: Helvetica;">Comentarios</label>
-          <div class="comentarios">
+          
             <div class="comentario">
               <img class="commentPhoto" [src]="bookComent.Images" alt="">
-              <label (click)="goToPerfil(bookComent.User)" class="user">{{ bookComent.name }}</label><br />
-              <label class="commentText">{{ bookComent.Comment }}</label>
+              <div><label (click)="goToPerfil(bookComent.User)" class="user">{{ bookComent.name }}</label><br/>
+                <label class="commentText">{{ bookComent.Comment }}</label></div>
+              
             </div>
-          </div>
+          
         </div>
       </div>
       
-      <button (click)="activateComent()">Agregar comentario</button>
-      <div *ngIf="activateComentD == true">
-        <input type="text" placeholder="Escriba su comentario" [(ngModel)]="comentario">
-        <button (click)="sendComentario(book.Title)">Enviar</button>
-      </div>
+
       
     </div>
 
