@@ -208,8 +208,9 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-
     this.groupList.forEach((element, index) => {
+      console.log("element.name");
+      console.log(element.name);
       for (let i = 0; i < this.misGroupsList.length; i++) {
         if (this.misGroupsList[i].name == element.name) {
           if ("Images" in element) {
@@ -218,10 +219,10 @@ export class ProfileComponent implements OnInit {
           } else {
             this.misGroupsList[i].Images = "../../../../../../assets/img/NoImage.png";
           }
+          
         }
       }  
     });
-
   }
 
   //-----------------------------------------------------Update perfil photo----------------------------------------------

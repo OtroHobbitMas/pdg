@@ -72,8 +72,6 @@ export class HomeComponent implements OnInit {
     booksList: any[] = [];
     booksListGroup: any[] = [];
     tagsList: any[] = [];
-    activate = false;
-    activateComentD = false;
     comentario: string;
     arrTagsBooks: any[] = [];
     groupList: any[] = [];
@@ -177,11 +175,12 @@ export class HomeComponent implements OnInit {
     
   }
 
-  activateSelect(){
-    this.activate = true;
+  activateSelect(i){
+    let activate = document.getElementById("activateGroupSelect"+i);
+    activate.style.display = "block";
   }
 
-  async sendComentario(nombreLibro){
+  async sendComentario(nombreLibro,i){
 
     const Email = firebase.auth().currentUser.email;
 
@@ -206,7 +205,8 @@ export class HomeComponent implements OnInit {
       
       this.toastr.success('Comentario enviado', 'Exitosamente');
       this.comentario = "";
-      this.activateComentD = false;
+      let activateComent = document.getElementById("activateComentInput"+i);
+      activateComent.style.display = "none";
     }
   }
 
@@ -237,8 +237,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  activateComent(){
-    this.activateComentD = true;
+  activateComent(i){
+    let activateComent = document.getElementById("activateComentInput"+i);
+    activateComent.style.display = "block";
   }
 
    async coments(books,register){
@@ -401,10 +402,13 @@ export class HomeComponent implements OnInit {
     let keygroup;
     let booksinGroup: any[] = [];
     let entries;
+    let contador = 0;
+    let activate = document.getElementById("activateGroupSelect"+i);
+    activate.style.display = "none";
     
     this.titulo = this.macthRecomended[i].Title;
     this.imagen = this.macthRecomended[i].Portada;
-    this.autor = this.macthRecomended[i].Nombre;
+    this.autor = this.macthRecomended[i].Autor;
     alink = this.macthRecomended[i].alink;
     
 
@@ -440,28 +444,32 @@ export class HomeComponent implements OnInit {
         alink: alink,
         Pag: 0
       });
+      booksinGroup.push(this.titulo);
       this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
     }
 
     for (let i = 0; i < booksinGroup.length; i++) {
-      if (this.titulo != booksinGroup[i]){
-        if (keygroup) {
-          this.firebase.database.ref("groups").child(keygroup).child("books").push({
-            Autor: this.autor,
-            Imagen: this.imagen,
-            Titulo: this.titulo,
-            alink: alink,
-            Pag: 0
-          });
-          this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
-        }
-        break;  
-      } else {
-        this.toastr.error('El libro ya se encuentra en el grupo');
-        break;
+      if (this.titulo == booksinGroup[i]){
+        contador ++;
       }
     }
-     
+
+    if (contador == 0) {
+
+      this.firebase.database.ref("groups").child(keygroup).child("books").push({
+        Autor: this.autor,
+        Imagen: this.imagen,
+        Titulo: this.titulo,
+        alink: alink,
+        Pag: 0
+      });
+      booksinGroup.push(this.titulo);
+      this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
+
+    } else {
+      this.toastr.error('El libro ya se encuentra en el grupo');
+    }
+    this.groupValue = "";
   }
   
   async SendContact() {

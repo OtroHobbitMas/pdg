@@ -39,20 +39,20 @@
           style="width: 45%">
           Añadir a mi lista
         </button>
-        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect()" style="width: 50%; margin-left: 5px;">
+        <button *ngIf="booksListGroup.length != 0" class="button is-info" id="{{ 'buttonGroup-' + i }}" (click)="activateSelect(i)" style="width: 50%; margin-left: 5px;">
           Añadir a mi grupo
         </button>
-        <div style="margin-top:10px "  *ngIf="activate == true">
+        <div style="margin-top:10px; display: none;" [id]="'activateGroupSelect'+i">
           <select (change)="addBookToGroup(i)"  [(ngModel)]="groupValue"> 
             <option value="" disabled selected>Seleccione su grupo</option>
             <option *ngFor="let groups of booksListGroup"  [ngValue]="groups">{{groups}}</option>
           </select>
         </div>
         
-        <button class="button is-info" style="width: 55%; margin-top: 5px;" (click)="activateComent()">Añadir Comentario</button>
-        <div *ngIf="activateComentD == true">
+        <button class="button is-info" style="width: 55%; margin-top: 5px;" (click)="activateComent(i)">Añadir Comentario</button>
+        <div style="display: none;"  [id]="'activateComentInput'+i">
           <input  style=" margin-top: 5px;"  type="text" placeholder="Escriba su comentario" [(ngModel)]="comentario">
-          <button class="button is-info" style=" margin-top: 5px; margin-left: 2px;  width: 25%; height: 10%;" (click)="sendComentario(book.Title)">Enviar</button>
+          <button class="button is-info" style=" margin-top: 5px; margin-left: 2px;  width: 25%; height: 10%;" (click)="sendComentario(book.Title,i)">Enviar</button>
         </div>
       </div>
 
