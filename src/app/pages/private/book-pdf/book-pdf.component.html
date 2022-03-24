@@ -4,32 +4,50 @@
 <script src="js/reader.js"></script> -->
 <div class="name">{{name}}</div>
 
-<mat-drawer-container class="example-container" autosize>
-    <mat-drawer position="end" #drawer class="chat" mode="side">
-        <button type="button" mat-button (click)="drawer.close()">Go to book</button>
-        <app-book-chat *ngFor="let msg of msgs" [msg]="msg"></app-book-chat>
+<!-- <div id="container"> -->
+    <mat-drawer-container class="example-container" >
+
         
-        <textarea id="msgID" [formControl]="msgForm" type="text" class="inputMSG"></textarea>
-        <button (click)="sendMsg()" type="submit" class="button is-info" style="padding: 5px;">Enviar mensaje</button>
-
-    </mat-drawer>
-
-    <div class="example-sidenav-content">
-        <button type="button" *ngIf="isGroup" mat-button (click)="drawer.toggle()">Go to chat</button>
-
-        <div class="epubContainer" style="height: 500px; width: 80%;">
-            <angular-epub-viewer padding="10px" #epubViewer></angular-epub-viewer>
-        </div>
-        
-        <button id="BtnContinue" (click)="btnDisplay()" (click)="epubViewer.goTo(this.pag)" >Continuar Leyendo</button>
-        <button (click)="previousPage()">Previous page</button>
-        <button (click)="nextPage()">Next page</button>
+            <mat-drawer position="end" #drawer class="chat" mode="side">
+                <button type="button" mat-button (click)="drawer.close()">Go to book</button>
+                <app-book-chat *ngFor="let msg of msgs" [msg]="msg"></app-book-chat>
+    
+                <textarea id="msgID" [formControl]="msgForm" type="text" class="inputMSG"></textarea>
+                <button (click)="sendMsg()" type="submit" class="button is-info" style="padding: 5px;">Enviar
+                    mensaje</button>
+            </mat-drawer>
        
 
+
+        <!-- firstPage -->
+        <button type="button" *ngIf="isGroup" mat-button (click)="drawer.toggle()">Go to chat</button>
+        
+    <div id="container">
+        <div class="example-sidenav-content">
+
+
+            <div class="epubContainer" style="height: 500px; width: 80vw;">
+                <button id="BtnContinue" (click)="btnDisplay()" (click)="epubViewer.goTo(this.pag)">Continuar
+                    Leyendo</button>
+
+                <angular-epub-viewer padding="10px" #epubViewer></angular-epub-viewer>
+            </div>
+
+
+            <button (click)="previousPage()">Previous page</button>
+            <button (click)="nextPage()">Next page</button>
+
+
+        </div>
     </div>
 
 
 
-</mat-drawer-container>
+    </mat-drawer-container>
+<!-- </div> -->
+   
+
+
+
 
 <app-footer></app-footer>

@@ -24,7 +24,7 @@
                     descripción</button>
             </div>
 
- 
+
 
             <div class="tagsContainer">
 
@@ -78,41 +78,48 @@
 
             <ngb-carousel>
                 <ng-template *ngFor="let misLibros of misLibrosList; let i = index" id="{{'mislibros'+i}}" ngbSlide>
-            
-                    <div >
+
+                    <div>
 
                         <div (click)=goToBook(i) class="picsum-img-wrapper">
-                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen" alt="Random first slide">
-            
+                            <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen"
+                                alt="Random first slide">
+
                         </div>
                         <div class="carousel-caption" style="z-index: 0;">
-                            <img (click)="deleteBook(i)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag"
-                                class="tagImg">
+                            <img (click)="deleteBook(i)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg"
+                                alt="tag" class="tagImg">
                             <h3 id="{{'titulo'+i}}" align="center">{{misLibros.Titulo}}</h3>
                             <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{misLibros.Autor}}</p>
                         </div>
                     </div>
                 </ng-template>
             </ngb-carousel>
-            </div>
+        </div>
 
 
 
         <h1 class="name" style="margin-top: 20px;">Mis Amigos</h1>
-        <div *ngFor="let misAmigos of misAmigosList; let i = index" class="{{'containerAmigos'+i}}" id="friendsContainer">
-            <img (click)="goToPerfil(misAmigos.User)" id="{{'foto'+i}}" [src]="misAmigos.Images" alt="foto" class="friendImg">
+        <div *ngFor="let misAmigos of misAmigosList; let i = index" class="{{'containerAmigos'+i}}"
+            id="friendsContainer">
+            <img (click)="goToPerfil(misAmigos.User)" id="{{'foto'+i}}" [src]="misAmigos.Images" alt="foto"
+                class="friendImg">
             <p (click)="goToPerfil(misAmigos.User)" class="friendsName">{{misAmigos.name}}</p>
-            <img (click)="deleteFriend(i,misAmigos.User)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg2">
+            <img (click)="deleteFriend(i,misAmigos.User)" id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg"
+                alt="tag" class="tagImg2">
         </div>
 
-        <div >
-            <h1 class="name" style="margin-top: 20px;">Mis grupos</h1>
-            <div *ngFor="let misgrupos of misGroupsList; let i = index" class="{{'containerAmigos'+i}}" id="friendsContainer">
-                <img (click)="goToGroup(misgrupos.name)" id="{{'foto'+i}}" [src]="misgrupos.Images" alt="foto" class="friendImg">
-                <p (click)="goToGroup(misgrupos.name)" class="friendsName">{{misgrupos.name}}</p>
-            </div>
+
+        <h1 class="name" style="margin-top: 20px;">Mis grupos</h1>
+        <div *ngFor="let misgrupos of misGroupsList; let i = index" class="{{'containerAmigos'+i}}"
+            id="friendsContainer">
+            <img (click)="goToGroup(misgrupos.name)" id="{{'foto'+i}}" [src]="misgrupos.Images" alt="foto"
+                class="friendImg">
+            <p (click)="goToGroup(misgrupos.name)" class="friendsName">{{misgrupos.name}}</p>
+            <!-- ESTE ELIMINAR NO ESTÁ FUNCIONANDO -->
+            <img id="{{'eliminate'+i}}" src="../../../../assets/img/xIcon.svg" alt="tag" class="tagImg2">
+
         </div>
-        
 
 
     </div>

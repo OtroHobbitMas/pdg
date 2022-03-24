@@ -9,8 +9,6 @@ $AzulMedio: #205493;
 $AzulClaro: #0071bc;
 $text: #212121;
 
-
-
 .name{
     font-size: larger;
     text-align: center;
@@ -26,6 +24,36 @@ $text: #212121;
     align-items: center;
     justify-content: center;
 }
+
+#container{
+    // margin-top: 30px;
+    // width: 100%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+    margin-bottom: 30px;
+    // background-color: darkcyan
+}
+
+#bookContainer{
+    // background-color: aqua;
+    width: 100%;
+}
+
+#BtnContinue{
+    width: 80%;
+    background-color: rgba($color: #ffff, $alpha: 0.9) ;
+    position: absolute;
+    top: 100px;
+    z-index: 99;
+    height: 300px;
+    border-color: transparent;
+}
+
+
+
+
 
 .chat{
     width: 100%;
@@ -49,3 +77,5 @@ $text: #212121;
     word-break: break-word; 
     height: 100px;
 }
+
+

@@ -1,24 +1,26 @@
 <app-navigation-bar></app-navigation-bar>
 
-<div class="librosContainer">
+<div class="container">
+    <div class="librosContainer">
 
-    <h1 class="name" style="margin-top: 40px;">Mis Libros</h1>
-
-    <ngb-carousel>
-        <ng-template *ngFor="let misLibros of misLibrosList; let i = index" id="{{'mislibros'+i}}" ngbSlide>
-            <div (click)=goToBook(i)>
-                <div class="picsum-img-wrapper">
-                    <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen"
-                        alt="Random first slide">
-
+        <h1 class="name" style="margin-top: 40px;">Mis Libros</h1>
+    
+        <ngb-carousel>
+            <ng-template *ngFor="let misLibros of misLibrosList; let i = index" id="{{'mislibros'+i}}" ngbSlide>
+                <div >
+                    <div (click)=goToBook(i) class="picsum-img-wrapper">
+                        <img class="portadaImg" id="{{'imagen'+i}}" [src]="misLibros.Imagen" alt="Random first slide">
+    
+                    </div>
+                    <div class="carousel-caption" style="z-index: 0;">
+                        <h3 id="{{'titulo'+i}}" align="center">{{misLibros.Titulo}}</h3>
+                        <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{misLibros.Autor}}</p>
+                    </div>
                 </div>
-                <div class="carousel-caption" style="z-index: 0;">
-                    <h3 id="{{'titulo'+i}}" align="center">{{misLibros.Titulo}}</h3>
-                    <p id="{{'autor'+i}}" align="center" style="margin-bottom:10px">{{misLibros.Autor}}</p>
-                </div>
-            </div>
-        </ng-template>
-    </ngb-carousel>
+            </ng-template>
+        </ngb-carousel>
+    </div>
+    
 </div>
 
 <app-footer></app-footer>

@@ -1,8 +1,8 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    overflow-y: hidden;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  overflow-y: hidden;
 }
 
 $azulOscuro: #112e51;
@@ -10,158 +10,150 @@ $AzulMedio: #205493;
 $AzulClaro: #0071bc;
 $text: #212121;
 
+.name {
+  font-size: x-large;
+  text-align: center;
+  margin-top: 10px;
+  color: $AzulMedio;
+  align-self: center;
+}
 
+.perfilContainer {
+  // background-color: blue;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+  margin-top: 100px;
+}
 
-.name{
-    font-size: x-large;
-    text-align: center;
+.Photoimg {
+  height: 140px;
+  width: 140px;
+  border-radius: 75px;
+  object-fit: cover;
+  border: 3px solid $azulOscuro;
+}
+
+.app {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+  margin-bottom: 80px;
+}
+.container {
+  // background-color: bisque;
+  width: 90%;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+  margin-bottom: 80px;
+
+  .ContainerDescription {
+    // width: 80%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+    // background-color: aquamarine;
+  }
+
+  .inputDescripcion {
     margin-top: 10px;
-    color: $AzulMedio;
-    align-self: center;
-}
+    margin-bottom: 10px;
+    // margin-left: 2%;
+    width: 80vw;
+    height: 100px;
+    border-radius: 20px;
+    padding: 10px;
+    // resize: vertical;
+    // overflow-y: auto;
+    // white-space: nowrap;
+    // overflow: hidden;
+    text-overflow: ellipsis;
+    // white-space: pre;
+    word-break: break-word;
+  }
 
-.perfilContainer{
-    // background-color: blue;
+  .tagsContainer {
     display: flex;
     align-content: center;
     align-items: center;
     flex-flow: column wrap;
-    margin-top: 100px;
+    // background-color: darkgoldenrod;
+    margin-top: 20px;
+    width: 80%;
 
+    #titleTag {
+      color: $AzulClaro;
+      font-size: large;
+    }
+  }
+  .tagImg {
+    width: 30px;
+    height: 30px;
+    // position: absolute;
+    // z-index: 5
+    right: 0px;
+    top: 5px;
+    // left: -50px;
+    // top: 80px;
+  }
+  .Editimg {
+    width: 40px;
+    height: 40px;
+  }
 
-}
-
-.Photoimg{
-    height: 140px;
-    width: 140px;
-    border-radius: 75px;
+  .portadaImg {
+    width: 300px; /* width of container */
+    height: 500px; /* height of container */
     object-fit: cover;
-    border: 3px solid $azulOscuro;
+  }
 
-}
-
-.app{
+  #friendsContainer {
     display: flex;
     align-content: center;
-    align-items: center;
-    flex-flow: column wrap;
-    margin-bottom: 80px;
+    align-items: center !important;
+    justify-content: center;
+    flex-flow: row nowrap;
+    vertical-align: center;
+    // background-color: indianred;
+    width: 80%;
+    height: 100%;
+    // margin-top: -15px;
+    vertical-align: middle;
 
+    .friendsName {
+      color: $AzulClaro;
+      font-size: large;
+      text-align: center;
+      text-justify: center;
+      align-self: center;
+      // line-height: 40px;
+      // margin-top: 10px;
+      // background-color: hotpink;
+      margin-left: 10px;
+      // line-height: 90px;
+      vertical-align: middle;
+      padding-top: 10px;
+    }
+
+    .tagImg2 {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+      // position: absolute;
+      // z-index: 5
+      // left: -50px;
+      // top: 80px;
+    }
+  }
 }
-.container{
-    // background-color: bisque;
-    width: 90%;
-    display: flex;
-    align-content: center;
-    align-items: center;
-    flex-flow: column wrap;
-    margin-bottom: 80px;
-
-    .ContainerDescription{
-        // width: 80%;
-        display: flex;
-        align-content: center;
-        align-items: center;
-        flex-flow: column wrap;
-        // background-color: aquamarine;
-        
-    }
-
-    .inputDescripcion{
-        margin-top: 10px;
-        margin-bottom: 10px;
-        // margin-left: 2%;
-        width: 80vw;
-        height: 100px;
-        border-radius: 20px;
-        padding: 10px;
-        // resize: vertical;
-        // overflow-y: auto;
-        // white-space: nowrap;
-        // overflow: hidden;
-        text-overflow: ellipsis;
-        // white-space: pre;
-        word-break: break-word; 
-    }
-
-    .tagsContainer{
-        display: flex;
-        align-content: center;
-        align-items: center;
-        flex-flow: column wrap;
-        // background-color: darkgoldenrod;
-        margin-top: 20px;
-        width: 80%;
-
-        #titleTag{
-            color: $AzulClaro;
-            font-size: large;
-        }
-        
-    }
-    .tagImg{
-        width: 30px;
-        height: 30px;
-        // position: absolute;
-        // z-index: 5
-        right: 0px;
-        top: 5px;
-        // left: -50px;
-        // top: 80px;
-    }
-    .Editimg{
-        width: 40px;
-        height: 40px;
-    }
-
-    .portadaImg{
-        width: 300px; /* width of container */
-        height: 500px; /* height of container */
-        object-fit: cover;
-    }
-
-    #friendsContainer{
-
-        display: flex;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        flex-flow:  row nowrap;
-        // background-color: indianred;
-        vertical-align: center;
-        width: 80%;
-        margin-top: -15px;
-
-        .friendsName{
-            color: $AzulClaro;
-            font-size: large;
-            // line-height: 40px;
-            margin-top: 10px;
-            // background-color: hotpink;
-            margin-left: 10px;
-            
-
-        }
-        
-        .friendImg{
-            height: 40px;
-            width: 40px;
-            border-radius: 100%;
-            border: solid 1px $text;
-            // background-color: indigo;
-        }
-
-        .tagImg2{
-            width: 20px;
-            height: 20px;
-            margin-left: 10px;
-            // position: absolute;
-            // z-index: 5
-            // left: -50px;
-            // top: 80px;
-        }
-    }
-
-
-
+.friendImg {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border: solid 1px $text;
 }
