@@ -20,7 +20,7 @@
             <div class="card-body">
                 <h1 style="display: none;" id="{{'correo'+i}}"  align="center" >{{user.email}}</h1>
                 <h1 class="card-title" (click)="viewExternalProfile(user.email)" id="{{'nombre'+i}}"  align="center">{{user.name}} {{user.lname}}</h1>
-                <p class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.Descripcion}}</p>
+                <div style="width: 100%;" class="card-text" id="{{'descripcion'+i}}"  align="center">{{user.Descripcion}}</div> 
                 <button class="button is-info" style="margin-right: 10px;" (click)="viewExternalProfile(user.email)">Ver Perfil</button>
                 <!-- <button class="button is-info" id="{{'button-'+i}}" (click)="addFriend(i)">{{mensajeButton[i]}}</button>
                 <button class="button is-info" *ngIf="mensajeButton.length == 0" id="{{'button-'+i}}" (click)="addFriend(i)">Seguir</button> -->
@@ -60,11 +60,7 @@
             <h1 class="name">Sus tags:</h1>
 
                 <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Tag</th>
-                    </tr>
-                    </thead>
+
                     <tbody>
                     <tr *ngFor="let susTags of susTagsList; let i = index" id="{{'contTag'+i}}">
                         <th><label id="{{'mitag'+i}}">{{susTags.Tags}}</label></th>            

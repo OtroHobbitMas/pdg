@@ -1,0 +1,149 @@
+.app {
+    // width: 90%;
+
+    .containerComponents {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        flex-flow: column wrap;
+        margin-bottom: 80px;
+        // background-color: aqua  ;
+
+        #boton {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+    }
+}
+
+.name {
+    font-size: x-large;
+    text-align: center;
+    // margin-top: 10px;
+    color: #205493;
+    align-self: center;
+}
+
+.integrants{
+    font-size: x-large;
+    text-align: center;
+    // margin-top: 10px;
+    color: #205493;
+    align-self: center;  
+}
+
+.subName {
+    text-align: left;
+    font-size: large;
+    color: #205493;
+    align-self: center;
+}
+
+.card-body {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+.card-title {
+    margin-top: -10px;
+}
+
+.card-text {
+    margin-top: -10px;
+}
+
+
+.forms{
+    width: 90%;
+}
+
+#volver{
+    font-size: 12px;
+}
+
+.field{
+    width: 100%;
+    // background-color:  darkorchid;
+}
+
+#select{
+    width: 100%;
+    // border-color: #4f4f4f;
+    // background-color: aqua;
+    border: 1px solid #8f8f8f;
+    border-radius: 5px;
+}
+
+.registrar{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+
+.photoContainer{
+    margin-top: 20px;
+    
+    .Photoimg{
+        width: 100%; /* width of container */
+        height: 200px; /* height of container */
+        object-fit: cover;
+    }
+}
+
+.buttons{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+
+
+.inputDescripcion{
+    // margin-top: 10px;
+    margin-bottom: 10px;
+    // margin-left: 2%;
+    width: 80vw;
+    height: 100px;
+    border-radius: 20px;
+    padding: 10px;
+    // resize: vertical;
+    // overflow-y: auto;
+    // white-space: nowrap;
+    // overflow: hidden;
+    text-overflow: ellipsis;
+    // white-space: pre;
+    word-break: break-word; 
+}
+
+.carusel{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+.contanier{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+    justify-content: center;
+}
+
+.tagImg{
+    height: 25px;
+    width: 25px;
+}
+
+.eliminate{
+    display: flex;
+    align-items:flex-end;
+    flex-flow: column wrap;
+    justify-content: center; 
+    width: 85%;
+}

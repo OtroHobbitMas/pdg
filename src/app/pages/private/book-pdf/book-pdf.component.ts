@@ -180,13 +180,10 @@ export class BookPDFComponent implements OnInit {
     
     });
     }
+  }
 
-    
-    
-
-
-
-
+  btnDisplay(){
+    document.getElementById("BtnContinue").style.display="none";
   }
 }
 

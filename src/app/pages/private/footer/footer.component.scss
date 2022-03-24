@@ -11,10 +11,16 @@ $AzulMedio: #205493;
 $AzulClaro: #0071bc;
 $text: #212121;
 
+.footer{
+    width: 100%;
+
+}
+
 .container{
     width: 100vw;
-    // height: 8vh; 
+    // height: 9vh; 
     bottom: 0px;
+    margin-bottom: 0px;
     background-color: $AzulMedio;
     position: fixed;
  
