@@ -24,7 +24,7 @@ export class BookPDFComponent implements OnInit {
   @ViewChild('epubViewer')
   epubViewer: AngularEpubViewerComponent;
 
-  msgs: Array<MessageI> =[{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Harry Potter y la  Piedra Filosofal","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Holaaaa","time":"8:50","book":"Hp","group":"hola123"},{"user":"../../../../../../assets/img/NoImage.png","content":"Adiossss","time":"8:50","book":"HA","group":"hola123"}];
+  msgs: Array<MessageI> =[];
   msgForm: FormControl;
   subscriptionList: {
     connection: Subscription,
@@ -80,6 +80,7 @@ export class BookPDFComponent implements OnInit {
         if(info.group==this.group && info.book==this.title){
           if(info.page == "Next") this.epubViewer.nextPage()
           else if(info.page == "Previous") this.epubViewer.previousPage()
+          else if(info.page == "Continue") this.epubViewer.goTo(info.pageNum);
           // else if (info.page == "Continue") this.epubViewer.goTo(5); AIUDA
         }
       })
@@ -94,8 +95,10 @@ export class BookPDFComponent implements OnInit {
     
     if(this.group!=""){
       this.chatService.sendpageChange(pageInfo)
+    }else{
+      this.epubViewer.nextPage()
+
     }
-    this.epubViewer.nextPage()
   }
 
 
@@ -106,9 +109,26 @@ export class BookPDFComponent implements OnInit {
     const pageInfo: pageChange = {group: this.group,book:this.title,page:"Previous"}
     if(this.group!=""){
       this.chatService.sendpageChange(pageInfo)
+    }else{
+      this.epubViewer.previousPage()
+
     }
-    this.epubViewer.previousPage()
   }
+
+  continuePage(){
+    const pageInfo: pageChange = {group: this.group,book:this.title,page:"Continue",pageNum: this.pag}
+
+    if(this.group!=""){
+      this.chatService.sendpageChange(pageInfo)
+    }else{
+      this.epubViewer.goTo(this.pag);
+
+    }
+
+    
+  }
+
+
 
   
   async sendMsg() {

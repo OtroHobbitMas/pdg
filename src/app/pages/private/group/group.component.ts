@@ -426,7 +426,8 @@ export class GroupComponent implements OnInit {
   goToBook(i: string) {
     // console.log("CLICK LIBRO",this.librosGrupo[i]);
     // console.log("GRUPO",this.openedGruop);
-    this.router.navigate(['/book',{Pag: this.librosGrupo[i].pag, title: this.librosGrupo[i].Titulo,url: this.librosGrupo[i].alink,group:this.openedGruop}]);
+    // console.log("PAGE", this.librosGrupo[i].pag);
+    this.router.navigate(['/book',{Pag: this.librosGrupo[i].Pag, title: this.librosGrupo[i].Titulo,url: this.librosGrupo[i].alink,group:this.openedGruop}]);
   }
 
 

@@ -3,6 +3,7 @@
     margin: 0;
     box-sizing: border-box;
     overflow-y: hidden;
+    // overflow-x: hidden !important; 
 }
 $azulOscuro: #112e51;
 $AzulMedio: #205493;
@@ -14,8 +15,9 @@ $text: #212121;
     text-align: center;
     color: $AzulMedio;
     align-self: center;
-    margin-top: 80px;
+    // margin-top: 80px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .page{
@@ -28,32 +30,100 @@ $text: #212121;
 #container{
     // margin-top: 30px;
     // width: 100%;
+    
     display: flex;
     align-content: center;
     align-items: center;
     flex-flow: column wrap;
-    margin-bottom: 30px;
-    // background-color: darkcyan
+    // margin-bottom: 30px;
+    // background-color: darkcyan;
+    // height: 600px !important;
+    // margin-top: -20px;
+    // overflow-x: hidden !important; 
+
 }
 
 #bookContainer{
     // background-color: aqua;
     width: 100%;
+    
 }
 
 #BtnContinue{
-    width: 80%;
+    width: 100vw;
     background-color: rgba($color: #ffff, $alpha: 0.9) ;
     position: absolute;
-    top: 100px;
-    z-index: 99;
+    top: 30%;
+    left: 0px;
+    z-index: 50;
     height: 300px;
     border-color: transparent;
+    font-size: large;
+    text-align: center;
+    color: $AzulMedio;
+    // align-self: center
+
+}
+
+#arrowPrev{
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 50%;
+    left: 0vw;
+    z-index: 15;
+}
+
+#arrowNext{
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 50%;
+    left: 86vw;
+    z-index: 15;
 }
 
 
 
 
+
+
+#chat{
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    margin-left: 87vw;
+    margin-bottom: 10px;
+    top: 10vh;
+    // top: 0px;
+    // justify-self: flex-end;
+    z-index: 30;
+}
+
+
+#chatContainer{
+    margin-top: 10vh;
+    margin-bottom: 80px;
+    // width: 100%;
+    display: flex;
+    // align-content: center;
+    // align-items: center;
+    flex-flow: wrap;
+    // margin-bottom: 30px;
+    // background-color: darkcyan;
+    // height: 600px !important;
+    // margin-top: -20px;
+    // overflow-x: hidden !important; 
+
+}
+
+#chats{
+    min-height: 30vh;
+    width: 90%;
+    margin-left: 15px;
+    // background-color: tan;
+
+}
 
 .chat{
     width: 100%;
@@ -75,7 +145,10 @@ $text: #212121;
     text-overflow: ellipsis;
     // white-space: pre;
     word-break: break-word; 
-    height: 100px;
+    height: 80px;
+    margin-left: 15px;
+
 }
+
 
 

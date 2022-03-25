@@ -2,40 +2,59 @@
 
 <!-- <script src="../dist/epub.js"></script>
 <script src="js/reader.js"></script> -->
-<div class="name">{{name}}</div>
+
 
 <!-- <div id="container"> -->
-    <mat-drawer-container class="example-container" >
+<mat-drawer-container class="example-container">
 
-        
-            <mat-drawer position="end" #drawer class="chat" mode="side">
-                <button type="button" mat-button (click)="drawer.close()">Go to book</button>
+    <div class="name" style="margin-top:80px">{{name}}</div>
+
+    <mat-drawer position="end" #drawer class="chat" mode="side"  >
+        <div id="chatContainer">
+            <button class="button is-info" type="button" style="padding: 8px; height: 30px; margin-left:5px; margin-bottom: 10px;" mat-button (click)="drawer.close()">Volver</button>
+            <div class="name">{{name}}</div>
+            <div class="name">Mensajes</div>
+
+            <div id="chats">
+                
                 <app-book-chat *ngFor="let msg of msgs" [msg]="msg"></app-book-chat>
+
+            </div>
+
     
-                <textarea id="msgID" [formControl]="msgForm" type="text" class="inputMSG"></textarea>
-                <button (click)="sendMsg()" type="submit" class="button is-info" style="padding: 5px;">Enviar
-                    mensaje</button>
-            </mat-drawer>
-       
+            <textarea id="msgID" [formControl]="msgForm" type="text" class="inputMSG"></textarea>
+    
+            <button (click)="sendMsg()" type="submit"  class="button is-info" style="padding: 5px; margin-left: 20px;">Enviar
+                mensaje</button>
+        </div>
+
+    </mat-drawer>
 
 
-        <!-- firstPage -->
-        <button type="button" *ngIf="isGroup" mat-button (click)="drawer.toggle()">Go to chat</button>
-        
+
+    <!-- firstPage -->
+    <img id="chat" src="../../../../assets/img/messenger.png" *ngIf="isGroup" (click)="drawer.toggle()" alt="">
+    <!-- <button type="button" *ngIf="isGroup" mat-button (click)="drawer.toggle()">Go to chat</button> -->
+
+
     <div id="container">
         <div class="example-sidenav-content">
 
+            <img id="arrowPrev" src="../../../../assets/img/Previous.png" (click)="previousPage()" alt="">
+            <!-- <button (click)="previousPage()">Previous page</button> -->
+            <img id="arrowNext" src="../../../../assets/img/Next.png" (click)="nextPage()" alt="">
 
-            <div class="epubContainer" style="height: 500px; width: 80vw;">
-                <button id="BtnContinue" (click)="btnDisplay()" (click)="epubViewer.goTo(this.pag)">Continuar
+            <div class="epubContainer" style="height: 480px; width: 75vw; margin-top: 15px; ">
+                <button id="BtnContinue" (click)="btnDisplay()" (click)="continuePage()">Continuar
                     Leyendo</button>
-
-                <angular-epub-viewer padding="10px" #epubViewer></angular-epub-viewer>
+                <!-- (click)="epubViewer.goTo(this.pag)" -->
+                <angular-epub-viewer #epubViewer></angular-epub-viewer>
             </div>
 
 
-            <button (click)="previousPage()">Previous page</button>
-            <button (click)="nextPage()">Next page</button>
+
+
+            <!-- <button (click)="nextPage()">Next page</button> -->
 
 
         </div>
@@ -43,9 +62,9 @@
 
 
 
-    </mat-drawer-container>
+</mat-drawer-container>
 <!-- </div> -->
-   
+
 
 
 

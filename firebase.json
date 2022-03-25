@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/Read2gether",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
