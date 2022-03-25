@@ -46,7 +46,6 @@ export class FileUploadComponent {
 
     //Client-side Validation example
     // if (file.type.split('/')[0] !== 'audio' || 'image') {
-    //   console.error('No hay soporte en ese tipo de archivo :(')
     //   return;
     // }
 
@@ -71,7 +70,6 @@ export class FileUploadComponent {
     this.downloadURL.subscribe(url => {
         this.fileURL = url;
         this.fileUrlEmitter.emit(url);
-        console.log("URL ES: " + url );
       });
     })).subscribe();
 
@@ -80,7 +78,6 @@ export class FileUploadComponent {
       this.downloadURL.subscribe(imgUrl => {
           this.imgURL = imgUrl;
           this.imgUrlEmitter.emit(imgUrl);
-          console.log("URL ES: " + imgUrl );
         });
       })).subscribe();
 

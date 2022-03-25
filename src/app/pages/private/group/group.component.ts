@@ -206,14 +206,12 @@ export class GroupComponent implements OnInit {
   SendDescription(nombreGrupo){
     let groupKey;
     
-    console.log("this.descripcion");
-    console.log(this.descripcion);
+
 
     this.groupList.forEach((element) => {
       if (element.name == nombreGrupo) {
         groupKey = element.$key;
-        console.log("groupKey");
-        console.log(groupKey); 
+
       }
     });
 
@@ -236,8 +234,7 @@ export class GroupComponent implements OnInit {
     this.groupList.forEach((element) => {
       if (element.name == nombreGrupo) {
         groupKey = element.$key;
-        console.log("groupKey");
-        console.log(groupKey);
+
         if ("integrants" in element){          
           entries = Object.values(element.integrants);
           keys = Object.keys(element.integrants);
@@ -264,7 +261,6 @@ export class GroupComponent implements OnInit {
       if (this.userName == this.selectedIntegrants[i]) {
         this.selectedIntegrants.splice(i, 1);
         this.permisoAdd = true;
-        console.log(this.selectedIntegrants);
         if (this.userName != this.selectedIntegrants[i] && this.selectedGroup[0].privacity == "privado"){
           this.permisoVisual = false;
         } 
@@ -389,7 +385,6 @@ export class GroupComponent implements OnInit {
 
 
     this.librosGrupo = temp[0];
-    // console.log("libros grupo",this.librosGrupo);
     
     this.registerList.forEach((element,index) => {
       for (let i = 0; i < this.groupList.length; i++) {
@@ -424,9 +419,7 @@ export class GroupComponent implements OnInit {
   }
 
   goToBook(i: string) {
-    // console.log("CLICK LIBRO",this.librosGrupo[i]);
-    // console.log("GRUPO",this.openedGruop);
-    // console.log("PAGE", this.librosGrupo[i].pag);
+
     this.router.navigate(['/book',{Pag: this.librosGrupo[i].Pag, title: this.librosGrupo[i].Titulo,url: this.librosGrupo[i].alink,group:this.openedGruop}]);
   }
 

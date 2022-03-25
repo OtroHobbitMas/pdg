@@ -37,7 +37,6 @@ export class NavigationBarComponent implements OnInit {
 
   goToAutors() {
     // this.router.navigate(['/home']);  
-    console.log("aquí van los autores");
   }
 
 

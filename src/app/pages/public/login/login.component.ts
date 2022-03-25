@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
           x["$key"] = element.key;
           this.registerList.push(x as User);
         });
-        console.log(this.registerList);
       });
   }
 
@@ -58,16 +57,12 @@ export class LoginComponent implements OnInit {
     let userExist;
     if(email.match(emailRegexp)){
       // Es correo
-      console.log(this.registerList);
-      console.log("Es correo");
+
       userExist = this.registerList.find( user => user.email == email);
-      console.log(userExist);
     } else {
-      console.log("Es teléfono");
       // Es teléfono
       userExist = this.registerList.find( user => user.telefono.e164Number == email && user);
       email = userExist && userExist.email || undefined;
-      console.log(email);
     }
 
     if(userExist){
@@ -118,7 +113,6 @@ export class LoginComponent implements OnInit {
           data.forEach(element => {
             let user = element.exportVal();
 
-            console.log(user.email);
 
             email = user.email;
           });

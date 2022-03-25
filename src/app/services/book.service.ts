@@ -21,8 +21,8 @@ export class BookService {
 
   deleteBooks(tagkey: string,$key: string)
   {
-    console.log("delete $key");
-    console.log(tagkey);
+    // console.log("delete $key");
+    // console.log(tagkey);
     this.firebase.database.ref("register").child($key).child("MisLibros").child(tagkey).remove();
   }
 

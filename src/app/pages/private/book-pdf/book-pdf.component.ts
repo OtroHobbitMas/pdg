@@ -69,7 +69,7 @@ export class BookPDFComponent implements OnInit {
 
   initChat() {
     this.subscriptionList.connection = this.chatService.connect().subscribe(_ => {
-      console.log("Nos conectamos");
+      console.log("Conexión exitosa");
       this.subscriptionList.newMgs = this.chatService.getNewMsgs().subscribe((msg: MessageI) => {
         
         if(msg.group==this.group && msg.book==this.title){
@@ -132,7 +132,6 @@ export class BookPDFComponent implements OnInit {
 
   
   async sendMsg() {
-    // console.log(firebase.auth().currentUser);
     let img= ""
     await this.userService.getUserImg(firebase.auth().currentUser.email).then(value =>{
       img = value 
@@ -157,10 +156,8 @@ export class BookPDFComponent implements OnInit {
   
       ref.orderByChild('email').equalTo(email).limitToLast(1).once("value", (user) =>{
   
-          console.log(user.val()); 
           user=user.val();
           let userKey=Object.keys(user);
-          console.log(userKey);
           let books = user[Object.keys(user)[0]].MisLibros;
           let bookKeys = Object.keys(books);
         
@@ -168,7 +165,6 @@ export class BookPDFComponent implements OnInit {
         bookKeys.forEach(element => {
           
             if(books[element].Titulo==this.title){
-              console.log(books[element].Titulo);
     
               let currentpage = books[element].Pag;
               this.firebase.database.ref("register").child(userKey[0]).child("MisLibros").child(element).child("Pag").set(currentpage+pag);

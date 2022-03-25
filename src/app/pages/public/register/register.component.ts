@@ -135,7 +135,6 @@ export class RegisterComponent implements OnInit {
     let phoneExist = this.registerList.find(user => user.telefono.e164Number == telefono.e164Number);
 
     if (emailExist) {
-      console.log("Ya existe este email");
       this.toastr.error('Ese correo ya esta registrado', 'Intenta otro correo', {
         positionClass: 'toast-top-center'
       });
@@ -143,7 +142,6 @@ export class RegisterComponent implements OnInit {
       this.toastr.error('El número ya esta registrado', 'Intenta otro número', {
         positionClass: 'toast-top-center'
       });
-      console.log("Ya existe este número");
     } else {
 
       if (confirmPassword == password) {
@@ -157,8 +155,7 @@ export class RegisterComponent implements OnInit {
           var errorCode = error.code;
           var errorMessage = error.message;
           
-          console.log(errorCode);
-          console.log(errorMessage);
+          console.log("Error",errorCode,errorMessage);
         });
 
         this.email = email;
@@ -168,8 +165,6 @@ export class RegisterComponent implements OnInit {
             positionClass: 'toast-top-center'
           });
         })
-        console.log("this.email");
-        console.log(this.email);
 
         this.router.navigate(["/tags"]);
       }

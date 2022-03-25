@@ -30,18 +30,20 @@ export class MyBooksComponent implements OnInit {
   }
 
   goToBook(i: string) {
-    // console.log(this.misLibrosList[i]);
-    // console.log(this.misLibrosList[i].link);
+
     this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink,group:""}]);
+  }
+
+  goToGroup(){
+    console.log("hola");
+    this.router.navigate(['/groups']); 
   }
 
 
   misLibrosList: any[] = [];
 
   async getMisLibros() {
-    console.log("USER",firebase.auth().currentUser);
     const Email = firebase.auth().currentUser.email;
-    console.log("EMAIL",Email);
 
     await this.firebase.database.ref("register").once("value", (users) => {
       let usersData = users.val();
@@ -57,7 +59,6 @@ export class MyBooksComponent implements OnInit {
         });
       }  
     });
-    console.log("MIS LIBROS",this.misLibrosList);
   }
 
 }

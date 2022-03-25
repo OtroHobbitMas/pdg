@@ -108,8 +108,7 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(["/tags"]);
   }
   goToBook(i: string) {
-    // console.log(this.misLibrosList[i]);
-    // console.log(this.misLibrosList[i].link);
+
     this.router.navigate(['/book',{Pag: this.misLibrosList[i].Pag, title: this.misLibrosList[i].Titulo,url: this.misLibrosList[i].alink,group:""}]);
   }
 
@@ -127,11 +126,7 @@ export class ProfileComponent implements OnInit {
 
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            // console.log("Sign-in provider: " + profile.providerId);
-            // console.log("  Provider-specific UID: " + profile.uid);
-            // console.log("  Name: " + profile.displayName);
-            // console.log("  Email: " + profile.email);
-            // console.log("  Phone Number: " + profile.photoURL);
+
             $this.UpdatePerfilPhoto(profile.email);
             $this.getNameUser(profile.email);
             $this.getDescriptionUser(profile.email);
@@ -163,7 +158,6 @@ export class ProfileComponent implements OnInit {
 
   // async getGroupImg(event){
   //   this.ImgGUrl = event;
-  //   console.log("URL recibida en padre: " + this.ImgGUrl);
   //  await this.groupImage();
   // }
 
@@ -209,8 +203,6 @@ export class ProfileComponent implements OnInit {
     });
 
     this.groupList.forEach((element, index) => {
-      console.log("element.name");
-      console.log(element.name);
       for (let i = 0; i < this.misGroupsList.length; i++) {
         if (this.misGroupsList[i].name == element.name) {
           if ("Images" in element) {
@@ -435,8 +427,7 @@ export class ProfileComponent implements OnInit {
 
   getMisAmigos() {
     let entries;
-    // console.log("this.registerList");
-    // console.log(this.registerList);
+
     this.misAmigosList = [];
 
     const Email = firebase.auth().currentUser.email;
@@ -496,7 +487,6 @@ export class ProfileComponent implements OnInit {
 
     await this.firebase.database.ref("register").once("value", (users) => {
       users.forEach((user) => {
-        // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
         if (childData.email == Email) {
@@ -511,11 +501,9 @@ export class ProfileComponent implements OnInit {
                 const TagChildData = Tag.val();
                 if (TagChildKey == "Tag") {
                   Tags = TagChildData;
-                  // console.log(aut);
                   // this.misTagsList.push({Tags:TagChildData});
                   if (Tags != "") {
-                    // console.log("info key");
-                    // console.log(keyTAGS);
+
                     this.keyOrdenList.push(keyTAGS);
                     this.misTagsList.push({ Tags });
                   }
@@ -539,14 +527,10 @@ export class ProfileComponent implements OnInit {
   }
 
   async deleteBook(i) {
-    console.log("ENTRÉ");
     // let index = i.split("-");
     let query2: string = "#mislibros" + i;
-    console.log("QUERY",query2);
     let cont: any = document.querySelector(query2);
-    console.log("CONT",cont);
     //por el carrusel no encuentra el query2
-    // console.log(cont);
     // cont.style.display = "none";
 
     this.bookService.deleteBooks(

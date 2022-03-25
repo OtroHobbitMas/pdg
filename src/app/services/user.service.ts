@@ -57,15 +57,13 @@ export class UserService {
 
   deleteFriends(tagkey: string,$key: string)
   {
-    console.log("delete $key");
-    console.log(tagkey);
+
     this.firebase.database.ref(this.collection).child($key).child("Amigos").child(tagkey).remove();
   }
 
   deleteGroups(tagkey: string,$key: string)
   {
-    console.log("delete $key");
-    console.log(tagkey);
+
     this.firebase.database.ref("groups").child($key).child("integrants").child(tagkey).remove();
   }
 
@@ -75,8 +73,6 @@ export class UserService {
 
   updateUsername(user: User)
   {
-    console.log("user.$key");
-    console.log(user.$key);
     // this.registerList.update(register.$key, {
     //   name: register.name,
     // });

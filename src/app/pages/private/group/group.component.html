@@ -85,16 +85,22 @@
       <div style="padding-bottom: 20px; padding-top: 5px;" class="registrar">
         <div class="buttons">
           <button [disabled]="ngForm.invalid" type="submit" class="button is-info"
+          
             (click)="onSubmit()">Crear Grupo</button>
           <!-- <button class="button is-success" (click)="goToLogin()">Back to Login</button> -->
         </div>
       </div>
 
     </form>
-    <div *ngIf="nextImage == true">
+    <div *ngIf="nextImage == true" class="subName" style="margin-bottom: 5px;">Escoja una imagen para el grupo</div>
+
+    <div *ngIf="nextImage == true" >
       <app-file-upload (imgUrlEmitter)="getImg($event)"></app-file-upload>
       <img class="createGroupPhotoimg" [src]="Currentimg" srcset="" alt="" id="img">
+      
     </div>
+
+
 
   </div>
 </div>

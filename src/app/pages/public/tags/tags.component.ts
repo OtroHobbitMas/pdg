@@ -45,7 +45,6 @@ export class TagsComponent implements OnInit {
   ngOnInit(): void {
     let $this = this;
     this.UserAcount();
-    console.log(this.tagService.getTags());
     this.tagService.getTags()    
       .snapshotChanges().subscribe(item => {
         this.tagsList = [];
@@ -61,7 +60,6 @@ export class TagsComponent implements OnInit {
         for (let i = 0; i < this.tagsList.length; i++) {
           this.validate.push(this.tagsList[i][0]);     
         }        
-        console.log(this.tagsList);
         setTimeout(function(){ $this.validateTags(); }, 500);
       });
       
@@ -76,14 +74,9 @@ export class TagsComponent implements OnInit {
 
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            // console.log("Sign-in provider: " + profile.providerId);
-            // console.log("  Provider-specific UID: " + profile.uid);
-            // console.log("  Name: " + profile.displayName);
-            // console.log("  Email: " + profile.email);
-            // console.log("  Phone Number: " + profile.photoURL);
+
           });
         }
-        // console.log(user);
       } else {
         // No user is signed in.
       }
@@ -108,7 +101,6 @@ export class TagsComponent implements OnInit {
       const Email = firebase.auth().currentUser.email;
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -170,7 +162,6 @@ export class TagsComponent implements OnInit {
       const Email = firebase.auth().currentUser.email;
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -197,8 +188,7 @@ export class TagsComponent implements OnInit {
           if (this.validate[i]==this.tagsValidate[j]){
             let query2: string = "#tags"+i;
             let image: any = document.querySelector(query2);
-            console.log("image");
-            console.log(image);
+
             image.src = "../../../../assets/img/checkIcon.svg"; 
           }
                  

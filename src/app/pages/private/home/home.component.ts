@@ -111,7 +111,6 @@ export class HomeComponent implements OnInit {
           x["$key"] = element.key;
           this.tagsList.push(x as User);
         });
-        console.log(this.tagsList);
       });
       
       this.bookService.getBooks()
@@ -139,14 +138,11 @@ export class HomeComponent implements OnInit {
         this.arrTagsBooks.push({tags: entries, name: element.Title});
       }
     });
-    // console.log(this.arrTagsBooks);
     this.tagsList = Object.values(tags[0]);   
   }
 
   getBooksByTag(){
     let entries;
-    console.log("this.tag");
-    console.log(this.tag);
 
     if (this.tag == "All") {
       this.macthRecomended = this.booksList;
@@ -155,7 +151,6 @@ export class HomeComponent implements OnInit {
       this.bookList.forEach((element,index) => {
         if ("Tags" in element){
           entries = Object.values(element.Tags);
-          console.log(entries);
           for (let i = 0; i < entries.length; i++) {
             if (this.tag == entries[i]) {
               this.macthRecomended.push(element);
@@ -165,8 +160,7 @@ export class HomeComponent implements OnInit {
         }
       });      
     }
-    console.log("this.macthRecomended");
-    console.log(this.macthRecomended);
+
 
     if (this.macthRecomended.length == 0){
       this.macthRecomended = this.bookList;
@@ -195,8 +189,7 @@ export class HomeComponent implements OnInit {
         }
       });
 
-      console.log("Key");
-      console.log(Key);
+
 
       this.firebase.database.ref("books").child(Key).child("Comentarios").push({
         Comment: this.comentario,
@@ -248,10 +241,7 @@ export class HomeComponent implements OnInit {
     let bookComentLocal = [];
     this.bookComents = [];
     bookComentLocal = this.bookComents;
-    console.log("bookComentLocal");
-    console.log(bookComentLocal);
-    console.log("this.bookComents");
-    console.log(this.bookComents);
+
 
     await books.forEach((element) => {
         if ("Comentarios" in element){
@@ -262,8 +252,7 @@ export class HomeComponent implements OnInit {
           
         }      
     });
-    console.log(" register");
-    console.log(register);
+
 
     await register.forEach((element) => {
       if (bookComentLocal.length != 0) {
@@ -284,8 +273,7 @@ export class HomeComponent implements OnInit {
         }  
       }       
     });
-    console.log("bookComentLocal");
-    console.log(bookComentLocal);
+
       
     }
 
@@ -300,14 +288,10 @@ export class HomeComponent implements OnInit {
           
           if (user != null) {
             user.providerData.forEach(function (profile) {
-              // console.log("Sign-in provider: " + profile.providerId);
-              // console.log("  Provider-specific UID: " + profile.uid);
-              // console.log("  Name: " + profile.displayName);
-              // console.log("  Email: " + profile.email);
+
               // $this.addBookToUser(profile.email,"");
             });
           }
-          // console.log(user);
         } else {
           // No user is signed in.
         }
@@ -345,7 +329,6 @@ export class HomeComponent implements OnInit {
 
       await this.firebase.database.ref("register").once("value", (users) => {
         users.forEach((user) => {
-          // console.log("entre nivel1");
           const childKey = user.key;
           const childData = user.val();
           if (childData.email == Email) {
@@ -383,7 +366,7 @@ export class HomeComponent implements OnInit {
           Titulo: this.titulo,
           Autor: this.autor,
           alink: alink,
-          Pag: 0
+          Pag: 1
         });
         this.toastr.success('Libro añadido a tu lista', 'Exitosamente');
       }
@@ -414,7 +397,6 @@ export class HomeComponent implements OnInit {
 
     await this.firebase.database.ref("groups").once("value", (users) => {
       users.forEach((user) => {
-        // console.log("entre nivel1");
         const childKey = user.key;
         const childData = user.val();
         if (childData.name == this.groupValue) {
@@ -442,7 +424,7 @@ export class HomeComponent implements OnInit {
         Imagen: this.imagen,
         Titulo: this.titulo,
         alink: alink,
-        Pag: 0
+        Pag: 1
       });
       booksinGroup.push(this.titulo);
       this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
@@ -461,12 +443,12 @@ export class HomeComponent implements OnInit {
         Imagen: this.imagen,
         Titulo: this.titulo,
         alink: alink,
-        Pag: 0
+        Pag: 1
       });
       booksinGroup.push(this.titulo);
       this.toastr.success('Libro añadido a tu grupo', 'Exitosamente');
 
-    } else {
+    } else { 
       this.toastr.error('El libro ya se encuentra en el grupo');
     }
     this.groupValue = "";
@@ -487,34 +469,26 @@ export class HomeComponent implements OnInit {
         const childData = user.val();
         if (childData.email == Email) {
           Key = childKey;
-          // console.log("entramos", childKey);
         }
-        // console.log("recorrido", childKey);
       });
     });
 
     if (ContactNumber.match(emailRegexp)) {
       // Es correo
-      // console.log("Es correo");
       userExist = this.registerList.find(user => user.email == ContactNumber);
       ContactNumber = userExist && userExist.email || undefined;
       if (!userExist) {
-        // console.log("Este usuario no existe")
       } else {
-        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,
         });
       }
     } else {
-      // console.log("Es teléfono");
       // Es teléfono
       userExist = this.registerList.find(user => user.telefono.e164Number == ContactNumber && user);
       if (!userExist) {
-        // console.log("Este usuario no existe")
       } else {
-        // console.log(ContactName, ContactNumber);
         this.firebase.database.ref('register').child(Key).child('contacts').push({
           Namecontact: ContactName,
           Numbercontact: ContactNumber,

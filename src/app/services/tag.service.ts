@@ -18,15 +18,13 @@ export class TagService {
 
   deleteTag(tagkey: string,$key: string)
   {
-    console.log("delete $key");
-    console.log(tagkey);
+
     this.firebase.database.ref("register").child($key).child("Tags").child(tagkey).remove();
   }
 
   deleteIntegrant(tagkey: string,$key: string)
   {
-    console.log("delete $key");
-    console.log(tagkey);
+
     this.firebase.database.ref("register").child($key).child("Groups").child(tagkey).remove();
   }
 

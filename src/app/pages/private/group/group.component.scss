@@ -147,3 +147,26 @@
     justify-content: center; 
     width: 85%;
 }
+
+#upload{
+    background-color: salmon;
+    width: 100%;
+    height: 80px;
+}
+
+
+.createGroupPhotoimg{
+    height: 140px;
+    width: 140px;
+    border-radius: 75px;
+    object-fit: cover;
+    border: 3px solid #205493;
+}
+
+#imgContainer{
+    display: flex;
+    align-items:flex-end;
+    flex-flow: column wrap;
+    justify-content: center; 
+}
+
