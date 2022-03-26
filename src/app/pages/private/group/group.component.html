@@ -144,11 +144,15 @@
   <div class="containerComponents">
     <div class="groupContainer" *ngIf="viewInsideGroup == true">
 
-      <div *ngFor="let select of selectedGroup">
+      <div *ngFor="let select of selectedGroup; let i = index">
       
         <button class="button is-info" id="volver" style="align-self: left;" (click)="goBack()">Volver</button>
       
         <div class="photoContainer">
+          <div *ngIf="select.owner == owner">
+            <app-file-upload (imgUrlEmitter)="getImg($event,select.name,'update',i)"></app-file-upload>
+          </div>
+          
           <img class="Photoimg" [src]="select.Images" srcset="" alt="" id="img">
         </div>
       
