@@ -71,6 +71,10 @@ export class UserService {
     this.firebase.database.ref("groups").child($key).child("description").set(value);
   }
 
+  updatePhotoGroup($key: string,$imagekey: string,value: string){
+    this.firebase.database.ref("groups").child($key).child("Images").child($imagekey).child("ImgUrl").set(value);
+  }
+
   updateUsername(user: User)
   {
     // this.registerList.update(register.$key, {

@@ -573,9 +573,11 @@ export class GroupComponent implements OnInit {
 
   async SendImage (nombre){
     const nombreGrupo = this.ngForm.controls.name.value;
+    let groupKey;
+    let imageKey;
+
     if (nombreGrupo) {
-      if(this.ImgUrl){
-        let Key;      
+      if(this.ImgUrl){    
         // const Email = firebase.auth().currentUser.email;
   
         await this.firebase.database.ref("groups").once("value", (groups) => {
@@ -583,22 +585,30 @@ export class GroupComponent implements OnInit {
             const childKey = group.key;
             const childData = group.val();
             if (childData.name == nombreGrupo) {
-              Key = childKey;
+              groupKey = childKey;
+              if (childData.Images) {
+                imageKey = childKey;
+              }
             }
                      
           });
         });
   
-        this.firebase.database.ref("groups").child(Key).child("Images").push({
+        this.firebase.database.ref("groups").child(groupKey).child("Images").push({
           ImgUrl: this.ImgUrl
         });
+
+        // this.userService.updatePhotoGroup(
+        //   groupKey,
+        //   imageKey,
+        //   this.ImgUrl
+        // );
         
         this.toastr.success('Foto subida', 'Exitosamente');
       }
     }
     if (nombre != "") {
-      if(this.ImgUrl){
-        let Key;      
+      if(this.ImgUrl){    
         // const Email = firebase.auth().currentUser.email;
   
         await this.firebase.database.ref("groups").once("value", (groups) => {
@@ -606,15 +616,25 @@ export class GroupComponent implements OnInit {
             const childKey = group.key;
             const childData = group.val();
             if (childData.name == nombre) {
-              Key = childKey;
+              groupKey = childKey;
+              if (childData.Images) {
+                imageKey = childKey;
+              }
             }
                      
           });
         });
   
-        this.firebase.database.ref("groups").child(Key).child("Images").push({
-          ImgUrl: this.ImgUrl
-        });
+        // this.firebase.database.ref("groups").child(Key).child("Images").push({
+        //   ImgUrl: this.ImgUrl
+        // });
+        
+
+        this.userService.updatePhotoGroup(
+          groupKey,
+          imageKey,
+          this.ImgUrl
+        );
         
         this.toastr.success('Foto subida', 'Exitosamente');
       }
