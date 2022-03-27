@@ -18,7 +18,7 @@
     border-bottom-left-radius: 10px;
 
     #logo {
-        width: 8%;
+        // width: 8%;
         height: 8%;
         // margin: 2%;
         margin-left: 2%;
@@ -28,6 +28,10 @@
         color: white;
         font-family: Helvetica;
         font-size: large;
+        img{
+            height: 40px;
+            width: 50px;
+        }
     }
 
     #toggler{

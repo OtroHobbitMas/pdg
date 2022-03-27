@@ -17,7 +17,7 @@ export class ChatService {
   connect() {
     return new Observable(observer => {
       // this.socket = io('http://192.168.0.23:3000');
-      this.socket = io('192.168.1.52:3000',{ transports: ['websocket'] }); 
+      this.socket = io('https://4c7d-186-168-128-4.ngrok.io',{ transports: ['websocket'] }); 
       //AQUI CAMBIO LA IP V4 https://c6e7-186-170-64-187.ngrok.io
       this.socket.on('connect', () => {
         this.socket.emit("connected");
