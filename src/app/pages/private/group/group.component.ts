@@ -121,12 +121,19 @@ export class GroupComponent implements OnInit {
     this.fileUrl = event;
   }
 
-  async getImg(event){
+  async getImg(event,nombreGrupo,accion,index){
     this.ImgUrl = event;
-   await this.SendImage();
-   await this.UpdatePerfilPhoto();
+    if (accion == "update") {      
+      await this.SendImage(nombreGrupo);
+      await this.UpdatePerfilPhoto(nombreGrupo,index);
+    } else {
+      await this.SendImage("");
+      await this.UpdatePerfilPhoto("","");
+    }
+   
   //  await this.UpdatePerfilPhoto(Email);
   }
+
   
   createGroup(){
     this.firstPage = false;
@@ -358,6 +365,7 @@ export class GroupComponent implements OnInit {
 
     let entries;
     let entriesIntegrants;
+    let entriesValues;
 
     this.groupList.forEach((element,index) => {
       if (this.groupList[index].name == name){
@@ -369,10 +377,18 @@ export class GroupComponent implements OnInit {
             this.selectedIntegrants.push(entriesIntegrants[i].name);
           }
         }
-        this.openedGruop=name;
-        
-        entries = Object.keys(element.Images);
         this.selectedGroup.push(element);
+
+        entries = Object.keys(element.Images);
+        entriesValues = Object.values(element.Images);
+        entriesIntegrants = Object.values(element.integrants);
+
+        // if (entries.length >= 2) {
+        //   console.log(entriesValues[entries.length-1]);
+        //   this.selectedGroup[index].Images = entriesValues[entries.length-1];
+        // }
+
+        this.openedGruop=name;
         this.descripcion = element.description;
         
         this.selectedTags.push(Object.values(element.tags));
@@ -555,57 +571,112 @@ export class GroupComponent implements OnInit {
 
   
 
-  async SendImage (){
+  async SendImage (nombre){
     const nombreGrupo = this.ngForm.controls.name.value;
-
-    if(this.ImgUrl){
-      let Key;      
-      // const Email = firebase.auth().currentUser.email;
-
-      await this.firebase.database.ref("groups").once("value", (groups) => {
-        groups.forEach((group) => {
-          const childKey = group.key;
-          const childData = group.val();
-          if (childData.name == nombreGrupo) {
-            Key = childKey;
-          }
-                   
+    if (nombreGrupo) {
+      if(this.ImgUrl){
+        let Key;      
+        // const Email = firebase.auth().currentUser.email;
+  
+        await this.firebase.database.ref("groups").once("value", (groups) => {
+          groups.forEach((group) => {
+            const childKey = group.key;
+            const childData = group.val();
+            if (childData.name == nombreGrupo) {
+              Key = childKey;
+            }
+                     
+          });
         });
-      });
-
-      this.firebase.database.ref("groups").child(Key).child("Images").push({
-        ImgUrl: this.ImgUrl
-      });
-      
-      this.toastr.success('Foto subida', 'Exitosamente');
+  
+        this.firebase.database.ref("groups").child(Key).child("Images").push({
+          ImgUrl: this.ImgUrl
+        });
+        
+        this.toastr.success('Foto subida', 'Exitosamente');
+      }
     }
+    if (nombre != "") {
+      if(this.ImgUrl){
+        let Key;      
+        // const Email = firebase.auth().currentUser.email;
+  
+        await this.firebase.database.ref("groups").once("value", (groups) => {
+          groups.forEach((group) => {
+            const childKey = group.key;
+            const childData = group.val();
+            if (childData.name == nombre) {
+              Key = childKey;
+            }
+                     
+          });
+        });
+  
+        this.firebase.database.ref("groups").child(Key).child("Images").push({
+          ImgUrl: this.ImgUrl
+        });
+        
+        this.toastr.success('Foto subida', 'Exitosamente');
+      }
+    }
+
+    
   }
 
-  async UpdatePerfilPhoto(){
+  async UpdatePerfilPhoto(nombre,index){
     const nombreGrupo = this.ngForm.controls.name.value;
     let Key;
 
-    await this.firebase.database.ref("groups").once("value", (users) => {
-      users.forEach((user) => {
-        const childKey = user.key;
-        const childData = user.val();     
-        if (childData.name == nombreGrupo) {
-          Key = childKey;
-          user.forEach((info) => {
-            info.forEach((Images) => {
-              Images.forEach((ImgUrl) => {
-                const ImagesChildKey = ImgUrl.key;
-                const ImagesChildData = ImgUrl.val();
-
-                if (ImagesChildKey == "ImgUrl"){
-                  this.Currentimg = ImagesChildData;
-                } 
+    if (nombreGrupo) {
+      await this.firebase.database.ref("groups").once("value", (users) => {
+        users.forEach((user) => {
+          const childKey = user.key;
+          const childData = user.val();     
+          if (childData.name == nombreGrupo) {
+            Key = childKey;
+            user.forEach((info) => {
+              info.forEach((Images) => {
+                Images.forEach((ImgUrl) => {
+                  const ImagesChildKey = ImgUrl.key;
+                  const ImagesChildData = ImgUrl.val();
+  
+                  if (ImagesChildKey == "ImgUrl"){
+                    this.Currentimg = ImagesChildData;
+                  } 
+                });
               });
             });
-          });
-        }
+          }
+        });
       });
-    });
+    }
+
+    if (nombre != "") {
+      await this.firebase.database.ref("groups").once("value", (users) => {
+        users.forEach((user) => {
+          const childKey = user.key;
+          const childData = user.val();     
+          if (childData.name == nombre) {
+            Key = childKey;
+            user.forEach((info) => {
+              info.forEach((Images) => {
+                Images.forEach((ImgUrl) => {
+                  const ImagesChildKey = ImgUrl.key;
+                  const ImagesChildData = ImgUrl.val();
+  
+                  if (ImagesChildKey == "ImgUrl"){
+                    this.Currentimg = ImagesChildData;
+                  } 
+                });
+              });
+            });
+          }
+        });
+      });
+
+      this.selectedGroup[index].Images = this.ImgUrl;
+    }
+    
 
     if(!this.Currentimg) {
       this.Currentimg = "../../../../../../assets/img/NoImage.png";
